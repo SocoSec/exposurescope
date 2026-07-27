@@ -1,11 +1,8 @@
 // POST /api/breach
-// Looks up whether an email address appears in known breaches, via the
-// Have I Been Pwned v3 API. The HIBP key stays server-side. Nothing is stored.
-//
-// This endpoint is DISABLED unless HIBP_API_KEY is set, because HIBP email
-// lookups require a paid key. Enabling live email lookups on a public
-// deployment means processing personal data — only do so under an approved
-// ethics protocol, and design your consent flow accordingly.
+// Looks up whether an email address OR phone number appears in known breaches,
+// via the Have I Been Pwned v3 API. The HIBP key stays server-side. Nothing is
+// stored. Disabled unless HIBP_API_KEY is set (HIBP account lookups need a paid
+// key). Only enable live lookups under an approved ethics protocol.
 
 export const runtime = "edge";
 
@@ -21,41 +18,46 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function POST(req) {
   const key = process.env.HIBP_API_KEY;
   if (!key) {
-    return json(
-      { configured: false, error: "Email breach lookup is not enabled on this deployment." },
-      503
-    );
+    return json({ configured: false, error: "Breach lookup is not enabled on this deployment." }, 503);
   }
 
-  let email = "";
+  let email = "", phone = "";
   try {
     const body = await req.json();
     email = (body?.email || "").toString().trim().toLowerCase();
+    phone = (body?.phone || "").toString().trim();
   } catch {
     return json({ error: "Invalid request body." }, 400);
   }
-  if (!EMAIL_RE.test(email)) return json({ error: "Enter a valid email address." }, 400);
+
+  // Determine the identifier to search. HIBP's breachedaccount endpoint takes an
+  // account (email); phone numbers are searchable only for a small set of
+  // breaches and are queried the same way, digits only.
+  let account = "";
+  if (email) {
+    if (!EMAIL_RE.test(email)) return json({ error: "Enter a valid email address." }, 400);
+    account = email;
+  } else if (phone) {
+    account = phone.replace(/[^0-9]/g, "");
+    if (account.length < 7) return json({ error: "Enter a valid phone number." }, 400);
+  } else {
+    return json({ error: "Provide an email or phone number." }, 400);
+  }
 
   try {
     const url =
       "https://haveibeenpwned.com/api/v3/breachedaccount/" +
-      encodeURIComponent(email) +
-      "?truncateResponse=false";
+      encodeURIComponent(account) + "?truncateResponse=false";
     const res = await fetch(url, {
-      headers: {
-        "hibp-api-key": key,
-        "user-agent": "ExposureScope-Research-SelfAssessment",
-      },
+      headers: { "hibp-api-key": key, "user-agent": "ExposureScope-Research-SelfAssessment" },
     });
 
-    // HIBP returns 404 when the account is not found in any breach.
     if (res.status === 404) return json({ configured: true, breaches: [], count: 0 }, 200);
     if (res.status === 401) return json({ error: "HIBP key rejected." }, 502);
     if (res.status === 429) return json({ error: "Rate limited by HIBP — wait and retry." }, 429);
     if (!res.ok) return json({ error: "HIBP error.", status: res.status }, 502);
 
     const data = await res.json();
-    // Return only a minimal, non-sensitive summary. No storage.
     const breaches = (Array.isArray(data) ? data : []).map((b) => ({
       name: b.Name,
       title: b.Title,
