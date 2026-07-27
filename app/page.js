@@ -74,6 +74,15 @@ const STYLE = `
 .x-tag{font-family:ui-monospace,monospace;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.03em;}
 .x-src{margin-top:12px;text-align:center;font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);letter-spacing:.04em;}
 .x-foot{margin-top:26px;color:var(--mute);font-size:10.5px;line-height:1.6;text-align:center;font-family:ui-monospace,monospace;}
+.x-formula{font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-bottom:14px;letter-spacing:.02em;text-align:center;}
+.x-btable{border-top:1px solid var(--line);}
+.x-btrow{display:grid;grid-template-columns:1.7fr .6fr 1fr 1.1fr;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px;}
+.x-btrow .c{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.x-bthead{color:var(--mute);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;}
+.x-btrow .contrib{display:flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:11px;justify-content:flex-end;}
+.x-btrow .cbar{height:6px;border-radius:4px;flex:0 0 auto;}
+.x-btfoot{display:flex;justify-content:space-between;padding:9px 2px;font-size:12.5px;border-bottom:1px solid var(--line);font-family:ui-monospace,monospace;color:var(--mute);}
+.x-btfoot:last-child{border-bottom:none;font-weight:700;color:var(--ink);}
 .x-fpfound{border:1px dashed var(--line);border-radius:12px;padding:14px 15px;margin-bottom:14px;background:rgba(103,116,139,.05);}
 .x-fpfoundh{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:6px;}
 .x-fpfoundb{color:var(--mute);font-size:12.5px;line-height:1.55;}
@@ -282,21 +291,37 @@ const BAND = {
   high: { c: "var(--coral)", label: "High", head: "Significant exposure" },
 };
 
-function Gauge({ score, color, level }) {
-  const pct = level === "safe" ? 100 : score;
+function sevLabel(sv) { return sv >= 1 ? "Financial" : sv >= 0.7 ? "Credentials" : sv >= 0.4 ? "Contact" : "Email"; }
+
+function Gauge({ score, level }) {
+  const S = level === "safe" ? 0 : Math.max(0, Math.min(100, Math.round(score)));
+  const Cx = 160, Cy = 150, R = 118, SW = 24, N = 9, gap = 2.4, seg = 180 / N;
+  const ramp = ["#2FBF71", "#57C559", "#8CCB44", "#C0CE3B", "#E7C93B", "#E9A93C", "#E8843F", "#E76A45", "#E5544A"];
+  const P = (ang, r = R) => { const t = ang * Math.PI / 180; return [Cx + r * Math.cos(t), Cy - r * Math.sin(t)]; };
+  const arcs = [];
+  for (let k = 0; k < N; k++) {
+    const a0 = 180 - k * seg - gap / 2;
+    const a1 = 180 - (k + 1) * seg + gap / 2;
+    const [x0, y0] = P(a0), [x1, y1] = P(a1);
+    arcs.push(<path key={k} d={"M " + x0.toFixed(1) + " " + y0.toFixed(1) + " A " + R + " " + R + " 0 0 1 " + x1.toFixed(1) + " " + y1.toFixed(1)} stroke={ramp[k]} strokeWidth={SW} fill="none" strokeLinecap="round" />);
+  }
+  const nAng = 180 - (S / 100) * 180;
+  const [tx, ty] = P(nAng, R - 4);
+  const [b1x, b1y] = P(nAng + 90, 7);
+  const [b2x, b2y] = P(nAng - 90, 7);
+  const bandColor = ramp[Math.min(N - 1, Math.floor((S / 100) * N))];
   return (
-    <div className="x-gauge">
-      <div style={{
-        borderRadius: "50%", width: "100%", height: "100%",
-        background: `conic-gradient(${color} ${pct * 3.6}deg, var(--line) 0deg)`,
-        WebkitMask: "radial-gradient(farthest-side, transparent calc(100% - 11px), #000 calc(100% - 11px))",
-        mask: "radial-gradient(farthest-side, transparent calc(100% - 11px), #000 calc(100% - 11px))",
-      }} />
-      <div className="x-gnum">
-        <span className="x-gval" style={{ color }}>{level === "safe" ? 0 : score}</span>
-        <span className="x-gof">/ 100</span>
-      </div>
-    </div>
+    <svg viewBox="0 0 320 224" style={{ width: "100%", maxWidth: 340, display: "block", margin: "0 auto" }}>
+      <defs><filter id="nsh" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000" floodOpacity="0.55" /></filter></defs>
+      {arcs}
+      <polygon points={tx.toFixed(1) + "," + ty.toFixed(1) + " " + b1x.toFixed(1) + "," + b1y.toFixed(1) + " " + b2x.toFixed(1) + "," + b2y.toFixed(1)} fill="#EAF1FA" filter="url(#nsh)" />
+      <circle cx={Cx} cy={Cy} r="13" fill="#0F1521" stroke={bandColor} strokeWidth="3.5" />
+      <circle cx={Cx} cy={Cy} r="4.5" fill={bandColor} />
+      <text x={Cx} y="200" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="38" fontWeight="700" fill={bandColor}>{S}</text>
+      <text x={Cx} y="216" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10" fill="#67748B">/ 100</text>
+      <text x="30" y="176" fontFamily="ui-monospace,monospace" fontSize="9" fill="#2FBF71">SAFE</text>
+      <text x="290" y="176" textAnchor="end" fontFamily="ui-monospace,monospace" fontSize="9" fill="#E5544A">CRITICAL</text>
+    </svg>
   );
 }
 
@@ -447,9 +472,35 @@ export default function Page() {
 
             {leaked && !meta.unavailable && (
               <>
+                {/* Score model (transparent breakdown) */}
+                {meta.kind !== "password" && report.scored.length > 0 && (() => {
+                  const rows = [...report.scored].sort((a, b) => b.contribution - a.contribution);
+                  const maxC = Math.max(...rows.map((r) => r.contribution), 0.0001);
+                  return (
+                    <div className="x-card">
+                      <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Score model</span></div>
+                      <div className="x-secd">How your score is calculated. The MVP uses the Breach Risk component (B): each breach contributes by severity \u00d7 recency, normalised to 0\u2013100.</div>
+                      <div className="x-formula">E = 0.30\u00b7B + 0.20\u00b7O + 0.20\u00b7S + 0.15\u00b7M + 0.15\u00b7L &nbsp;\u2014&nbsp; MVP: B active</div>
+                      <div className="x-btable">
+                        <div className="x-btrow x-bthead"><span>Company</span><span>Year</span><span>Type</span><span>Weight</span></div>
+                        {rows.map((b, i) => (
+                          <div className="x-btrow" key={i}>
+                            <span className="c" title={b.title}>{b.title}</span>
+                            <span>{b.year || "\u2014"}</span>
+                            <span>{sevLabel(b.sev)}</span>
+                            <span className="contrib"><span className="cbar" style={{ width: (8 + (b.contribution / maxC) * 46) + "px", background: band.c }} />{b.contribution.toFixed(2)}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="x-btfoot"><span>Breaches found</span><span>{rows.length}</span></div>
+                      <div className="x-btfoot"><span>Exposure Score E</span><span style={{ color: band.c }}>{report.score} / 100</span></div>
+                    </div>
+                  );
+                })()}
+
                 {/* Breakdown */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Exposure breakdown</span></div>
+                  <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">Exposure breakdown</span></div>
                   <div className="x-secd">What kinds of your data appear, and how often, across the breaches found.</div>
                   {meta.kind === "password" ? (
                     <div className="x-bar"><span className="bl">Breach dumps</span><span className="bt"><span className="bf" style={{ width: "100%", background: band.c }} /></span><span className="bv">{meta.credCount.toLocaleString()}</span></div>
@@ -461,7 +512,7 @@ export default function Page() {
                 {/* Timeline (email/phone only) */}
                 {meta.kind !== "password" && (
                   <div className="x-card">
-                    <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">Breach timeline</span></div>
+                    <div className="x-sech"><span className="x-secn">03</span><span className="x-sect">Breach timeline</span></div>
                     <div className="x-secd">When the breaches occurred. Recent breaches weigh more — older ones decay in the score.</div>
                     <Timeline scored={report.scored} color={band.c} />
                   </div>
@@ -469,7 +520,7 @@ export default function Page() {
 
                 {/* Mosaic */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">03</span><span className="x-sect">What can be assembled about you</span></div>
+                  <div className="x-sech"><span className="x-secn">04</span><span className="x-sect">What can be assembled about you</span></div>
                   <div className="x-secd">The mosaic effect: separate fragments combine into one identity. Highlighted items are exposed.</div>
                   <div className="x-mosaic">
                     {ATTR_DEFS.map((a) => {
@@ -485,7 +536,7 @@ export default function Page() {
 
                 {/* ExpoBot remediation */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">04</span><span className="x-sect">Actions to take</span></div>
+                  <div className="x-sech"><span className="x-secn">05</span><span className="x-sect">Actions to take</span></div>
                   <div className="x-secd">Prioritised, specific steps — each with its likely impact on your score.</div>
                   {remediation(report.attrs, meta).map((r, i) => (
                     <div className="x-remcard" key={i}>
@@ -498,7 +549,7 @@ export default function Page() {
 
                 {/* How it leaked */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">05</span><span className="x-sect">How your data leaked</span></div>
+                  <div className="x-sech"><span className="x-secn">06</span><span className="x-sect">How your data leaked</span></div>
                   {howLeaked(report.attrs, meta.count).map((it, i) => (
                     <div className="x-info" key={i}><div className="x-infot">{it.title}</div><div className="x-infob">{it.body}</div></div>
                   ))}
@@ -506,7 +557,7 @@ export default function Page() {
 
                 {/* Attacker view */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">06</span><span className="x-sect">How attackers could use it</span></div>
+                  <div className="x-sech"><span className="x-secn">07</span><span className="x-sect">How attackers could use it</span></div>
                   <div className="x-secd">Awareness, not instructions — understanding the risk is how you defend against it.</div>
                   {howWeaponised(report.attrs).map((it, i) => (
                     <div className="x-info" key={i}><div className="x-infot">{it.title}</div><div className="x-infob">{it.body}</div></div>
@@ -515,7 +566,7 @@ export default function Page() {
 
                 {/* Your public footprint (self-check, no auto-profiling) */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">07</span><span className="x-sect">Your public footprint</span></div>
+                  <div className="x-sech"><span className="x-secn">08</span><span className="x-sect">Your public footprint</span></div>
                   <div className="x-secd">What an attacker could piece together from public sources — and how to check it yourself.</div>
                   <div className="x-fpfound">
                     <div className="x-fpfoundh">Public information found</div>
