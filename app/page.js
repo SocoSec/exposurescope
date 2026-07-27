@@ -97,6 +97,18 @@ const STYLE = `
 .x-fpfoundb{color:var(--mute);font-size:12.5px;line-height:1.55;}
 .x-fplink{display:inline-block;margin-top:8px;font-family:ui-monospace,monospace;font-size:12px;color:var(--sig);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;transition:border-color .15s;}
 .x-fplink:hover{border-color:var(--sig);}
+.x-chat{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding:4px 2px;margin-bottom:12px;}
+.x-msg{padding:10px 13px;border-radius:13px;font-size:13px;line-height:1.55;max-width:88%;white-space:pre-wrap;}
+.x-msg.bot{background:var(--card2);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px;}
+.x-msg.me{background:var(--sig);color:#04201A;align-self:flex-end;border-bottom-right-radius:4px;font-weight:500;}
+.x-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:11px;}
+.x-chip2{background:none;border:1px solid var(--line);color:var(--mute);border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer;transition:border-color .15s,color .15s;font-family:inherit;}
+.x-chip2:hover:not(:disabled){border-color:var(--sig);color:var(--sig);}
+.x-chip2:disabled{opacity:.5;cursor:not-allowed;}
+.x-chatin{display:flex;gap:8px;}
+.x-send{background:var(--sig);color:#04201A;border:none;border-radius:10px;padding:0 18px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;text-transform:uppercase;cursor:pointer;white-space:nowrap;}
+.x-send:disabled{opacity:.4;cursor:not-allowed;}
+.x-spin2{display:inline-block;width:11px;height:11px;border:2px solid var(--mute);border-top-color:transparent;border-radius:50%;animation:x-rot .7s linear infinite;margin-right:7px;vertical-align:-1px;}
 @media print{.x-actions,.x-foot,.x-consent{display:none;}.x-root{background:#fff;}}
 `;
 
@@ -293,6 +305,21 @@ function footprint(attrs, identifier, kind) {
   return items;
 }
 
+function buildContext(report, meta) {
+  const L = [];
+  L.push("Exposure score: " + report.score + "/100 (band: " + report.level + ")");
+  if (meta.kind === "password") {
+    L.push("Check type: password. Appears in breach dumps " + (meta.credCount || 0) + " times.");
+  } else {
+    L.push("Identifier type: " + meta.kind);
+    L.push("Breaches found: " + report.scored.length);
+    if (report.scored.length) L.push("Breached companies: " + report.scored.map((b) => b.title).join(", "));
+    L.push("Data types exposed: " + ([...report.attrs].join(", ") || "none"));
+  }
+  if (meta.sources && meta.sources.length) L.push("Sources checked: " + meta.sources.join(", "));
+  return L.join("\n");
+}
+
 const BAND = {
   safe: { c: "var(--sig)", label: "Safe", head: "No exposure found" },
   low: { c: "var(--sig)", label: "Low", head: "Limited exposure" },
@@ -380,9 +407,12 @@ export default function Page() {
   const [report, setReport] = useState(null);
   const [meta, setMeta] = useState(null);
   const [err, setErr] = useState("");
+  const [chatMsgs, setChatMsgs] = useState([]);
+  const [chatInput, setChatInput] = useState("");
+  const [chatBusy, setChatBusy] = useState(false);
 
   const kind = useMemo(() => classify(value), [value]);
-  const reset = () => { setValue(""); setState("idle"); setReport(null); setMeta(null); setErr(""); };
+  const reset = () => { setValue(""); setState("idle"); setReport(null); setMeta(null); setErr(""); setChatMsgs([]); setChatInput(""); };
 
   const run = async () => {
     if (!value.trim()) return;
@@ -419,6 +449,26 @@ export default function Page() {
       if (kind === "password") setValue("");
     } catch (e) {
       setErr(String(e.message || e)); setState("error");
+    }
+  };
+
+  const sendChat = async (text) => {
+    const q = (text || chatInput).trim();
+    if (!q || chatBusy) return;
+    const next = [...chatMsgs, { role: "user", content: q }];
+    setChatMsgs(next); setChatInput(""); setChatBusy(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ context: buildContext(report, meta), messages: next }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Assistant failed.");
+      setChatMsgs([...next, { role: "assistant", content: data.reply }]);
+    } catch (e) {
+      setChatMsgs([...next, { role: "assistant", content: "Sorry — I couldn't respond (" + (e.message || e) + ")." }]);
+    } finally {
+      setChatBusy(false);
     }
   };
 
@@ -622,6 +672,30 @@ export default function Page() {
                   ))}
                 </div>
               </>
+            )}
+
+            {!meta.unavailable && (
+              <div className="x-card">
+                <div className="x-sech"><span className="x-secn">AI</span><span className="x-sect">Ask ExpoBot</span></div>
+                <div className="x-secd">Your report-aware assistant. Ask what to do, in plain language.</div>
+                <div className="x-chat">
+                  <div className="x-msg bot">I've reviewed your exposure report. Ask me anything — for example, what to fix first, or how worried you should be.</div>
+                  {chatMsgs.map((m, i) => (
+                    <div className={"x-msg " + (m.role === "user" ? "me" : "bot")} key={i}>{m.content}</div>
+                  ))}
+                  {chatBusy && <div className="x-msg bot"><span className="x-spin2" />Thinking…</div>}
+                </div>
+                <div className="x-chips">
+                  {["What should I do first?", "Explain my score", "Am I at risk of identity theft?"].map((q, i) => (
+                    <button className="x-chip2" key={i} onClick={() => sendChat(q)} disabled={chatBusy}>{q}</button>
+                  ))}
+                </div>
+                <div className="x-chatin">
+                  <input className="x-input" value={chatInput} onChange={(e) => setChatInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && sendChat()} placeholder="Ask ExpoBot…" disabled={chatBusy} />
+                  <button className="x-send" onClick={() => sendChat()} disabled={chatBusy || !chatInput.trim()}>Send</button>
+                </div>
+              </div>
             )}
 
             <div className="x-actions">
