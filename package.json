@@ -1,0 +1,20 @@
+{
+  "name": "exposurescope",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A self-assessment instrument for personal digital exposure (research prototype).",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}
