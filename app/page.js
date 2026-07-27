@@ -109,8 +109,14 @@ const STYLE = `
 .x-send{background:var(--sig);color:#04201A;border:none;border-radius:10px;padding:0 18px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;text-transform:uppercase;cursor:pointer;white-space:nowrap;}
 .x-send:disabled{opacity:.4;cursor:not-allowed;}
 .x-spin2{display:inline-block;width:11px;height:11px;border:2px solid var(--mute);border-top-color:transparent;border-radius:50%;animation:x-rot .7s linear infinite;margin-right:7px;vertical-align:-1px;}
-.x-launcher{position:fixed;right:22px;bottom:22px;width:58px;height:58px;border-radius:50%;background:var(--sig);border:none;cursor:pointer;box-shadow:0 8px 26px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:60;transition:transform .15s;}
-.x-launcher:hover{transform:translateY(-2px) scale(1.04);}
+.x-launcher{position:fixed;right:22px;bottom:22px;width:60px;height:60px;border-radius:50%;background:var(--sig);border:none;cursor:pointer;box-shadow:0 8px 28px rgba(56,200,154,.35),0 6px 20px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:60;transition:transform .15s;animation:x-pop .5s cubic-bezier(.2,1.3,.4,1);}
+.x-launcher:hover{transform:translateY(-2px) scale(1.05);}
+.x-launcher::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--sig);animation:x-pulse 2.6s ease-out infinite;pointer-events:none;}
+@keyframes x-pop{0%{transform:scale(0) rotate(-12deg);}70%{transform:scale(1.14);}100%{transform:scale(1);}}
+@keyframes x-pulse{0%{transform:scale(1);opacity:.55;}70%{transform:scale(1.55);opacity:0;}100%{opacity:0;}}
+.x-tip{position:absolute;right:74px;top:50%;background:var(--card);border:1px solid var(--line);color:var(--ink);font-size:12.5px;font-weight:500;padding:9px 13px;border-radius:11px;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:x-tipfade 7s ease forwards;}
+.x-tip::after{content:"";position:absolute;right:-6px;top:50%;transform:translateY(-50%) rotate(45deg);width:10px;height:10px;background:var(--card);border-right:1px solid var(--line);border-top:1px solid var(--line);}
+@keyframes x-tipfade{0%{opacity:0;transform:translateY(-50%) translateX(8px);}9%{opacity:1;transform:translateY(-50%) translateX(0);}82%{opacity:1;transform:translateY(-50%) translateX(0);}100%{opacity:0;transform:translateY(-50%) translateX(8px);visibility:hidden;pointer-events:none;}}
 .x-panel{position:fixed;right:22px;bottom:22px;width:380px;max-width:calc(100vw - 32px);height:564px;max-height:calc(100vh - 44px);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 54px rgba(0,0,0,.55);display:flex;flex-direction:column;z-index:60;overflow:hidden;}
 .x-panelhead{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);flex-shrink:0;}
 .x-paneltitle{font-weight:650;font-size:15px;display:flex;align-items:center;gap:8px;}
@@ -728,6 +734,7 @@ export default function Page() {
           </div>
         ) : (
           <button className="x-launcher" onClick={() => setChatOpen(true)} aria-label="Open ExpoBot">
+            <span className="x-tip">Ask ExpoBot</span>
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v7A2.5 2.5 0 0 1 17.5 15H9l-4 4v-4H6.5A2.5 2.5 0 0 1 4 12.5v-7Z" fill="#04201A"/><circle cx="9" cy="9.2" r="1.15" fill="#38C89A"/><circle cx="12" cy="9.2" r="1.15" fill="#38C89A"/><circle cx="15" cy="9.2" r="1.15" fill="#38C89A"/></svg>
           </button>
         )
