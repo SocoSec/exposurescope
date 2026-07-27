@@ -74,6 +74,11 @@ const STYLE = `
 .x-tag{font-family:ui-monospace,monospace;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.03em;}
 .x-src{margin-top:12px;text-align:center;font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);letter-spacing:.04em;}
 .x-foot{margin-top:26px;color:var(--mute);font-size:10.5px;line-height:1.6;text-align:center;font-family:ui-monospace,monospace;}
+.x-fpfound{border:1px dashed var(--line);border-radius:12px;padding:14px 15px;margin-bottom:14px;background:rgba(103,116,139,.05);}
+.x-fpfoundh{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:6px;}
+.x-fpfoundb{color:var(--mute);font-size:12.5px;line-height:1.55;}
+.x-fplink{display:inline-block;margin-top:8px;font-family:ui-monospace,monospace;font-size:12px;color:var(--sig);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;transition:border-color .15s;}
+.x-fplink:hover{border-color:var(--sig);}
 @media print{.x-actions,.x-foot,.x-consent{display:none;}.x-root{background:#fff;}}
 `;
 
@@ -239,6 +244,37 @@ function howWeaponised(attrs) {
   return items;
 }
 
+// Self-check footprint guidance. The app does NOT profile anyone or fetch
+// third-party data — it shows the user how to inspect their own public footprint,
+// consistent with the thesis scope (no automated third-party data processing).
+function footprint(attrs, identifier, kind) {
+  const items = [];
+  if ((kind === "email" || kind === "phone") && identifier) {
+    items.push({
+      title: "Search engines",
+      body: "See what a search engine surfaces for your " + kind + ". Attackers start here to connect your identifier to public profiles and posts.",
+      action: { label: "Search my " + kind, url: "https://www.google.com/search?q=" + encodeURIComponent('"' + identifier + '"') },
+    });
+  }
+  if (attrs.has("username")) items.push({
+    title: "Username reuse",
+    body: "Your usernames appear in breach data. If you reuse the same handle across platforms, those profiles can be linked together. Search the platforms you use for your handles and diversify the ones you want kept separate.",
+  });
+  if (attrs.has("email")) items.push({
+    title: "Connected accounts",
+    body: "Many sites reveal whether an email has an account during password reset. Review which services are tied to this email and close the ones you no longer use.",
+  });
+  items.push({
+    title: "Data brokers",
+    body: "People-search and broker sites compile public records with breach data into profiles. Search the major brokers for your name and use their opt-out forms to request removal.",
+  });
+  items.push({
+    title: "Photos & metadata",
+    body: "Public photos can carry GPS metadata and enable reverse-image linkage. Strip EXIF data before posting and review images you're tagged in.",
+  });
+  return items;
+}
+
 const BAND = {
   safe: { c: "var(--sig)", label: "Safe", head: "No exposure found" },
   low: { c: "var(--sig)", label: "Low", head: "Limited exposure" },
@@ -344,7 +380,7 @@ export default function Page() {
 
       const r = buildReport(kind, { credLeaked, credCount, acctLeaked, breaches });
       setReport(r);
-      setMeta({ kind, credCount, count: breaches.length, sources, unavailable, credLeaked, acctLeaked });
+      setMeta({ kind, credCount, count: breaches.length, sources, unavailable, credLeaked, acctLeaked, identifier: kind === "password" ? null : value.trim() });
       setState("done");
       if (kind === "password") setValue("");
     } catch (e) {
@@ -474,6 +510,23 @@ export default function Page() {
                   <div className="x-secd">Awareness, not instructions — understanding the risk is how you defend against it.</div>
                   {howWeaponised(report.attrs).map((it, i) => (
                     <div className="x-info" key={i}><div className="x-infot">{it.title}</div><div className="x-infob">{it.body}</div></div>
+                  ))}
+                </div>
+
+                {/* Your public footprint (self-check, no auto-profiling) */}
+                <div className="x-card">
+                  <div className="x-sech"><span className="x-secn">07</span><span className="x-sect">Your public footprint</span></div>
+                  <div className="x-secd">What an attacker could piece together from public sources — and how to check it yourself.</div>
+                  <div className="x-fpfound">
+                    <div className="x-fpfoundh">Public information found</div>
+                    <div className="x-fpfoundb">None retrieved. Exposio does not automatically profile people or fetch anyone's social posts or activity — that would process others' personal data. This stays blank by design; use the self-checks below to inspect your own footprint.</div>
+                  </div>
+                  {footprint(report.attrs, meta.identifier, meta.kind).map((it, i) => (
+                    <div className="x-info" key={i}>
+                      <div className="x-infot">{it.title}</div>
+                      <div className="x-infob">{it.body}</div>
+                      {it.action && <a className="x-fplink" href={it.action.url} target="_blank" rel="noopener noreferrer">{it.action.label} ↗</a>}
+                    </div>
                   ))}
                 </div>
               </>
