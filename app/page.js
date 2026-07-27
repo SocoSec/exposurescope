@@ -105,7 +105,7 @@ export default function Page() {
     setState("loading"); setErr(""); setResult(null);
     try {
       let credLeaked = null, acctLeaked = null;
-      let credCount = 0, acctCount = 0, acctBreaches = [], acctUnavailable = false;
+      let credCount = 0, acctCount = 0, acctBreaches = [], acctUnavailable = false, acctSources = [];
 
       if (kind === "password") {
         const hash = await sha1Hex(value);
@@ -126,7 +126,7 @@ export default function Page() {
         const data = await res.json();
         if (res.status === 503 || data.configured === false) acctUnavailable = true;
         else if (!res.ok) throw new Error(data.error || "Lookup failed.");
-        else { acctCount = data.count || 0; acctBreaches = data.breaches || []; acctLeaked = acctCount > 0; }
+        else { acctCount = data.count || 0; acctBreaches = data.breaches || []; acctLeaked = acctCount > 0; acctSources = data.sources || []; }
       }
 
       // ---- Exposure Score (MVP: Breach Risk component B, 0-100) ----
@@ -162,7 +162,7 @@ export default function Page() {
       if (nothingChecked) level = "unchecked";
       else if (!anyLeak) level = "safe";
 
-      setResult({ level, score: anyLeak ? Math.max(score, 1) : 0, kind, credLeaked, acctLeaked, credCount, acctCount, acctBreaches, acctUnavailable });
+      setResult({ level, score: anyLeak ? Math.max(score, 1) : 0, kind, credLeaked, acctLeaked, credCount, acctCount, acctBreaches, acctUnavailable, acctSources });
       setState("done");
       if (kind === "password") setValue("");
     } catch (e) {
@@ -277,6 +277,11 @@ export default function Page() {
                     <span style={{ fontFamily: "ui-monospace,monospace", color: "var(--coral)" }}>{result.acctCount}</span></div>
                 )}
               </div>
+              {result.acctSources && result.acctSources.length > 0 && (
+                <div style={{ marginTop: 12, textAlign: "center", fontFamily: "ui-monospace,monospace", fontSize: 11, color: "var(--mute)", letterSpacing: ".04em" }}>
+                  Sources checked: {result.acctSources.join(" + ")}
+                </div>
+              )}
               <button className="x-again" onClick={reset}>Check another</button>
             </>
           )}
