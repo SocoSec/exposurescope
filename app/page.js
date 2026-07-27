@@ -158,7 +158,9 @@ export default function Page() {
       else level = "high";
       // If nothing leaked at all, force the reassuring "safe" state.
       const anyLeak = credLeaked === true || acctLeaked === true;
-      if (!anyLeak) level = "safe";
+      const nothingChecked = (kind === "email" || kind === "phone") && acctUnavailable;
+      if (nothingChecked) level = "unchecked";
+      else if (!anyLeak) level = "safe";
 
       setResult({ level, score: anyLeak ? Math.max(score, 1) : 0, kind, credLeaked, acctLeaked, credCount, acctCount, acctBreaches, acctUnavailable });
       setState("done");
@@ -169,6 +171,7 @@ export default function Page() {
   };
 
   const V = {
+    unchecked: { color: "var(--mute)", state: "Not checked", head: "Breach source not enabled" },
     safe:   { color: "var(--sig)",   state: "Safe",   head: "No exposure found" },
     low:    { color: "var(--sig)",   state: "Low",    head: "Limited exposure" },
     medium: { color: "var(--amber)", state: "Medium", head: "Notable exposure" },
@@ -176,8 +179,9 @@ export default function Page() {
   };
 
   const detail = (r) => {
+    if (r.level === "unchecked") return "This email/phone was NOT checked — no breach source is configured on this deployment. Add a DeHashed key to enable real lookups. Meanwhile, check this address free at haveibeenpwned.com, and keep unique passwords plus two-factor authentication.";
     if (r.level === "safe") {
-      if (r.acctUnavailable) return "The account source needs its key to run — nothing was verified. Still, keep yourself safe: unique passwords per site and two-factor authentication everywhere.";
+      if (r.acctUnavailable) return "The account source needs a breach-source key to run — nothing was verified. Still, keep yourself safe: unique passwords per site and two-factor authentication everywhere.";
       return "No match in the breach sources checked. Keep yourself safe: use a password manager, a unique password per site, and two-factor authentication everywhere.";
     }
     if (r.level === "high") return "Significant multi-vector exposure — immediate remediation required. Change the affected password everywhere it was reused and enable app-based two-factor authentication now.";
@@ -199,7 +203,7 @@ export default function Page() {
 
   const ringStyle = (r) => {
     const c = V[r.level].color;
-    const pct = r.level === "safe" ? 100 : r.score;
+    const pct = r.level === "unchecked" ? 0 : (r.level === "safe" ? 100 : r.score);
     return {
       borderRadius: "50%", width: "100%", height: "100%",
       background: `conic-gradient(${c} ${pct * 3.6}deg, var(--line) 0deg)`,
@@ -246,7 +250,7 @@ export default function Page() {
                 <div className="x-scorewrap">
                   <div style={ringStyle(result)} />
                   <div className="x-scoreval">
-                    <span className="x-scorenum" style={{ color: V[result.level].color }}>{result.score}</span>
+                    <span className="x-scorenum" style={{ color: V[result.level].color }}>{result.level === "unchecked" ? "\u2013" : result.score}</span>
                     <span className="x-scoreof">/ 100</span>
                   </div>
                 </div>
