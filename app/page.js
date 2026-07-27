@@ -74,7 +74,16 @@ const STYLE = `
 .x-tag{font-family:ui-monospace,monospace;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.03em;}
 .x-src{margin-top:12px;text-align:center;font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);letter-spacing:.04em;}
 .x-foot{margin-top:26px;color:var(--mute);font-size:10.5px;line-height:1.6;text-align:center;font-family:ui-monospace,monospace;}
-.x-formula{font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-bottom:14px;letter-spacing:.02em;text-align:center;}
+.x-explain{border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;margin-bottom:16px;background:rgba(255,255,255,.02);border:1px solid var(--line);}
+.x-lglabel{font-size:12px;color:var(--mute);margin-bottom:8px;line-height:1.5;}
+.x-legend{margin-bottom:16px;}
+.x-lgrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:12.5px;}
+.x-lgrow:last-child{border-bottom:none;}
+.x-lgrow .ll{display:flex;align-items:center;gap:8px;color:var(--mute);}
+.x-lgrow .lw{font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);white-space:nowrap;}
+.x-lgrow.on .ll{color:var(--ink);font-weight:600;}
+.x-lgrow.on .lw{color:var(--sig);}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .x-btable{border-top:1px solid var(--line);}
 .x-btrow{display:grid;grid-template-columns:1.7fr .6fr 1fr 1.1fr;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px;}
 .x-btrow .c{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -472,28 +481,60 @@ export default function Page() {
 
             {leaked && !meta.unavailable && (
               <>
-                {/* Score model (transparent breakdown) */}
+                {/* Score model — plain-English explanation + weighting rules */}
                 {meta.kind !== "password" && report.scored.length > 0 && (() => {
                   const rows = [...report.scored].sort((a, b) => b.contribution - a.contribution);
                   const maxC = Math.max(...rows.map((r) => r.contribution), 0.0001);
+                  const a = report.attrs;
+                  const n = rows.length;
+                  const lower = [];
+                  if (a.has("email")) lower.push("email");
+                  if (a.has("phone")) lower.push("phone");
+                  if (a.has("address")) lower.push("address");
+                  if (a.has("username")) lower.push("username");
+                  const lowerTxt = lower.length ? lower.join(", ") : "contact";
+                  let why;
+                  if (a.has("password") || a.has("financial")) {
+                    const strong = [];
+                    if (a.has("financial")) strong.push("financial data");
+                    if (a.has("password")) strong.push("passwords");
+                    why = "Your data appears in " + n + " breach" + (n > 1 ? "es" : "") + ". Because " + strong.join(" and ") + " " + (strong.length > 1 ? "were" : "was") + " exposed, the risk of account takeover and fraud is high — which is what drives the score up.";
+                  } else {
+                    why = "Your data appears in " + n + " breach" + (n > 1 ? "es" : "") + ", but only " + lowerTxt + " information was exposed — no passwords and no financial data. That keeps account-takeover risk low, so the score stays in the lower range. Older breaches also count for less over time.";
+                  }
+                  const tiers = [
+                    { label: "Financial (passwords + payment data)", w: "1.0", on: a.has("financial") },
+                    { label: "Credentials (passwords, no payment)", w: "0.7", on: a.has("password") && !a.has("financial") },
+                    { label: "Contact (phone or address)", w: "0.4", on: (a.has("phone") || a.has("address")) && !a.has("password") },
+                    { label: "Email only", w: "0.2", on: !a.has("phone") && !a.has("address") && !a.has("password") && a.has("email") },
+                  ];
                   return (
                     <div className="x-card">
                       <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Score model</span></div>
-                      <div className="x-secd">How your score is calculated. The MVP uses the Breach Risk component (B): each breach contributes by severity \u00d7 recency, normalised to 0\u2013100.</div>
-                      <div className="x-formula">E = 0.30\u00b7B + 0.20\u00b7O + 0.20\u00b7S + 0.15\u00b7M + 0.15\u00b7L &nbsp;\u2014&nbsp; MVP: B active</div>
+                      <div className="x-secd">How this score was reached — and the weighting behind it.</div>
+                      <div className="x-explain" style={{ borderLeft: "3px solid " + band.c }}>{why}</div>
+                      <div className="x-lglabel">Severity weighting — worse data types raise the score more:</div>
+                      <div className="x-legend">
+                        {tiers.map((t, i) => (
+                          <div className={"x-lgrow" + (t.on ? " on" : "")} key={i}>
+                            <span className="ll"><span className="ldot" style={{ background: t.on ? band.c : "var(--line)" }} />{t.label}</span>
+                            <span className="lw">{t.w}{t.on ? " · in your result" : ""}</span>
+                          </div>
+                        ))}
+                      </div>
                       <div className="x-btable">
                         <div className="x-btrow x-bthead"><span>Company</span><span>Year</span><span>Type</span><span>Weight</span></div>
                         {rows.map((b, i) => (
                           <div className="x-btrow" key={i}>
                             <span className="c" title={b.title}>{b.title}</span>
-                            <span>{b.year || "\u2014"}</span>
+                            <span>{b.year || "—"}</span>
                             <span>{sevLabel(b.sev)}</span>
                             <span className="contrib"><span className="cbar" style={{ width: (8 + (b.contribution / maxC) * 46) + "px", background: band.c }} />{b.contribution.toFixed(2)}</span>
                           </div>
                         ))}
                       </div>
-                      <div className="x-btfoot"><span>Breaches found</span><span>{rows.length}</span></div>
-                      <div className="x-btfoot"><span>Exposure Score E</span><span style={{ color: band.c }}>{report.score} / 100</span></div>
+                      <div className="x-btfoot"><span>Breaches found</span><span>{n}</span></div>
+                      <div className="x-btfoot"><span>Exposure Score</span><span style={{ color: band.c }}>{report.score} / 100</span></div>
                     </div>
                   );
                 })()}
