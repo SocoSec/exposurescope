@@ -109,6 +109,19 @@ const STYLE = `
 .x-send{background:var(--sig);color:#04201A;border:none;border-radius:10px;padding:0 18px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;text-transform:uppercase;cursor:pointer;white-space:nowrap;}
 .x-send:disabled{opacity:.4;cursor:not-allowed;}
 .x-spin2{display:inline-block;width:11px;height:11px;border:2px solid var(--mute);border-top-color:transparent;border-radius:50%;animation:x-rot .7s linear infinite;margin-right:7px;vertical-align:-1px;}
+.x-flow{display:flex;align-items:flex-start;justify-content:space-between;gap:2px;margin:6px 0 18px;}
+.x-fnode{display:flex;flex-direction:column;align-items:center;gap:9px;flex:1;text-align:center;min-width:0;}
+.x-ficon{width:50px;height:50px;border-radius:13px;border:1.5px solid var(--sig);display:flex;align-items:center;justify-content:center;background:var(--card2);flex-shrink:0;}
+.x-flabel{font-size:10.5px;color:var(--mute);line-height:1.35;max-width:82px;}
+.x-farrow{display:flex;align-items:center;justify-content:center;font-size:18px;height:50px;flex-shrink:0;opacity:.65;}
+.x-nudge{position:fixed;right:22px;bottom:96px;width:256px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 14px 13px;box-shadow:0 14px 44px rgba(0,0,0,.55);z-index:61;animation:x-nudgein .45s cubic-bezier(.2,1.2,.4,1);}
+.x-nudge::after{content:"";position:absolute;right:24px;bottom:-7px;width:13px;height:13px;background:var(--card);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg);}
+@keyframes x-nudgein{from{opacity:0;transform:translateY(12px) scale(.95);}to{opacity:1;transform:none;}}
+.x-nudgex{position:absolute;top:7px;right:10px;background:none;border:none;color:var(--mute);font-size:17px;cursor:pointer;line-height:1;}
+.x-nudgex:hover{color:var(--ink);}
+.x-nudgemsg{font-size:13px;line-height:1.5;color:var(--ink);margin-bottom:11px;padding-right:14px;}
+.x-nudgecta{background:var(--sig);color:#04201A;border:none;border-radius:8px;padding:8px 13px;font-family:ui-monospace,monospace;font-size:11px;font-weight:700;text-transform:uppercase;cursor:pointer;}
+.x-nudgecta:hover{transform:translateY(-1px);}
 .x-tabs{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:5px;margin-top:22px;position:sticky;top:12px;z-index:20;}
 .x-tab{flex:1;background:none;border:none;color:var(--mute);border-radius:8px;padding:10px 8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s,color .15s;letter-spacing:.01em;}
 .x-tab:hover{color:var(--ink);}
@@ -352,6 +365,49 @@ const BAND = {
   high: { c: "var(--coral)", label: "High", head: "Significant exposure" },
 };
 
+function Icon({ name, color }) {
+  const c = color || "var(--sig)";
+  const cm = { viewBox: "0 0 24 24", width: 24, height: 24, fill: "none", stroke: c, strokeWidth: 1.6, strokeLinecap: "round", strokeLinejoin: "round" };
+  switch (name) {
+    case "person": return <svg {...cm}><circle cx="12" cy="8" r="3.4" /><path d="M5.5 20c0-3.6 3-5.6 6.5-5.6s6.5 2 6.5 5.6" /></svg>;
+    case "building": return <svg {...cm}><rect x="6" y="3.5" width="12" height="17" rx="1" /><path d="M9.5 7.5h1M13.5 7.5h1M9.5 11h1M13.5 11h1M9.5 14.5h1M13.5 14.5h1" /></svg>;
+    case "db": return <svg {...cm}><ellipse cx="12" cy="6" rx="6.5" ry="2.6" /><path d="M5.5 6v11c0 1.5 2.9 2.6 6.5 2.6s6.5-1.1 6.5-2.6V6" /><path d="M5.5 11.5c0 1.5 2.9 2.6 6.5 2.6s6.5-1.1 6.5-2.6" /></svg>;
+    case "layers": return <svg {...cm}><path d="M12 3l8.5 4.2L12 11.4 3.5 7.2z" /><path d="M4 12l8 4 8-4" /></svg>;
+    case "key": return <svg {...cm}><circle cx="8" cy="14" r="3.6" /><path d="M10.6 11.4L19 3M15.5 6.5l2 2M13.5 8.5l2 2" /></svg>;
+    case "target": return <svg {...cm}><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></svg>;
+    case "unlock": return <svg {...cm}><rect x="5.5" y="11" width="13" height="8.5" rx="2" /><path d="M9 11V8a3 3 0 0 1 5.7-1.3" /></svg>;
+    default: return null;
+  }
+}
+
+function FlowDiagram({ steps, color }) {
+  return (
+    <div className="x-flow">
+      {steps.map((st, i) => (
+        <React.Fragment key={i}>
+          <div className="x-fnode">
+            <div className="x-ficon" style={{ borderColor: color }}><Icon name={st.icon} color={color} /></div>
+            <div className="x-flabel">{st.label}</div>
+          </div>
+          {i < steps.length - 1 && <div className="x-farrow" style={{ color }}>→</div>}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+const LEAK_FLOW = [
+  { icon: "person", label: "You sign up" },
+  { icon: "building", label: "Company breached" },
+  { icon: "db", label: "Data dumped & sold" },
+  { icon: "layers", label: "Profile aggregated" },
+];
+const ATTACK_FLOW = [
+  { icon: "key", label: "Leaked login" },
+  { icon: "target", label: "Tried on many sites" },
+  { icon: "unlock", label: "Account taken over" },
+];
+
 function sevLabel(sv) { return sv >= 1 ? "Financial" : sv >= 0.7 ? "Credentials" : sv >= 0.4 ? "Contact" : "Email"; }
 
 function Gauge({ score, level }) {
@@ -437,8 +493,16 @@ export default function Page() {
   const [chatBusy, setChatBusy] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [tab, setTab] = useState("overview");
+  const [nudge, setNudge] = useState(false);
   const chatRef = useRef(null);
   useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, [chatMsgs, chatBusy, chatOpen]);
+  useEffect(() => {
+    if (state === "done" && report && meta && !meta.unavailable && !chatOpen) {
+      const t = setTimeout(() => setNudge(true), 3500);
+      return () => clearTimeout(t);
+    }
+    setNudge(false);
+  }, [state, report, meta, chatOpen]);
 
   const kind = useMemo(() => classify(value), [value]);
   const reset = () => { setValue(""); setState("idle"); setReport(null); setMeta(null); setErr(""); setChatMsgs([]); setChatInput(""); setChatOpen(false); setTab("overview"); };
@@ -693,6 +757,8 @@ export default function Page() {
                 {/* How it leaked */}
                 <div className="x-card">
                   <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">How your data leaked</span></div>
+                  <div className="x-secd">The path your data takes from a signup form to an aggregated profile.</div>
+                  <FlowDiagram steps={LEAK_FLOW} color={band.c} />
                   {howLeaked(report.attrs, meta.count).map((it, i) => (
                     <div className="x-info" key={i}><div className="x-infot">{it.title}</div><div className="x-infob">{it.body}</div></div>
                   ))}
@@ -702,6 +768,7 @@ export default function Page() {
                 <div className="x-card">
                   <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">How attackers could use it</span></div>
                   <div className="x-secd">Awareness, not instructions — understanding the risk is how you defend against it.</div>
+                  <FlowDiagram steps={ATTACK_FLOW} color={band.c} />
                   {howWeaponised(report.attrs).map((it, i) => (
                     <div className="x-info" key={i}><div className="x-infot">{it.title}</div><div className="x-infob">{it.body}</div></div>
                   ))}
@@ -766,10 +833,19 @@ export default function Page() {
             </div>
           </div>
         ) : (
+          <>
+            {nudge && (
+              <div className="x-nudge">
+                <button className="x-nudgex" onClick={() => setNudge(false)} aria-label="Dismiss">×</button>
+                <div className="x-nudgemsg">I saw your report — want the top 3 fixes?</div>
+                <button className="x-nudgecta" onClick={() => { setNudge(false); setChatOpen(true); sendChat("What are my top 3 fixes?"); }}>Show me →</button>
+              </div>
+            )}
           <button className="x-launcher" onClick={() => setChatOpen(true)} aria-label="Open ExpoBot">
             <span className="x-tip">Ask ExpoBot</span>
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v7A2.5 2.5 0 0 1 17.5 15H9l-4 4v-4H6.5A2.5 2.5 0 0 1 4 12.5v-7Z" fill="#04201A"/><circle cx="9" cy="9.2" r="1.15" fill="#38C89A"/><circle cx="12" cy="9.2" r="1.15" fill="#38C89A"/><circle cx="15" cy="9.2" r="1.15" fill="#38C89A"/></svg>
           </button>
+          </>
         )
       )}
     </div>
