@@ -109,6 +109,14 @@ const STYLE = `
 .x-send{background:var(--sig);color:#04201A;border:none;border-radius:10px;padding:0 18px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;text-transform:uppercase;cursor:pointer;white-space:nowrap;}
 .x-send:disabled{opacity:.4;cursor:not-allowed;}
 .x-spin2{display:inline-block;width:11px;height:11px;border:2px solid var(--mute);border-top-color:transparent;border-radius:50%;animation:x-rot .7s linear infinite;margin-right:7px;vertical-align:-1px;}
+.x-tabs{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:5px;margin-top:22px;position:sticky;top:12px;z-index:20;}
+.x-tab{flex:1;background:none;border:none;color:var(--mute);border-radius:8px;padding:10px 8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s,color .15s;letter-spacing:.01em;}
+.x-tab:hover{color:var(--ink);}
+.x-tab.on{background:var(--sig);color:#04201A;}
+.x-panelfade{animation:x-fade .28s ease;}
+@keyframes x-fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.x-glance{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:14px;}
+.x-gchip{font-family:ui-monospace,monospace;font-size:11px;text-transform:capitalize;color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:4px 11px;letter-spacing:.02em;}
 .x-launcher{position:fixed;right:22px;bottom:22px;width:60px;height:60px;border-radius:50%;background:var(--sig);border:none;cursor:pointer;box-shadow:0 8px 28px rgba(56,200,154,.35),0 6px 20px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:60;transition:transform .15s;animation:x-pop .5s cubic-bezier(.2,1.3,.4,1);}
 .x-launcher:hover{transform:translateY(-2px) scale(1.05);}
 .x-launcher::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--sig);animation:x-pulse 2.6s ease-out infinite;pointer-events:none;}
@@ -428,11 +436,12 @@ export default function Page() {
   const [chatInput, setChatInput] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [tab, setTab] = useState("overview");
   const chatRef = useRef(null);
   useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, [chatMsgs, chatBusy, chatOpen]);
 
   const kind = useMemo(() => classify(value), [value]);
-  const reset = () => { setValue(""); setState("idle"); setReport(null); setMeta(null); setErr(""); setChatMsgs([]); setChatInput(""); setChatOpen(false); };
+  const reset = () => { setValue(""); setState("idle"); setReport(null); setMeta(null); setErr(""); setChatMsgs([]); setChatInput(""); setChatOpen(false); setTab("overview"); };
 
   const run = async () => {
     if (!value.trim()) return;
@@ -465,6 +474,7 @@ export default function Page() {
       const r = buildReport(kind, { credLeaked, credCount, acctLeaked, breaches });
       setReport(r);
       setMeta({ kind, credCount, count: breaches.length, sources, unavailable, credLeaked, acctLeaked, identifier: kind === "password" ? null : value.trim() });
+      setTab("overview");
       setState("done");
       if (kind === "password") setValue("");
     } catch (e) {
@@ -543,6 +553,12 @@ export default function Page() {
                         ? "Your Exposure Score reflects the breach data found. The sections below explain the risk and what to do."
                         : "No match in the breach sources checked. Keep yourself safe: unique passwords per site and two-factor authentication everywhere."}
                     </div>
+                    {leaked && (
+                      <div className="x-glance">
+                        {meta.kind !== "password" && <span className="x-gchip">{report.scored.length} breach{report.scored.length > 1 ? "es" : ""}</span>}
+                        {[...report.attrs].slice(0, 4).map((k) => <span className="x-gchip" key={k}>{k}</span>)}
+                      </div>
+                    )}
                     {meta.sources && meta.sources.length > 0 && <div className="x-src">Sources checked: {meta.sources.join(" + ")}</div>}
                   </>
                 )}
@@ -551,6 +567,14 @@ export default function Page() {
 
             {leaked && !meta.unavailable && (
               <>
+                {/* Tab navigation */}
+                <div className="x-tabs">
+                  {[["overview", "Overview"], ["details", "Details"], ["actions", "Actions"], ["learn", "Learn"]].map(([id, label]) => (
+                    <button key={id} className={"x-tab" + (tab === id ? " on" : "")} onClick={() => setTab(id)}>{label}</button>
+                  ))}
+                </div>
+
+                {tab === "overview" && (<div className="x-panelfade">
                 {/* Score model — plain-English explanation + weighting rules */}
                 {meta.kind !== "password" && report.scored.length > 0 && (() => {
                   const rows = [...report.scored].sort((a, b) => b.contribution - a.contribution);
@@ -608,10 +632,12 @@ export default function Page() {
                     </div>
                   );
                 })()}
+                </div>)}
 
+                {tab === "details" && (<div className="x-panelfade">
                 {/* Breakdown */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">Exposure breakdown</span></div>
+                  <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Exposure breakdown</span></div>
                   <div className="x-secd">What kinds of your data appear, and how often, across the breaches found.</div>
                   {meta.kind === "password" ? (
                     <div className="x-bar"><span className="bl">Breach dumps</span><span className="bt"><span className="bf" style={{ width: "100%", background: band.c }} /></span><span className="bv">{meta.credCount.toLocaleString()}</span></div>
@@ -623,7 +649,7 @@ export default function Page() {
                 {/* Timeline (email/phone only) */}
                 {meta.kind !== "password" && (
                   <div className="x-card">
-                    <div className="x-sech"><span className="x-secn">03</span><span className="x-sect">Breach timeline</span></div>
+                    <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">Breach timeline</span></div>
                     <div className="x-secd">When the breaches occurred. Recent breaches weigh more — older ones decay in the score.</div>
                     <Timeline scored={report.scored} color={band.c} />
                   </div>
@@ -631,7 +657,7 @@ export default function Page() {
 
                 {/* Mosaic */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">04</span><span className="x-sect">What can be assembled about you</span></div>
+                  <div className="x-sech"><span className="x-secn">03</span><span className="x-sect">What can be assembled about you</span></div>
                   <div className="x-secd">The mosaic effect: separate fragments combine into one identity. Highlighted items are exposed.</div>
                   <div className="x-mosaic">
                     {ATTR_DEFS.map((a) => {
@@ -645,9 +671,12 @@ export default function Page() {
                   </div>
                 </div>
 
+                </div>)}
+
+                {tab === "actions" && (<div className="x-panelfade">
                 {/* ExpoBot remediation */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">05</span><span className="x-sect">Actions to take</span></div>
+                  <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Actions to take</span></div>
                   <div className="x-secd">Prioritised, specific steps — each with its likely impact on your score.</div>
                   {remediation(report.attrs, meta).map((r, i) => (
                     <div className="x-remcard" key={i}>
@@ -658,9 +687,12 @@ export default function Page() {
                   ))}
                 </div>
 
+                </div>)}
+
+                {tab === "learn" && (<div className="x-panelfade">
                 {/* How it leaked */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">06</span><span className="x-sect">How your data leaked</span></div>
+                  <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">How your data leaked</span></div>
                   {howLeaked(report.attrs, meta.count).map((it, i) => (
                     <div className="x-info" key={i}><div className="x-infot">{it.title}</div><div className="x-infob">{it.body}</div></div>
                   ))}
@@ -668,7 +700,7 @@ export default function Page() {
 
                 {/* Attacker view */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">07</span><span className="x-sect">How attackers could use it</span></div>
+                  <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">How attackers could use it</span></div>
                   <div className="x-secd">Awareness, not instructions — understanding the risk is how you defend against it.</div>
                   {howWeaponised(report.attrs).map((it, i) => (
                     <div className="x-info" key={i}><div className="x-infot">{it.title}</div><div className="x-infob">{it.body}</div></div>
@@ -677,7 +709,7 @@ export default function Page() {
 
                 {/* Your public footprint (self-check, no auto-profiling) */}
                 <div className="x-card">
-                  <div className="x-sech"><span className="x-secn">08</span><span className="x-sect">Your public footprint</span></div>
+                  <div className="x-sech"><span className="x-secn">03</span><span className="x-sect">Your public footprint</span></div>
                   <div className="x-secd">What an attacker could piece together from public sources — and how to check it yourself.</div>
                   <div className="x-fpfound">
                     <div className="x-fpfoundh">Public information found</div>
@@ -691,6 +723,7 @@ export default function Page() {
                     </div>
                   ))}
                 </div>
+                </div>)}
               </>
             )}
 
