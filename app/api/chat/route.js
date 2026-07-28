@@ -29,6 +29,7 @@ export async function POST(req) {
   try {
     const body = await req.json();
     context = (body?.context || "").toString().slice(0, 2000);
+    var language = (body?.language || "English").toString().slice(0, 20);
     messages = Array.isArray(body?.messages) ? body.messages : [];
   } catch {
     return json({ error: "Invalid request body." }, 400);
@@ -41,7 +42,7 @@ export async function POST(req) {
     content: (m.content || "").toString().slice(0, 1500),
   }));
 
-  const system = SYSTEM_BASE + "\n\nUSER'S EXPOSURE REPORT:\n" + context;
+  const system = SYSTEM_BASE + " Respond entirely in " + language + "." + "\n\nUSER'S EXPOSURE REPORT:\n" + context;
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {

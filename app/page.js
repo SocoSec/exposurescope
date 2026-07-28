@@ -2,6 +2,139 @@
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
 
+// ---- Internationalisation (i18n) ----
+const LANGS = [
+  { code: "en", label: "EN", name: "English" },
+  { code: "fr", label: "FR", name: "Français" },
+  { code: "de", label: "DE", name: "Deutsch" },
+  { code: "es", label: "ES", name: "Español" },
+  { code: "it", label: "IT", name: "Italiano" },
+  { code: "cs", label: "CS", name: "Čeština" },
+];
+const LANG_NAME = { en: "English", fr: "French", de: "German", es: "Spanish", it: "Italian", cs: "Czech" };
+const STR = {
+  en: {
+    title: "Check your exposure",
+    lede: "One check across breach intelligence — Have I Been Pwned and DeHashed. Enter an email, phone, or password (your own) for a full Exposure Report. Nothing is stored.",
+    inputLabel: "Email · phone · password",
+    placeholder: "Enter one to check",
+    detected: "Detected", kEmail: "email address", kPhone: "phone number", kPassword: "password",
+    run: "Run check", checking: "Checking",
+    consent: ["I'm checking ", "my own", " data. Zero storage — the password never leaves my browser, and the rest is processed in-session only."],
+    tabs: { overview: "Overview", details: "Details", actions: "Actions", learn: "Learn" },
+    bands: { safe: "Safe", low: "Low", medium: "Medium", high: "High" },
+    heads: { safe: "No exposure found", low: "Limited exposure", medium: "Notable exposure", high: "Significant exposure" },
+    sources: "Sources checked", breaches: "breaches", breach: "breach",
+    checkAnother: "Check another", printReport: "Save / print report",
+    botTitle: "Ask ExpoBot", botGreeting: "{L.botGreeting}",
+    botChips: ["What should I do first?", "Explain my score", "Am I at risk?"],
+    botPlaceholder: "Ask ExpoBot…", send: "Send", thinking: "Thinking…",
+    nudge: "I saw your report — want the top 3 fixes?", nudgeCta: "Show me", nudgeAsk: "What are my top 3 fixes?",
+    footer1: "Exposio · ephemeral orchestration layer over Have I Been Pwned & DeHashed",
+    footer2: "{L.footer2}",
+  },
+  fr: {
+    title: "Vérifiez votre exposition",
+    lede: "Une seule vérification sur les sources de fuites — Have I Been Pwned et DeHashed. Saisissez un e-mail, un téléphone ou un mot de passe (le vôtre) pour un rapport d'exposition complet. Rien n'est stocké.",
+    inputLabel: "E-mail · téléphone · mot de passe",
+    placeholder: "Saisissez une valeur à vérifier",
+    detected: "Détecté", kEmail: "adresse e-mail", kPhone: "numéro de téléphone", kPassword: "mot de passe",
+    run: "Vérifier", checking: "Vérification",
+    consent: ["Je vérifie ", "mes propres", " données. Aucun stockage — le mot de passe ne quitte jamais mon navigateur, le reste est traité uniquement pendant la session."],
+    tabs: { overview: "Aperçu", details: "Détails", actions: "Actions", learn: "Comprendre" },
+    bands: { safe: "Sûr", low: "Faible", medium: "Moyen", high: "Élevé" },
+    heads: { safe: "Aucune exposition trouvée", low: "Exposition limitée", medium: "Exposition notable", high: "Exposition importante" },
+    sources: "Sources consultées", breaches: "fuites", breach: "fuite",
+    checkAnother: "Vérifier une autre", printReport: "Enregistrer / imprimer",
+    botTitle: "Demander à ExpoBot", botGreeting: "Bonjour ! Je suis ExpoBot. J'ai lu votre rapport d'exposition — demandez-moi quoi faire, ou touchez une suggestion ci-dessous.",
+    botChips: ["Que dois-je faire en premier ?", "Expliquer mon score", "Suis-je à risque ?"],
+    botPlaceholder: "Demander à ExpoBot…", send: "Envoyer", thinking: "Réflexion…",
+    nudge: "J'ai vu votre rapport — voulez-vous les 3 correctifs prioritaires ?", nudgeCta: "Montrez-moi", nudgeAsk: "Quels sont mes 3 correctifs prioritaires ?",
+    footer1: "Exposio · couche d'orchestration éphémère sur Have I Been Pwned & DeHashed",
+    footer2: "Sans stockage · auto-évaluation uniquement · prototype de mémoire de master, Université Óbuda",
+  },
+  de: {
+    title: "Prüfen Sie Ihre Gefährdung",
+    lede: "Eine Prüfung über Leak-Datenbanken — Have I Been Pwned und DeHashed. Geben Sie eine E-Mail, Telefonnummer oder ein Passwort (Ihr eigenes) für einen vollständigen Gefährdungsbericht ein. Nichts wird gespeichert.",
+    inputLabel: "E-Mail · Telefon · Passwort",
+    placeholder: "Wert zum Prüfen eingeben",
+    detected: "Erkannt", kEmail: "E-Mail-Adresse", kPhone: "Telefonnummer", kPassword: "Passwort",
+    run: "Prüfen", checking: "Prüfung läuft",
+    consent: ["Ich prüfe ", "meine eigenen", " Daten. Keine Speicherung — das Passwort verlässt nie meinen Browser, der Rest wird nur während der Sitzung verarbeitet."],
+    tabs: { overview: "Übersicht", details: "Details", actions: "Maßnahmen", learn: "Lernen" },
+    bands: { safe: "Sicher", low: "Niedrig", medium: "Mittel", high: "Hoch" },
+    heads: { safe: "Keine Gefährdung gefunden", low: "Begrenzte Gefährdung", medium: "Erhebliche Gefährdung", high: "Bedeutende Gefährdung" },
+    sources: "Geprüfte Quellen", breaches: "Leaks", breach: "Leak",
+    checkAnother: "Weitere prüfen", printReport: "Speichern / drucken",
+    botTitle: "ExpoBot fragen", botGreeting: "Hallo! Ich bin ExpoBot. Ich habe Ihren Gefährdungsbericht gelesen — fragen Sie mich, was zu tun ist, oder tippen Sie unten auf einen Vorschlag.",
+    botChips: ["Was sollte ich zuerst tun?", "Meine Bewertung erklären", "Bin ich gefährdet?"],
+    botPlaceholder: "ExpoBot fragen…", send: "Senden", thinking: "Denke nach…",
+    nudge: "Ich habe Ihren Bericht gesehen — möchten Sie die 3 wichtigsten Maßnahmen?", nudgeCta: "Zeig mir", nudgeAsk: "Was sind meine 3 wichtigsten Maßnahmen?",
+    footer1: "Exposio · flüchtige Orchestrierungsschicht über Have I Been Pwned & DeHashed",
+    footer2: "Ohne Speicherung · nur Selbsteinschätzung · Masterarbeit-Prototyp, Óbuda-Universität",
+  },
+  es: {
+    title: "Comprueba tu exposición",
+    lede: "Una sola comprobación en fuentes de filtraciones — Have I Been Pwned y DeHashed. Introduce un correo, teléfono o contraseña (los tuyos) para un informe de exposición completo. No se almacena nada.",
+    inputLabel: "Correo · teléfono · contraseña",
+    placeholder: "Introduce un valor para comprobar",
+    detected: "Detectado", kEmail: "dirección de correo", kPhone: "número de teléfono", kPassword: "contraseña",
+    run: "Comprobar", checking: "Comprobando",
+    consent: ["Estoy comprobando ", "mis propios", " datos. Sin almacenamiento — la contraseña nunca sale de mi navegador, y el resto se procesa solo durante la sesión."],
+    tabs: { overview: "Resumen", details: "Detalles", actions: "Acciones", learn: "Aprender" },
+    bands: { safe: "Seguro", low: "Bajo", medium: "Medio", high: "Alto" },
+    heads: { safe: "No se encontró exposición", low: "Exposición limitada", medium: "Exposición notable", high: "Exposición significativa" },
+    sources: "Fuentes consultadas", breaches: "filtraciones", breach: "filtración",
+    checkAnother: "Comprobar otro", printReport: "Guardar / imprimir",
+    botTitle: "Preguntar a ExpoBot", botGreeting: "¡Hola! Soy ExpoBot. He leído tu informe de exposición — pregúntame qué hacer o toca una sugerencia abajo.",
+    botChips: ["¿Qué debo hacer primero?", "Explicar mi puntuación", "¿Estoy en riesgo?"],
+    botPlaceholder: "Preguntar a ExpoBot…", send: "Enviar", thinking: "Pensando…",
+    nudge: "Vi tu informe — ¿quieres las 3 soluciones prioritarias?", nudgeCta: "Muéstrame", nudgeAsk: "¿Cuáles son mis 3 soluciones prioritarias?",
+    footer1: "Exposio · capa de orquestación efímera sobre Have I Been Pwned y DeHashed",
+    footer2: "Sin almacenamiento · solo autoevaluación · prototipo de tesis de máster, Universidad Óbuda",
+  },
+  it: {
+    title: "Controlla la tua esposizione",
+    lede: "Un solo controllo sulle fonti di violazioni — Have I Been Pwned e DeHashed. Inserisci un'e-mail, un telefono o una password (i tuoi) per un rapporto di esposizione completo. Nulla viene memorizzato.",
+    inputLabel: "E-mail · telefono · password",
+    placeholder: "Inserisci un valore da controllare",
+    detected: "Rilevato", kEmail: "indirizzo e-mail", kPhone: "numero di telefono", kPassword: "password",
+    run: "Controlla", checking: "Controllo in corso",
+    consent: ["Sto controllando ", "i miei", " dati. Nessuna memorizzazione — la password non lascia mai il browser, il resto è elaborato solo durante la sessione."],
+    tabs: { overview: "Panoramica", details: "Dettagli", actions: "Azioni", learn: "Approfondisci" },
+    bands: { safe: "Sicuro", low: "Basso", medium: "Medio", high: "Alto" },
+    heads: { safe: "Nessuna esposizione trovata", low: "Esposizione limitata", medium: "Esposizione notevole", high: "Esposizione significativa" },
+    sources: "Fonti consultate", breaches: "violazioni", breach: "violazione",
+    checkAnother: "Controlla un altro", printReport: "Salva / stampa",
+    botTitle: "Chiedi a ExpoBot", botGreeting: "Ciao! Sono ExpoBot. Ho letto il tuo rapporto di esposizione — chiedimi cosa fare o tocca un suggerimento qui sotto.",
+    botChips: ["Cosa devo fare per primo?", "Spiega il mio punteggio", "Sono a rischio?"],
+    botPlaceholder: "Chiedi a ExpoBot…", send: "Invia", thinking: "Sto pensando…",
+    nudge: "Ho visto il tuo rapporto — vuoi le 3 correzioni prioritarie?", nudgeCta: "Mostrami", nudgeAsk: "Quali sono le mie 3 correzioni prioritarie?",
+    footer1: "Exposio · livello di orchestrazione effimero su Have I Been Pwned e DeHashed",
+    footer2: "Senza memorizzazione · solo autovalutazione · prototipo di tesi magistrale, Università Óbuda",
+  },
+  cs: {
+    title: "Zkontrolujte své vystavení",
+    lede: "Jedna kontrola napříč zdroji úniků — Have I Been Pwned a DeHashed. Zadejte e-mail, telefon nebo heslo (svoje) pro úplnou zprávu o vystavení. Nic se neukládá.",
+    inputLabel: "E-mail · telefon · heslo",
+    placeholder: "Zadejte hodnotu ke kontrole",
+    detected: "Rozpoznáno", kEmail: "e-mailová adresa", kPhone: "telefonní číslo", kPassword: "heslo",
+    run: "Zkontrolovat", checking: "Kontroluji",
+    consent: ["Kontroluji ", "svá vlastní", " data. Žádné ukládání — heslo nikdy neopustí můj prohlížeč a zbytek se zpracovává pouze během relace."],
+    tabs: { overview: "Přehled", details: "Podrobnosti", actions: "Kroky", learn: "Poučení" },
+    bands: { safe: "Bezpečné", low: "Nízké", medium: "Střední", high: "Vysoké" },
+    heads: { safe: "Žádné vystavení nenalezeno", low: "Omezené vystavení", medium: "Významné vystavení", high: "Zásadní vystavení" },
+    sources: "Zkontrolované zdroje", breaches: "úniků", breach: "únik",
+    checkAnother: "Zkontrolovat další", printReport: "Uložit / vytisknout",
+    botTitle: "Zeptat se ExpoBota", botGreeting: "Ahoj! Jsem ExpoBot. Přečetl jsem si vaši zprávu o vystavení — zeptejte se mě, co dělat, nebo klepněte na návrh níže.",
+    botChips: ["Co mám udělat jako první?", "Vysvětlit mé skóre", "Jsem v ohrožení?"],
+    botPlaceholder: "Zeptat se ExpoBota…", send: "Odeslat", thinking: "Přemýšlím…",
+    nudge: "Viděl jsem vaši zprávu — chcete 3 hlavní opravy?", nudgeCta: "Ukaž mi", nudgeAsk: "Jaké jsou mé 3 hlavní opravy?",
+    footer1: "Exposio · dočasná orchestrační vrstva nad Have I Been Pwned a DeHashed",
+    footer2: "Bez ukládání · pouze sebehodnocení · prototyp diplomové práce, Univerzita Óbuda",
+  },
+};
+
 // Exposio — ephemeral orchestration layer over Have I Been Pwned & DeHashed.
 // Enter your own email, phone, or password and receive a full Exposure Report:
 // score, breakdown, timeline, remediation (ExpoBot), how the data leaked, how
@@ -16,6 +149,10 @@ const STYLE = `
   font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   display:flex;align-items:flex-start;justify-content:center;}
 .x-wrap{width:100%;max-width:620px;padding:60px 22px 90px;}
+.x-langbar{display:flex;justify-content:center;gap:4px;margin-bottom:16px;flex-wrap:wrap;}
+.x-langbtn{background:none;border:1px solid var(--line);color:var(--mute);border-radius:7px;padding:4px 9px;font-family:ui-monospace,monospace;font-size:11px;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
+.x-langbtn:hover{color:var(--ink);border-color:var(--sig);}
+.x-langbtn.on{background:var(--sig);color:#04201A;border-color:var(--sig);}
 .x-brand{font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--sig);text-align:center;}
 .x-title{font-size:29px;font-weight:650;letter-spacing:-.02em;text-align:center;margin:12px 0 8px;}
 .x-lede{color:var(--mute);font-size:13.5px;line-height:1.55;text-align:center;max-width:46ch;margin:0 auto;}
@@ -494,6 +631,8 @@ export default function Page() {
   const [chatOpen, setChatOpen] = useState(false);
   const [tab, setTab] = useState("overview");
   const [nudge, setNudge] = useState(false);
+  const [lang, setLang] = useState("en");
+  const L = STR[lang];
   const chatRef = useRef(null);
   useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, [chatMsgs, chatBusy, chatOpen]);
   useEffect(() => {
@@ -554,7 +693,7 @@ export default function Page() {
     try {
       const res = await fetch("/api/chat", {
         method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ context: buildContext(report, meta), messages: next }),
+        body: JSON.stringify({ context: buildContext(report, meta), messages: next, language: LANG_NAME[lang] }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Assistant failed.");
@@ -567,30 +706,35 @@ export default function Page() {
   };
 
   const leaked = report && (meta.credLeaked || meta.acctLeaked);
-  const band = report ? BAND[report.level] : null;
+  const band = report ? { c: BAND[report.level].c, label: L.bands[report.level], head: L.heads[report.level] } : null;
 
   return (
     <div className="x-root">
       <style>{STYLE}</style>
       <div className="x-wrap">
+        <div className="x-langbar">
+          {LANGS.map((lg) => (
+            <button key={lg.code} className={"x-langbtn" + (lang === lg.code ? " on" : "")} onClick={() => setLang(lg.code)} title={lg.name}>{lg.label}</button>
+          ))}
+        </div>
         <div className="x-brand">Exposio</div>
-        <h1 className="x-title">Check your exposure</h1>
-        <p className="x-lede">One check across breach intelligence — Have I Been Pwned and DeHashed. Enter an email, phone, or password (your own) for a full Exposure Report. Nothing is stored.</p>
+        <h1 className="x-title">{L.title}</h1>
+        <p className="x-lede">{L.lede}</p>
 
         {state !== "done" && (
           <div className="x-card">
-            <label className="x-label">Email · phone · password</label>
+            <label className="x-label">{L.inputLabel}</label>
             <input className="x-input" type={kind === "password" ? "password" : "text"} value={value}
-              placeholder="Enter one to check" onChange={(e) => setValue(e.target.value)}
+              placeholder={L.placeholder} onChange={(e) => setValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && consent && run()} autoComplete="off" disabled={!consent} />
-            <div className="x-kind">{value.trim() ? <>Detected: <b>{KIND_LABEL[kind]}</b></> : "\u00A0"}</div>
+            <div className="x-kind">{value.trim() ? <>{L.detected}: <b>{L[kind === "email" ? "kEmail" : kind === "phone" ? "kPhone" : "kPassword"]}</b></> : "\u00A0"}</div>
             <button className="x-btn" onClick={run} disabled={!consent || state === "loading" || !value.trim()}>
-              {state === "loading" ? <><span className="x-spin" />Checking</> : "Run check"}
+              {state === "loading" ? <><span className="x-spin" />{L.checking}</> : L.run}
             </button>
             {state === "error" && <div className="x-err">{err}</div>}
             <label className="x-consent">
               <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-              <span>I'm checking <b>my own</b> data. Zero storage — the password never leaves my browser, and the rest is processed in-session only.</span>
+              <span>{L.consent[0]}<b>{L.consent[1]}</b>{L.consent[2]}</span>
             </label>
           </div>
         )}
@@ -619,11 +763,11 @@ export default function Page() {
                     </div>
                     {leaked && (
                       <div className="x-glance">
-                        {meta.kind !== "password" && <span className="x-gchip">{report.scored.length} breach{report.scored.length > 1 ? "es" : ""}</span>}
+                        {meta.kind !== "password" && <span className="x-gchip">{report.scored.length} {report.scored.length > 1 ? L.breaches : L.breach}</span>}
                         {[...report.attrs].slice(0, 4).map((k) => <span className="x-gchip" key={k}>{k}</span>)}
                       </div>
                     )}
-                    {meta.sources && meta.sources.length > 0 && <div className="x-src">Sources checked: {meta.sources.join(" + ")}</div>}
+                    {meta.sources && meta.sources.length > 0 && <div className="x-src">{L.sources}: {meta.sources.join(" + ")}</div>}
                   </>
                 )}
               </div>
@@ -633,7 +777,7 @@ export default function Page() {
               <>
                 {/* Tab navigation */}
                 <div className="x-tabs">
-                  {[["overview", "Overview"], ["details", "Details"], ["actions", "Actions"], ["learn", "Learn"]].map(([id, label]) => (
+                  {[["overview", L.tabs.overview], ["details", L.tabs.details], ["actions", L.tabs.actions], ["learn", L.tabs.learn]].map(([id, label]) => (
                     <button key={id} className={"x-tab" + (tab === id ? " on" : "")} onClick={() => setTab(id)}>{label}</button>
                   ))}
                 </div>
@@ -795,14 +939,14 @@ export default function Page() {
             )}
 
             <div className="x-actions">
-              <button className="x-again" onClick={reset}>Check another</button>
-              {leaked && !meta.unavailable && <button className="x-print" onClick={() => window.print()}>Save / print report</button>}
+              <button className="x-again" onClick={reset}>{L.checkAnother}</button>
+              {leaked && !meta.unavailable && <button className="x-print" onClick={() => window.print()}>{L.printReport}</button>}
             </div>
           </>
         )}
 
         <div className="x-foot">
-          Exposio · ephemeral orchestration layer over Have I Been Pwned &amp; DeHashed<br />
+          {L.footer1}<br />
           Zero-storage · self-assessment only · MSc thesis prototype, Óbuda University
         </div>
       </div>
@@ -811,24 +955,24 @@ export default function Page() {
         chatOpen ? (
           <div className="x-panel">
             <div className="x-panelhead">
-              <span className="x-paneltitle"><span className="x-ai">AI</span> ExpoBot</span>
+              <span className="x-paneltitle"><span className="x-ai">AI</span> {L.botTitle}</span>
               <button className="x-panelx" onClick={() => setChatOpen(false)} aria-label="Close">×</button>
             </div>
             <div className="x-chat x-chatpanel" ref={chatRef}>
               <div className="x-msg bot">Hi! I’m ExpoBot. I’ve read your exposure report — ask me what to do, or tap a suggestion below.</div>
               {chatMsgs.map((m, i) => (<div className={"x-msg " + (m.role === "user" ? "me" : "bot")} key={i}>{m.content}</div>))}
-              {chatBusy && <div className="x-msg bot"><span className="x-spin2" />Thinking…</div>}
+              {chatBusy && <div className="x-msg bot"><span className="x-spin2" />{L.thinking}</div>}
             </div>
             <div className="x-panelfoot">
               <div className="x-chips">
-                {["What should I do first?", "Explain my score", "Am I at risk?"].map((q, i) => (
+                {L.botChips.map((q, i) => (
                   <button className="x-chip2" key={i} onClick={() => sendChat(q)} disabled={chatBusy}>{q}</button>
                 ))}
               </div>
               <div className="x-chatin">
                 <input className="x-input" value={chatInput} onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && sendChat()} placeholder="Ask ExpoBot…" disabled={chatBusy} />
-                <button className="x-send" onClick={() => sendChat()} disabled={chatBusy || !chatInput.trim()}>Send</button>
+                  onKeyDown={(e) => e.key === "Enter" && sendChat()} placeholder={L.botPlaceholder} disabled={chatBusy} />
+                <button className="x-send" onClick={() => sendChat()} disabled={chatBusy || !chatInput.trim()}>{L.send}</button>
               </div>
             </div>
           </div>
@@ -837,8 +981,8 @@ export default function Page() {
             {nudge && (
               <div className="x-nudge">
                 <button className="x-nudgex" onClick={() => setNudge(false)} aria-label="Dismiss">×</button>
-                <div className="x-nudgemsg">I saw your report — want the top 3 fixes?</div>
-                <button className="x-nudgecta" onClick={() => { setNudge(false); setChatOpen(true); sendChat("What are my top 3 fixes?"); }}>Show me →</button>
+                <div className="x-nudgemsg">{L.nudge}</div>
+                <button className="x-nudgecta" onClick={() => { setNudge(false); setChatOpen(true); sendChat(L.nudgeAsk); }}>{L.nudgeCta} →</button>
               </div>
             )}
           <button className="x-launcher" onClick={() => setChatOpen(true)} aria-label="Open ExpoBot">
