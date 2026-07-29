@@ -14,23 +14,7 @@ exposure, and LLM attribute inference — and receives an illustrative exposure 
 
 ---
 
-## Deploy to Vercel (5 minutes)
-
-1. **Push this folder to a GitHub repo**, or upload the ZIP directly in the Vercel dashboard
-   (New Project → deploy without Git).
-2. In Vercel, **add environment variables** (Project → Settings → Environment Variables):
-
-   | Variable            | Required | Purpose                                                        |
-   |---------------------|----------|----------------------------------------------------------------|
-   | `ANTHROPIC_API_KEY` | Yes      | Powers Section 03, attribute inference.                        |
-   | `ANTHROPIC_MODEL`   | No       | Defaults to `claude-sonnet-5`. Any current model string works. |
-   | `HIBP_API_KEY`      | No       | Enables Section 02, email breach lookup. Paid HIBP key.        |
-
-   Get an Anthropic key at <https://console.anthropic.com/> and (optionally) an HIBP key at
-   <https://haveibeenpwned.com/API/Key>.
-3. **Deploy.** Vercel auto-detects Next.js; no extra configuration is needed.
-4. Open the URL. If `ANTHROPIC_API_KEY` is set, inference works. If `HIBP_API_KEY` is unset, Section 02
-   stays gracefully disabled and everything else works.
+ 
 
 ## Run locally
 
