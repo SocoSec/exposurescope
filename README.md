@@ -32,13 +32,13 @@ counters keyed by HMAC hashes, which expire within 24 hours.
 
 | Path | Role |
 |---|---|
-| `lib/config.js` | Every environment variable; dev-only switches gated to `next dev` |
+| `lib/config.js` | Every environment variable; testing switches gated to dev/preview |
 | `lib/crypto.js` | Web Crypto helpers: base64url, HMAC, keyed hashes, unbiased codes |
 | `lib/tokens.js` | Stateless signed tokens (challenge / scan / report) |
 | `lib/ratelimit.js` | Fixed-window limits (Upstash or in-memory) |
 | `lib/http.js` | JSON responses, error codes, body size caps, input normalisation |
 | `lib/mailer.js` | Verification email via Resend |
-| `lib/sources.js` | HIBP + DeHashed lookups, cross-source merge, dev fixtures |
+| `lib/sources.js` | HIBP + DeHashed lookups, cross-source merge, demo fixtures |
 | `lib/score.js` | Thesis Breach Risk component B (pure functions) |
 | `lib/playbook.js` | Vetted actions + residual-risk model |
 | `lib/expobot.js` | ExpoBot guard rails (trusted context, closed action set, output checks) |
@@ -53,13 +53,20 @@ counters keyed by HMAC hashes, which expire within 24 hours.
 
 ```bash
 npm install
-cp .env.example .env.local   # then set EXPOSIO_MOCK=1 and EXPOSIO_DEV_SHOW_CODE=1
+cp .env.example .env.local   # then set EXPOSIO_DEMO=1 and EXPOSIO_SHOW_CODE=1
 npm run selftest             # offline tests, no keys needed
 npm run dev                  # http://localhost:3000
 ```
 
-With the dev flags on, any `@example.com` address returns fixture breaches
+With the testing flags on, any address returns example breach data
 (`clean@example.com` returns none) and the verification code appears on screen.
+
+### Demoing on a preview deployment
+
+`EXPOSIO_DEMO=1` and `EXPOSIO_SHOW_CODE=1` also work on Vercel **Preview**
+deployments, which sit behind Vercel's login — useful for showing the product
+before the Resend and breach-data accounts are set up. They are ignored on
+production, and the interface shows a banner whenever they are active.
 
 ## Deploying — checklist
 

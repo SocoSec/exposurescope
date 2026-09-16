@@ -141,7 +141,11 @@ export default function Page() {
     const scan = await postJson("/api/breach", { email, scanToken: check.data.scanToken });
     setBusy(false);
     if (scan.ok) {
-      return showReport(scan.data.report, { sources: scan.data.sources, sourcesFailed: scan.data.sourcesFailed || [], identifier: email }, scan.data.reportToken);
+      return showReport(
+        scan.data.report,
+        { sources: scan.data.sources, sourcesFailed: scan.data.sourcesFailed || [], identifier: email, demo: scan.data.demo },
+        scan.data.reportToken
+      );
     }
     if (scan.data.error === "not_configured") {
       return showReport(EMPTY_EMAIL_REPORT, { unavailable: true, sources: [], sourcesFailed: [], identifier: email }, null);
@@ -230,7 +234,7 @@ export default function Page() {
                     {now < resendAt ? fill(L.resendIn, { s: Math.ceil((resendAt - now) / 1000) }) : L.resend}
                   </button>
                 </div>
-                {devCode && <div className="x-dev">Dev mode — no email was sent. Your code is {devCode}</div>}
+                {devCode && <div className="x-dev">{fill(L.codeOnScreen, { code: devCode })}</div>}
               </form>
             )}
 
@@ -262,6 +266,8 @@ export default function Page() {
         {/* ───────── report ───────── */}
         {stage === "done" && report && (
           <>
+            {/* Demo mode must never be mistaken for a real lookup. */}
+            {meta.demo && <div className="x-dev" style={{ marginTop: 22 }}>{L.demoBanner}</div>}
             <div className="x-card">
               <div className="x-hero">
                 {meta.unavailable ? (

@@ -68,9 +68,13 @@ export async function POST(req) {
   // If nothing answered, say so — never show "no breaches" for a check that didn't run.
   if (sources.length === 0) return fail("sources_down", 503, { sourcesFailed });
 
+  // In demo mode the data didn't come from HIBP or DeHashed — say so.
+  if (devFlags.mockBreaches) { sources.length = 0; sources.push("Demo data"); }
+
   const report = emailReport(mergeBreaches(...lists));
   const ids = applicableIds(report);
   const reportToken = await signToken(env.secret, { typ: "report", r: compactReport(report, ids, sources) });
 
-  return json({ report, sources, sourcesFailed, reportToken });
+  // `demo` tells the browser to show the "example data" banner.
+  return json({ report, sources, sourcesFailed, reportToken, demo: devFlags.mockBreaches });
 }

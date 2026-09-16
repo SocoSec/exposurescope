@@ -8,6 +8,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { randomDigits, keyedHashHex, safeEqual } from "../lib/crypto.js";
 import { signToken, verifyToken, emailId, codeTag, codeMatches, TTL } from "../lib/tokens.js";
 import { rateLimit, _resetMemoryLimiter } from "../lib/ratelimit.js";
@@ -249,6 +250,20 @@ await check("conversation is cleaned: roles fixed, must start and end with user"
   assert.deepEqual(cleanMessages([{ role: "assistant", content: "x" }]), []);
   assert.equal(cleanMessages(Array.from({ length: 30 }, (_, i) => ({ role: i % 2 ? "assistant" : "user", content: "m" + i }))).length <= 10, true);
   assert.equal(cleanMessages([{ role: "user", content: "y".repeat(5000) }])[0].content.length, 1000);
+});
+
+console.log("\ntesting switches are gated to dev/preview");
+await check("EXPOSIO_DEMO / EXPOSIO_SHOW_CODE are ignored on production", () => {
+  const read = (vercelEnv) => {
+    const out = execFileSync(process.execPath, ["--no-warnings", "--input-type=module", "-e",
+      'const c = await import("./lib/config.js"); console.log(JSON.stringify(c.devFlags));'], {
+      env: { ...process.env, NODE_ENV: "production", VERCEL_ENV: vercelEnv, EXPOSIO_DEMO: "1", EXPOSIO_SHOW_CODE: "1" },
+      encoding: "utf8",
+    });
+    return JSON.parse(out.trim().split("\n").pop());
+  };
+  assert.deepEqual(read("production"), { mockBreaches: false, showCode: false }, "production must ignore them");
+  assert.deepEqual(read("preview"), { mockBreaches: true, showCode: true }, "preview may use them");
 });
 
 console.log("\nGDPR letters");
