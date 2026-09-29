@@ -1,16 +1,17 @@
 {
   "name": "exposurescope",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "A self-assessment instrument for personal digital exposure (research prototype).",
+  "description": "Exposio — a self-assessment instrument for personal digital exposure (research MVP).",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "selftest": "node --no-warnings scripts/selftest.mjs"
   },
   "dependencies": {
-    "next": "14.2.5",
+    "next": "14.2.35",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
