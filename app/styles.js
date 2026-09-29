@@ -179,6 +179,9 @@ export const STYLE = `
 .x-botact{margin-top:6px;}
 .x-botact b{font-size:12.5px;}
 .x-botact ol{margin:4px 0 0;padding-left:18px;color:var(--mute);font-size:12px;line-height:1.5;}
+.x-botletterrow{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;}
+/* The agent's working: which tools produced the figures in the answer above. */
+.x-bottrace{margin-top:8px;color:var(--mute);font-size:10.5px;letter-spacing:.02em;opacity:.8;}
 .x-assumed{color:var(--amber);}
 /* Small screens: keep the ExpoBot bubble on the bottom edge so it doesn't cover the tabs or content mid-page. */
 @media (max-width:560px){.x-nudge{left:14px;right:14px;width:auto;bottom:90px;}.x-nudge::after{right:34px;}.x-panel{right:8px;bottom:8px;}}

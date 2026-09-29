@@ -394,7 +394,11 @@ export default function Page() {
         </div>
       </div>
 
-      {stage === "done" && reportToken && <ExpoBot key={reportToken} reportToken={reportToken} lang={lang} L={L} />}
+      {stage === "done" && reportToken && (
+        // `report` and `identifier` are only for rendering GDPR letters the
+        // agent offers — the agent itself works from the signed token.
+        <ExpoBot key={reportToken} reportToken={reportToken} report={report} identifier={meta.identifier} lang={lang} L={L} />
+      )}
     </div>
   );
 }
