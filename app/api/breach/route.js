@@ -49,7 +49,7 @@ export async function POST(req) {
     // Both providers are queried in parallel; total time ≈ the slower one.
     [hibp, dehashed] = await Promise.all([
       env.hibpKey ? queryHIBP(email, env.hibpKey) : null,
-      env.dehashedKey ? queryDeHashed(email, env.dehashedKey, env.dehashedUser) : null,
+      env.dehashedKey ? queryDeHashed(email, env.dehashedKey) : null,
     ]);
   }
 
