@@ -283,6 +283,182 @@ export const STR = {
   },
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Trust copy, kept together rather than spread through the six blocks above,
+// because it is the one part of the interface that MUST stay in step with what
+// the code actually does. When lib/ changes, this is the text to re-check.
+//
+// Every claim here is verifiable in this repository:
+//   "nothing is stored"      → no database; see the Project map in README.md
+//   "confirmed by a code"    → app/api/verify/start + check
+//   "password never sent"    → k-anonymity, 5 hash characters (app/page.js)
+//   "actions are reviewed"   → lib/playbook.js, written by hand and in git
+// Nothing here is a certification, an audit or a security guarantee, because
+// the project has none of those. Claiming one would be the opposite of trust.
+// ─────────────────────────────────────────────────────────────────────────────
+export const TRUST = {
+  en: {
+    signals: [
+      { k: "store", t: "Nothing is stored", d: "No database, no account, no history. Your address and your results are gone when you close the tab." },
+      { k: "code", t: "Only your own data", d: "A one-time code has to prove the address is yours before anything is looked up." },
+      { k: "open", t: "Open source", d: "The scoring, the privacy logic and these claims are public and checkable." },
+    ],
+    howTitle: "How this works",
+    steps: [
+      { n: "01", t: "Prove it's yours", d: "We email a 6-digit code. Without it, no lookup happens." },
+      { n: "02", t: "We check, we don't keep", d: "Your address is sent to the breach sources and nowhere else." },
+      { n: "03", t: "You get a plan", d: "A score you can recompute yourself, and reviewed steps to lower it." },
+    ],
+    safetyEmail: "Your address is used for this one check and the code that confirms it. It is never stored, never sold, never added to a mailing list.",
+    safetyPw: "Your password never leaves this browser. Only the first 5 characters of its SHA-1 hash are sent, so the service cannot tell which password you checked.",
+    neverTitle: "What this never does",
+    never: [
+      "Store your email address, your password or your results",
+      "Send your password anywhere, in any form",
+      "Email you anything except the one-time code",
+      "Show you a step that a human hasn't reviewed",
+    ],
+    sealSources: "Breach data from Have I Been Pwned",
+    sealCode: "Source code on GitHub",
+    sealResearch: "MSc research prototype, Óbuda University",
+    disclaimer: "A research demonstrator for checking your own exposure. Not a commercial security product, and not a substitute for professional advice.",
+  },
+  fr: {
+    signals: [
+      { k: "store", t: "Rien n'est conservé", d: "Aucune base de données, aucun compte, aucun historique. Votre adresse et vos résultats disparaissent à la fermeture de l'onglet." },
+      { k: "code", t: "Vos données uniquement", d: "Un code à usage unique doit prouver que l'adresse est la vôtre avant toute recherche." },
+      { k: "open", t: "Code ouvert", d: "Le calcul du score, la logique de confidentialité et ces affirmations sont publics et vérifiables." },
+    ],
+    howTitle: "Comment ça marche",
+    steps: [
+      { n: "01", t: "Prouvez que c'est la vôtre", d: "Nous envoyons un code à 6 chiffres. Sans lui, aucune recherche n'a lieu." },
+      { n: "02", t: "On vérifie, on ne garde rien", d: "Votre adresse est envoyée aux sources de fuites et nulle part ailleurs." },
+      { n: "03", t: "Vous obtenez un plan", d: "Un score que vous pouvez recalculer, et des mesures vérifiées pour le réduire." },
+    ],
+    safetyEmail: "Votre adresse sert à cette seule vérification et au code qui la confirme. Elle n'est jamais conservée, jamais vendue, jamais ajoutée à une liste de diffusion.",
+    safetyPw: "Votre mot de passe ne quitte jamais ce navigateur. Seuls les 5 premiers caractères de son empreinte SHA-1 sont envoyés : le service ne peut pas savoir quel mot de passe vous avez vérifié.",
+    neverTitle: "Ce que ce service ne fait jamais",
+    never: [
+      "Conserver votre adresse, votre mot de passe ou vos résultats",
+      "Envoyer votre mot de passe où que ce soit, sous quelque forme que ce soit",
+      "Vous écrire autre chose que le code à usage unique",
+      "Vous proposer une étape qu'un humain n'a pas relue",
+    ],
+    sealSources: "Données de fuites : Have I Been Pwned",
+    sealCode: "Code source sur GitHub",
+    sealResearch: "Prototype de recherche de master, Université Óbuda",
+    disclaimer: "Démonstrateur de recherche pour évaluer votre propre exposition. Ce n'est pas un produit de sécurité commercial ni un substitut à un conseil professionnel.",
+  },
+  de: {
+    signals: [
+      { k: "store", t: "Nichts wird gespeichert", d: "Keine Datenbank, kein Konto, kein Verlauf. Adresse und Ergebnisse sind weg, sobald Sie den Tab schließen." },
+      { k: "code", t: "Nur Ihre eigenen Daten", d: "Ein Einmalcode muss belegen, dass die Adresse Ihnen gehört, bevor etwas abgefragt wird." },
+      { k: "open", t: "Offener Quellcode", d: "Die Bewertung, die Datenschutzlogik und diese Aussagen sind öffentlich und überprüfbar." },
+    ],
+    howTitle: "So funktioniert es",
+    steps: [
+      { n: "01", t: "Bestätigen Sie die Adresse", d: "Wir senden einen 6-stelligen Code. Ohne ihn findet keine Abfrage statt." },
+      { n: "02", t: "Wir prüfen, wir behalten nichts", d: "Ihre Adresse geht an die Datenleck-Quellen und sonst nirgendwohin." },
+      { n: "03", t: "Sie bekommen einen Plan", d: "Ein Wert, den Sie selbst nachrechnen können, und geprüfte Schritte, um ihn zu senken." },
+    ],
+    safetyEmail: "Ihre Adresse wird nur für diese eine Prüfung und den Bestätigungscode verwendet. Sie wird nie gespeichert, nie verkauft, nie in einen Verteiler aufgenommen.",
+    safetyPw: "Ihr Passwort verlässt diesen Browser nie. Es werden nur die ersten 5 Zeichen seines SHA-1-Hashes gesendet — der Dienst kann nicht erkennen, welches Passwort Sie geprüft haben.",
+    neverTitle: "Was hier nie passiert",
+    never: [
+      "Ihre Adresse, Ihr Passwort oder Ihre Ergebnisse speichern",
+      "Ihr Passwort irgendwohin senden, in welcher Form auch immer",
+      "Ihnen etwas anderes schicken als den Einmalcode",
+      "Ihnen einen Schritt zeigen, den kein Mensch geprüft hat",
+    ],
+    sealSources: "Leak-Daten von Have I Been Pwned",
+    sealCode: "Quellcode auf GitHub",
+    sealResearch: "Master-Forschungsprototyp, Óbuda-Universität",
+    disclaimer: "Ein Forschungsdemonstrator zur Prüfung der eigenen Gefährdung. Kein kommerzielles Sicherheitsprodukt und kein Ersatz für professionelle Beratung.",
+  },
+  es: {
+    signals: [
+      { k: "store", t: "No se guarda nada", d: "Sin base de datos, sin cuenta, sin historial. Tu dirección y tus resultados desaparecen al cerrar la pestaña." },
+      { k: "code", t: "Solo tus propios datos", d: "Un código de un solo uso debe demostrar que la dirección es tuya antes de consultar nada." },
+      { k: "open", t: "Código abierto", d: "El cálculo, la lógica de privacidad y estas afirmaciones son públicos y verificables." },
+    ],
+    howTitle: "Cómo funciona",
+    steps: [
+      { n: "01", t: "Demuestra que es tuya", d: "Enviamos un código de 6 dígitos. Sin él, no se consulta nada." },
+      { n: "02", t: "Comprobamos, no guardamos", d: "Tu dirección se envía a las fuentes de filtraciones y a ningún otro sitio." },
+      { n: "03", t: "Obtienes un plan", d: "Una puntuación que puedes recalcular y pasos revisados para bajarla." },
+    ],
+    safetyEmail: "Tu dirección se usa para esta única comprobación y para el código que la confirma. Nunca se guarda, nunca se vende, nunca se añade a una lista de correo.",
+    safetyPw: "Tu contraseña nunca sale de este navegador. Solo se envían los 5 primeros caracteres de su hash SHA-1, así que el servicio no puede saber qué contraseña has comprobado.",
+    neverTitle: "Lo que esto nunca hace",
+    never: [
+      "Guardar tu dirección, tu contraseña o tus resultados",
+      "Enviar tu contraseña a ninguna parte, de ninguna forma",
+      "Escribirte nada que no sea el código de un solo uso",
+      "Mostrarte un paso que no haya revisado una persona",
+    ],
+    sealSources: "Datos de filtraciones de Have I Been Pwned",
+    sealCode: "Código fuente en GitHub",
+    sealResearch: "Prototipo de investigación de máster, Universidad Óbuda",
+    disclaimer: "Un demostrador de investigación para evaluar tu propia exposición. No es un producto de seguridad comercial ni sustituye al asesoramiento profesional.",
+  },
+  it: {
+    signals: [
+      { k: "store", t: "Non viene conservato nulla", d: "Nessun database, nessun account, nessuna cronologia. Indirizzo e risultati spariscono quando chiudi la scheda." },
+      { k: "code", t: "Solo i tuoi dati", d: "Un codice monouso deve dimostrare che l'indirizzo è tuo prima di qualsiasi ricerca." },
+      { k: "open", t: "Codice aperto", d: "Il calcolo, la logica sulla privacy e queste affermazioni sono pubblici e verificabili." },
+    ],
+    howTitle: "Come funziona",
+    steps: [
+      { n: "01", t: "Dimostra che è tuo", d: "Inviamo un codice di 6 cifre. Senza, nessuna ricerca viene eseguita." },
+      { n: "02", t: "Controlliamo, non conserviamo", d: "Il tuo indirizzo va alle fonti sulle violazioni e da nessun'altra parte." },
+      { n: "03", t: "Ottieni un piano", d: "Un punteggio che puoi ricalcolare e passi verificati per abbassarlo." },
+    ],
+    safetyEmail: "Il tuo indirizzo serve solo per questo controllo e per il codice che lo conferma. Non viene mai conservato, mai venduto, mai aggiunto a una lista.",
+    safetyPw: "La tua password non lascia mai questo browser. Vengono inviati solo i primi 5 caratteri del suo hash SHA-1, quindi il servizio non può sapere quale password hai controllato.",
+    neverTitle: "Cosa non fa mai",
+    never: [
+      "Conservare il tuo indirizzo, la tua password o i tuoi risultati",
+      "Inviare la tua password da qualche parte, in qualsiasi forma",
+      "Scriverti qualcosa che non sia il codice monouso",
+      "Mostrarti un passo che nessuna persona ha verificato",
+    ],
+    sealSources: "Dati sulle violazioni da Have I Been Pwned",
+    sealCode: "Codice sorgente su GitHub",
+    sealResearch: "Prototipo di ricerca magistrale, Università Óbuda",
+    disclaimer: "Un dimostratore di ricerca per valutare la propria esposizione. Non è un prodotto di sicurezza commerciale né sostituisce una consulenza professionale.",
+  },
+  cs: {
+    signals: [
+      { k: "store", t: "Nic se neukládá", d: "Žádná databáze, žádný účet, žádná historie. Vaše adresa i výsledky zmizí, jakmile zavřete kartu." },
+      { k: "code", t: "Jen vaše vlastní data", d: "Jednorázový kód musí prokázat, že adresa patří vám, než se cokoli vyhledá." },
+      { k: "open", t: "Otevřený kód", d: "Výpočet skóre, logika soukromí i tato tvrzení jsou veřejné a ověřitelné." },
+    ],
+    howTitle: "Jak to funguje",
+    steps: [
+      { n: "01", t: "Potvrďte, že je vaše", d: "Pošleme šestimístný kód. Bez něj se nic nevyhledává." },
+      { n: "02", t: "Zkontrolujeme, neuchováme", d: "Vaše adresa jde ke zdrojům úniků a nikam jinam." },
+      { n: "03", t: "Dostanete plán", d: "Skóre, které si můžete přepočítat, a ověřené kroky k jeho snížení." },
+    ],
+    safetyEmail: "Vaše adresa slouží jen k této jedné kontrole a k potvrzovacímu kódu. Nikdy se neukládá, neprodává ani nepřidává do žádné rozesílky.",
+    safetyPw: "Vaše heslo nikdy neopustí tento prohlížeč. Odesílá se jen prvních 5 znaků jeho otisku SHA-1, takže služba nepozná, které heslo jste kontrolovali.",
+    neverTitle: "Co se tu nikdy neděje",
+    never: [
+      "Ukládání vaší adresy, hesla nebo výsledků",
+      "Odeslání vašeho hesla kamkoli a v jakékoli podobě",
+      "Posílání čehokoli jiného než jednorázového kódu",
+      "Zobrazení kroku, který neprošel lidskou kontrolou",
+    ],
+    sealSources: "Data o únicích z Have I Been Pwned",
+    sealCode: "Zdrojový kód na GitHubu",
+    sealResearch: "Výzkumný prototyp magisterské práce, Óbudská univerzita",
+    disclaimer: "Výzkumná ukázka pro kontrolu vlastní expozice. Není to komerční bezpečnostní produkt ani náhrada odborné rady.",
+  },
+};
+
+export function trustFor(lang) {
+  return TRUST[lang] || TRUST.en;
+}
+
 // Fill "{name}" placeholders: fill("Resend in {s}s", { s: 30 }) → "Resend in 30s".
 export function fill(text, vars = {}) {
   return String(text).replace(/\{(\w+)\}/g, (_, key) => (key in vars ? String(vars[key]) : ""));
