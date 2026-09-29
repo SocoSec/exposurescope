@@ -14,8 +14,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import React, { useEffect, useMemo, useState } from "react";
-import { LANGS, STR, fill, errorText } from "./strings.js";
+import { LANGS, STR, fill, errorText, trustFor } from "./strings.js";
 import { STYLE } from "./styles.js";
+import { BrandHeader } from "./components/Brand.js";
+import { TrustStrip, SafetyNote, HowItWorks, NeverDoes, TrustSeals } from "./components/Trust.js";
 import { Gauge, Bars, Timeline, FlowDiagram, LEAK_FLOW, ATTACK_FLOW } from "./components/charts.js";
 import ActionPlan from "./components/ActionPlan.js";
 import ExpoBot from "./components/ExpoBot.js";
@@ -70,6 +72,7 @@ export default function Page() {
   // ---- interface state ----
   const [lang, setLang] = useState("en");
   const L = STR[lang];
+  const T = trustFor(lang); // trust copy; see the note above TRUST in strings.js
   const [mode, setMode] = useState("email"); // "email" | "password"
   const [stage, setStage] = useState("form"); // "form" | "code" | "done"
   const [busy, setBusy] = useState(false);
@@ -193,9 +196,13 @@ export default function Page() {
             <button key={lg.code} className={"x-langbtn" + (lang === lg.code ? " on" : "")} onClick={() => setLang(lg.code)} title={lg.name}>{lg.label}</button>
           ))}
         </div>
-        <div className="x-brand">Exposio</div>
+        <BrandHeader />
         <h1 className="x-title">{L.title}</h1>
         <p className="x-lede">{L.lede}</p>
+
+        {/* The three signals sit ABOVE the input on the first screen: someone
+            should be able to decide whether to trust this before they type. */}
+        {stage === "form" && <TrustStrip T={T} />}
 
         {/* ───────── input card ───────── */}
         {stage !== "done" && (
@@ -250,6 +257,11 @@ export default function Page() {
             )}
 
             {error && <div className="x-err" role="alert">{error}</div>}
+
+            {/* The mode-specific guarantee, next to the field it applies to.
+                For passwords this is the strong claim, and it is the true one:
+                checkPassword() below never sends the password itself. */}
+            {stage === "form" && <SafetyNote mode={mode} T={T} />}
 
             {stage === "form" && (
               <label className="x-consent">
@@ -388,13 +400,30 @@ export default function Page() {
           </>
         )}
 
+        {/* Below the input, for the reader who wants more before deciding.
+            Hidden once a report is on screen — by then they have decided, and
+            the page's job is the result, not the pitch. */}
+        {stage === "form" && (
+          <>
+            <HowItWorks T={T} />
+            <NeverDoes T={T} />
+          </>
+        )}
+
+        {stage !== "done" && <TrustSeals T={T} />}
+        {stage === "form" && <p className="x-disclaimer">{T.disclaimer}</p>}
+
         <div className="x-foot">
           {L.footer1}<br />
           {L.footer2} · <a className="x-privlink" href="/privacy">{L.privacy}</a>
         </div>
       </div>
 
-      {stage === "done" && reportToken && <ExpoBot key={reportToken} reportToken={reportToken} lang={lang} L={L} />}
+      {stage === "done" && reportToken && (
+        // `report` and `identifier` are only for rendering GDPR letters the
+        // agent offers — the agent itself works from the signed token.
+        <ExpoBot key={reportToken} reportToken={reportToken} report={report} identifier={meta.identifier} lang={lang} L={L} />
+      )}
     </div>
   );
 }

@@ -17,6 +17,7 @@ import { emailReport, passwordReport, attributesOf, tierOf, UNDATED_AGE_DAYS } f
 import { applicableIds, residualScore, estimatedReduction, PLAYBOOK } from "../lib/playbook.js";
 import { mergeBreaches, mockLookup, baseName, cleanTitle } from "../lib/sources.js";
 import { compactReport, buildSystemPrompt, cleanMessages, finalizeReply, responseTool } from "../lib/expobot.js";
+import { runAgent, runTool, finalizeAgentReply, MAX_TOOL_ROUNDS } from "../lib/agent.js";
 import { gdprLetter } from "../lib/gdpr.js";
 
 const SECRET = "selftest-secret-0123456789abcdef0123456789abcdef";
@@ -264,6 +265,62 @@ await check("EXPOSIO_DEMO / EXPOSIO_SHOW_CODE are ignored on production", () => 
   };
   assert.deepEqual(read("production"), { mockBreaches: false, showCode: false }, "production must ignore them");
   assert.deepEqual(read("preview"), { mockBreaches: true, showCode: true }, "preview may use them");
+});
+
+// The agent's tools are what let ExpoBot v2 answer "how much would this help?"
+// without inventing a number. These check the numbers are RIGHT; the hostile
+// cases live in scripts/redteam.mjs, which checks they cannot be abused.
+console.log("\nExpoBot agent tools");
+await check("list_actions reports the same reductions as the Actions tab", () => {
+  const out = runTool("list_actions", {}, token);
+  assert.equal(out.current_score, mixed.score);
+  assert.equal(out.actions.length, applicableIds(mixed).length);
+  for (const action of out.actions) {
+    assert.equal(action.estimated_points_removed, estimatedReduction(mixed, action.id),
+      action.id + " must match the playbook model");
+  }
+});
+await check("simulate_fixes matches residualScore exactly", () => {
+  const ids = applicableIds(mixed).slice(0, 2);
+  const out = runTool("simulate_fixes", { action_ids: ids }, token);
+  const expected = residualScore(mixed, ids);
+  assert.equal(out.score_after, expected.score);
+  assert.equal(out.band_after, expected.level);
+  assert.equal(out.points_removed, mixed.score - expected.score);
+});
+await check("breach_details ranks by contribution and never exceeds the report", () => {
+  const out = runTool("breach_details", {}, token);
+  assert.equal(out.total_breaches, mixed.breaches.length);
+  const contributions = out.breaches.map((b) => b.score_contribution);
+  assert.deepEqual(contributions, [...contributions].sort((a, b) => b - a), "highest risk first");
+});
+await check("an agent answer keeps only vetted IDs and the user's own companies", () => {
+  const reply = finalizeAgentReply(
+    { answer: "Start here.", action_ids: ["PW_CHANGE", "NOT_REAL"], letters: ["Nowhere Ltd", "Canva"] },
+    token,
+  );
+  assert.deepEqual(reply.actionIds, ["PW_CHANGE"]);
+  assert.deepEqual(reply.letters, ["Canva"]);
+});
+await check("a report token without contribution data is refused by the tools", () => {
+  const old = { ...token, breaches: token.breaches.map(({ t, y, a }) => ({ t, y, a })) };
+  assert.ok(runTool("list_actions", {}, old).error, "old tokens must not be guessed at");
+});
+await check("the agent loop is bounded and always ends in a validated answer", async () => {
+  let calls = 0;
+  const out = await runAgent({
+    report: token, lang: "en", messages: [{ role: "user", content: "what now?" }],
+    callModel: async () => {
+      calls++;
+      return calls <= 2
+        ? [{ type: "tool_use", id: "t" + calls, name: "list_actions", input: {} }]
+        : [{ type: "tool_use", id: "r", name: "respond", input: { answer: "Change your passwords.", action_ids: ["PW_CHANGE"] } }];
+    },
+  });
+  assert.ok(out.ok);
+  assert.deepEqual(out.reply.used, ["list_actions", "list_actions"], "the tool trace is shown to the user");
+  assert.deepEqual(out.reply.actionIds, ["PW_CHANGE"]);
+  assert.ok(calls <= MAX_TOOL_ROUNDS + 1);
 });
 
 console.log("\nGDPR letters");

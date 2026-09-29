@@ -5,18 +5,28 @@
 export const STYLE = `
 .x-root{--bg:#080B12;--card:#0F1521;--card2:#131B29;--line:#1C2636;--ink:#DBE4F1;--mute:#67748B;
   --sig:#38C89A;--amber:#E6B057;--coral:#E56A5A;
+  /* Tokens added with the trust layer. The signal colour is used at low alpha
+     for surfaces so "secure" reads as calm, not as a wall of green. */
+  --sig-dim:rgba(56,200,154,.10);--sig-edge:rgba(56,200,154,.22);
+  --lift:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,0));
+  --shadow:0 18px 40px -26px rgba(0,0,0,.9);
   background:var(--bg);color:var(--ink);min-height:100vh;
   font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   display:flex;align-items:flex-start;justify-content:center;}
-.x-wrap{width:100%;max-width:620px;padding:60px 22px 90px;}
+/* A visible focus ring is a security feature, not decoration: it is how anyone
+   navigating by keyboard knows what they are about to submit. */
+.x-root :focus-visible{outline:2px solid var(--sig);outline-offset:2px;border-radius:8px;}
+.x-wrap{width:100%;max-width:640px;padding:52px 22px 90px;}
 .x-langbar{display:flex;justify-content:center;gap:4px;margin-bottom:16px;flex-wrap:wrap;}
 .x-langbtn{background:none;border:1px solid var(--line);color:var(--mute);border-radius:7px;padding:4px 9px;font-family:ui-monospace,monospace;font-size:11px;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
 .x-langbtn:hover{color:var(--ink);border-color:var(--sig);}
 .x-langbtn.on{background:var(--sig);color:#04201A;border-color:var(--sig);}
 .x-brand{font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--sig);text-align:center;}
-.x-title{font-size:29px;font-weight:650;letter-spacing:-.02em;text-align:center;margin:12px 0 8px;}
-.x-lede{color:var(--mute);font-size:13.5px;line-height:1.55;text-align:center;max-width:46ch;margin:0 auto;}
-.x-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-top:22px;}
+.x-title{font-size:34px;font-weight:680;letter-spacing:-.025em;text-align:center;margin:14px 0 10px;line-height:1.15;}
+.x-lede{color:#93A0B6;font-size:14.5px;line-height:1.6;text-align:center;max-width:48ch;margin:0 auto;}
+/* Cards get depth instead of a flat outline: a top highlight, a soft shadow,
+   and a slightly lighter surface than the page. */
+.x-card{background:var(--card);background-image:var(--lift);border:1px solid var(--line);border-radius:16px;padding:24px;margin-top:22px;box-shadow:var(--shadow);}
 .x-label{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:10px;display:block;}
 .x-input{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:15px 16px;color:var(--ink);font-size:15px;font-family:ui-monospace,monospace;outline:none;transition:border-color .15s;}
 .x-input:focus{border-color:var(--sig);}
@@ -31,6 +41,58 @@ export const STYLE = `
 .x-err{color:var(--coral);font-size:12.5px;margin-top:12px;font-family:ui-monospace,monospace;text-align:center;}
 .x-spin{display:inline-block;width:13px;height:13px;border:2px solid #04201A;border-top-color:transparent;border-radius:50%;animation:x-rot .7s linear infinite;vertical-align:-1px;margin-right:8px;}
 @keyframes x-rot{to{transform:rotate(360deg);}}
+
+/* ── trust layer (app/components/Trust.js, app/components/Brand.js) ────────── */
+.x-header{display:flex;flex-direction:column;align-items:center;gap:11px;}
+/* The mark: a lens ring around a target. Drawn, not an image file, so the page
+   still loads nothing from a third party. */
+.x-mark{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:var(--sig);
+  background:linear-gradient(160deg,rgba(56,200,154,.16),rgba(56,200,154,.03));
+  border:1px solid var(--sig-edge);box-shadow:0 0 0 4px rgba(56,200,154,.04),0 14px 30px -18px rgba(56,200,154,.7);}
+.x-secureline{display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,monospace;font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);
+  border-radius:999px;padding:4px 11px;margin-top:2px;}
+.x-secureline b{color:var(--sig);font-weight:700;}
+
+.x-trust{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px;}
+.x-tsig{display:flex;gap:10px;align-items:flex-start;padding:14px;border:1px solid var(--line);
+  border-radius:13px;background:var(--card);background-image:var(--lift);}
+.x-tico{color:var(--sig);flex-shrink:0;display:grid;place-items:center;width:28px;height:28px;
+  border-radius:9px;background:var(--sig-dim);border:1px solid var(--sig-edge);}
+.x-tsigt{font-size:12.5px;font-weight:650;margin-bottom:4px;letter-spacing:-.005em;}
+.x-tsigd{font-size:11.5px;color:var(--mute);line-height:1.5;}
+
+/* The guarantee sits beside the field itself, at the moment of the decision. */
+.x-safety{display:flex;gap:10px;align-items:flex-start;margin-top:15px;padding:11px 13px;border-radius:11px;
+  background:var(--sig-dim);border:1px solid var(--sig-edge);font-size:12px;line-height:1.55;color:#C6D3E6;}
+
+.x-how{margin-top:28px;}
+.x-howt,.x-nevert{font-size:13px;font-weight:650;margin:0 0 12px;text-align:center;letter-spacing:.01em;}
+.x-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.x-step{padding:15px 14px;border:1px solid var(--line);border-radius:13px;background:var(--card);background-image:var(--lift);}
+.x-stepn{font-family:ui-monospace,monospace;font-size:10.5px;color:var(--sig);letter-spacing:.12em;}
+.x-stept{font-size:12.5px;font-weight:650;margin:7px 0 4px;}
+.x-stepd{font-size:11.5px;color:var(--mute);line-height:1.5;}
+
+.x-never{margin-top:22px;padding:17px 19px;border:1px solid var(--line);border-radius:14px;background:var(--card);background-image:var(--lift);}
+.x-neverl{list-style:none;margin:0;padding:0;display:grid;gap:9px;}
+.x-neverl li{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--mute);line-height:1.5;}
+.x-neverx{color:var(--coral);font-weight:700;flex-shrink:0;font-size:11px;line-height:1.55;}
+
+.x-seals{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px;}
+.x-seal{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid var(--line);
+  border-radius:999px;font-size:11px;color:var(--mute);text-decoration:none;transition:border-color .15s,color .15s;}
+.x-seal:hover{border-color:var(--sig);color:var(--sig);}
+.x-sealflat{cursor:default;}
+.x-sealflat:hover{border-color:var(--line);color:var(--mute);}
+.x-disclaimer{margin-top:16px;text-align:center;font-size:11.5px;line-height:1.6;color:var(--mute);max-width:52ch;margin-left:auto;margin-right:auto;}
+
+/* One column on phones: three-across turns into unreadable slivers. */
+@media (max-width:640px){
+  .x-trust,.x-steps{grid-template-columns:1fr;}
+  .x-title{font-size:27px;}
+  .x-lede{font-size:13.5px;}
+}
 
 /* report */
 .x-hero{text-align:center;padding:8px 0 4px;}
@@ -179,6 +241,9 @@ export const STYLE = `
 .x-botact{margin-top:6px;}
 .x-botact b{font-size:12.5px;}
 .x-botact ol{margin:4px 0 0;padding-left:18px;color:var(--mute);font-size:12px;line-height:1.5;}
+.x-botletterrow{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;}
+/* The agent's working: which tools produced the figures in the answer above. */
+.x-bottrace{margin-top:8px;color:var(--mute);font-size:10.5px;letter-spacing:.02em;opacity:.8;}
 .x-assumed{color:var(--amber);}
 /* Small screens: keep the ExpoBot bubble on the bottom edge so it doesn't cover the tabs or content mid-page. */
 @media (max-width:560px){.x-nudge{left:14px;right:14px;width:auto;bottom:90px;}.x-nudge::after{right:34px;}.x-panel{right:8px;bottom:8px;}}
