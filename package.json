@@ -10,7 +10,8 @@
     "lint": "next lint",
     "selftest": "node --no-warnings scripts/selftest.mjs",
     "redteam": "node --no-warnings scripts/redteam.mjs",
-    "redteam:live": "node --no-warnings scripts/redteam.mjs --live"
+    "redteam:live": "node --no-warnings scripts/redteam.mjs --live",
+    "evaluate": "node --no-warnings scripts/evaluate.mjs"
   },
   "dependencies": {
     "next": "14.2.35",
