@@ -178,13 +178,27 @@ function newestYear(report) {
 }
 
 function printTable(rows) {
-  const cols = ["id", "score", "band", "breaches", "undated", "residual_best", "top_action", "sources_ok"];
-  const widths = cols.map((c) => Math.max(c.length, ...rows.map((r) => String(r[c] ?? "").length)));
-  const line = (cells) => cells.map((v, i) => String(v ?? "").padEnd(widths[i])).join("  ");
-  console.log(line(cols));
-  console.log(widths.map((w) => "-".repeat(w)).join("  "));
-  for (const r of rows) console.log(line(cols.map((c) => r[c])));
-  console.log("");
+  // Failed lookups are listed separately rather than as a row of blanks: an
+  // empty row next to a score of 0 reads as "clean", which is the one thing
+  // this tool must never imply for a check that did not run.
+  const scored = rows.filter((r) => !r.error);
+  const failed = rows.filter((r) => r.error);
+
+  if (scored.length) {
+    const cols = ["id", "score", "band", "breaches", "undated", "residual_best", "top_action", "sources_ok"];
+    const widths = cols.map((c) => Math.max(c.length, ...scored.map((r) => String(r[c] ?? "").length)));
+    const line = (cells) => cells.map((v, i) => String(v ?? "").padEnd(widths[i])).join("  ");
+    console.log(line(cols));
+    console.log(widths.map((w) => "-".repeat(w)).join("  "));
+    for (const r of scored) console.log(line(cols.map((c) => r[c])));
+    console.log("");
+  }
+
+  if (failed.length) {
+    console.log("NOT CHECKED — these addresses have no result, which is not the same as no exposure:");
+    for (const r of failed) console.log("  " + r.id + "  " + r.error);
+    console.log("");
+  }
 }
 
 function printSummary(rows) {
