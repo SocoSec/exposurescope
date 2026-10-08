@@ -82,15 +82,28 @@ if (!addresses.length) {
 console.error("Checking " + addresses.length + " address(es) against HIBP" +
   (DEHASHED_KEY ? " and DeHashed" : "") + ", pacing at " + DELAY_MS + "ms…\n");
 
+// Per-source and wall-clock timings, reported as percentiles at the end.
+const latency = { HIBP: [], DeHashed: [], wall: [] };
+async function timed(name, fn) {
+  const t0 = Date.now();
+  try { return await fn(); } finally { latency[name].push(Date.now() - t0); }
+}
+
 const rows = [];
 for (let i = 0; i < addresses.length; i++) {
   const email = addresses[i].toLowerCase();
   if (i > 0) await sleep(DELAY_MS);
 
+  // Providers are queried in PARALLEL, as the application does, so wall-clock
+  // time is the slower provider rather than their sum. Each is timed separately
+  // so the report can state per-source latency instead of asserting that the
+  // design "handles" it.
+  const wall0 = Date.now();
   const [hibp, dehashed] = await Promise.all([
-    queryHIBP(email, HIBP_KEY),
-    DEHASHED_KEY ? queryDeHashed(email, DEHASHED_KEY) : Promise.resolve(null),
+    timed("HIBP", () => queryHIBP(email, HIBP_KEY)),
+    DEHASHED_KEY ? timed("DeHashed", () => queryDeHashed(email, DEHASHED_KEY)) : Promise.resolve(null),
   ]);
+  latency.wall.push(Date.now() - wall0);
 
   const lists = [];
   const ok = [];
@@ -142,6 +155,7 @@ if (asJson) {
 } else {
   printTable(rows);
   printSummary(rows);
+  printLatency();
 }
 
 if (outPath) {
@@ -220,6 +234,39 @@ function printSummary(rows) {
   console.log("bands: " + Object.entries(bands).map(([b, n]) => b + "=" + n).join("  "));
   const clean = scored.filter((r) => r.score === 0).length;
   console.log("addresses with no exposure found: " + clean + " / " + scored.length);
+  console.log("");
+}
+
+// Per-source latency, and the wall-clock time a user would actually wait.
+// Because the providers are queried in parallel, wall ≈ max(sources), not their
+// sum — which is the measured answer to "how do you handle varying provider
+// response times without compromising the user experience?".
+function printLatency() {
+  const pct = (arr, p) => {
+    if (!arr.length) return null;
+    const s = [...arr].sort((a, b) => a - b);
+    return s[Math.min(s.length - 1, Math.floor((p / 100) * s.length))];
+  };
+  const rowsOut = [];
+  for (const [name, arr] of Object.entries(latency)) {
+    if (!arr.length) continue;
+    rowsOut.push({
+      source: name === "wall" ? "wall clock (parallel)" : name,
+      n: arr.length,
+      min: Math.min(...arr),
+      p50: pct(arr, 50),
+      p95: pct(arr, 95),
+      max: Math.max(...arr),
+    });
+  }
+  if (!rowsOut.length) return;
+  console.log("Latency (ms)");
+  const cols = ["source", "n", "min", "p50", "p95", "max"];
+  const w = cols.map((c) => Math.max(c.length, ...rowsOut.map((r) => String(r[c]).length)));
+  const line = (cells) => cells.map((v, i) => String(v).padEnd(w[i])).join("  ");
+  console.log("  " + line(cols));
+  console.log("  " + w.map((n) => "-".repeat(n)).join("  "));
+  for (const r of rowsOut) console.log("  " + line(cols.map((c) => r[c])));
   console.log("");
 }
 

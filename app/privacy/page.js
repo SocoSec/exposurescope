@@ -36,8 +36,8 @@ const S = {
 const PROCESSING = [
   {
     what: "Your email address — verification",
-    where: "Resend (email delivery provider)",
-    why: "To send you a one-time code proving the address is yours. The code itself is never stored; your browser holds a signed, expiring token instead.",
+    where: "Resend (email delivery provider), EU region — Ireland",
+    why: "To send you a one-time code proving the address is yours. The code itself is never stored; your browser holds a signed, expiring token instead. Mail is sent from exposio.eu, authenticated with SPF, DKIM and DMARC, and processed inside the EU.",
   },
   {
     what: "Your verified email address — breach lookup",
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
       <div style={S.wrap}>
         <div style={S.brand}>Exposio</div>
         <h1 style={S.h1}>Privacy notice</h1>
-        <p style={S.meta}>Research prototype · last updated September 2026</p>
+        <p style={S.meta}>Research prototype · last updated October 2026</p>
 
         <h2 style={S.h2}>Who runs this tool</h2>
         <p style={S.p}>

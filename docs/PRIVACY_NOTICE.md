@@ -14,7 +14,7 @@ then set on the deployment:
 
 | Processing | Recipient | Code |
 |---|---|---|
-| Email → one-time verification code | Resend | `lib/mailer.js` |
+| Email → one-time verification code | Resend, **EU region (Ireland)**, sent from `exposio.eu` with SPF/DKIM/DMARC | `lib/mailer.js` |
 | Verified email → breach metadata | HIBP; DeHashed if enabled | `lib/sources.js` |
 | First 5 chars of password SHA-1 | Pwned Passwords | `app/page.js` (`pwnedCount`) |
 | Score, breach names, data types, chat messages (no email) | Anthropic | `lib/expobot.js`, `app/api/chat` |
