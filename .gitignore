@@ -12,3 +12,6 @@ out/
 addresses*.txt
 !addresses.example.txt
 docs/eval*.csv
+
+# Rendered figure previews (regenerate from the .svg)
+docs/figures/*.png
