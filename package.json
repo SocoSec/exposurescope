@@ -2,7 +2,7 @@
   "name": "exposurescope",
   "version": "1.2.0",
   "private": true,
-  "description": "Exposio — a self-assessment instrument for personal digital exposure (research MVP).",
+  "description": "Exposio \u2014 a self-assessment instrument for personal digital exposure (research MVP).",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,7 +11,8 @@
     "selftest": "node --no-warnings scripts/selftest.mjs",
     "redteam": "node --no-warnings scripts/redteam.mjs",
     "redteam:live": "node --no-warnings scripts/redteam.mjs --live",
-    "evaluate": "node --no-warnings scripts/evaluate.mjs"
+    "evaluate": "node --no-warnings scripts/evaluate.mjs",
+    "sensitivity": "node --no-warnings scripts/sensitivity.mjs"
   },
   "dependencies": {
     "next": "14.2.35",
