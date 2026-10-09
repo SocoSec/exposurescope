@@ -1,0 +1,256 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1216" viewBox="0 0 1300 1216">
+<!-- Exposio system architecture. Presentation attributes only (no CSS classes),
+     so it renders identically in browsers, Word, PowerPoint and LaTeX. -->
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+  </marker>
+</defs>
+
+<rect width="1300" height="1216" fill="#FFFFFF"/>
+
+<g font-family="Segoe UI, Calibri, Arial, sans-serif">
+
+<text x="30" y="42" font-size="23" font-weight="700" fill="#0F172A">Exposio — system architecture</text>
+<text x="30" y="66" font-size="12.5" fill="#475569">Three tiers, no persistence layer. Domain logic is pure and framework-free, so it can be tested without a server, a network or a key.</text>
+
+<!-- ══════════ CLIENT TIER ══════════ -->
+<rect x="30" y="86" width="1240" height="196" rx="8" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.4"/>
+<rect x="30" y="86" width="1240" height="28" rx="8" fill="#F1F5F9"/>
+<rect x="30" y="106" width="1240" height="8" fill="#F1F5F9"/>
+<text x="46" y="105" font-size="12.5" font-weight="700" fill="#334155" letter-spacing="1.6">CLIENT TIER · BROWSER</text>
+<text x="1254" y="105" font-size="11.5" fill="#64748B" text-anchor="end">React 18 · Next.js App Router · no build-step CSS</text>
+
+<rect x="54" y="128" width="400" height="60" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="70" y="150" font-family="Consolas, Courier New, monospace" font-size="12.5" font-weight="700" fill="#0F172A">app/page.js</text>
+<text x="70" y="168" font-size="12" fill="#475569">Flow state machine: form → code → report</text>
+<text x="70" y="183" font-size="12" fill="#475569">Holds tokens in memory only — never storage</text>
+
+<rect x="470" y="128" width="296" height="60" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="486" y="150" font-family="Consolas, Courier New, monospace" font-size="12.5" font-weight="700" fill="#0F172A">SHA-1 via Web Crypto</text>
+<text x="486" y="168" font-size="12" fill="#475569">Password hashed here; only the first</text>
+<text x="486" y="183" font-size="12" fill="#475569">5 hash characters ever leave the device</text>
+
+<rect x="782" y="128" width="464" height="60" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="798" y="150" font-family="Consolas, Courier New, monospace" font-size="12.5" font-weight="700" fill="#0F172A">app/strings.js · app/styles.js</text>
+<text x="798" y="168" font-size="12" fill="#475569">Interface text in six languages, plus the trust copy,</text>
+<text x="798" y="183" font-size="12" fill="#475569">annotated with the file that backs each claim</text>
+
+<text x="54" y="212" font-size="11" font-weight="700" fill="#64748B" letter-spacing="1.3">COMPONENTS</text>
+<rect x="54" y="220" width="186" height="48" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="68" y="241" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">charts.js</text>
+<text x="68" y="257" font-size="11.5" fill="#475569">Gauge, bars, timeline</text>
+
+<rect x="252" y="220" width="186" height="48" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="266" y="241" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">ActionPlan.js</text>
+<text x="266" y="257" font-size="11.5" fill="#475569">Steps, residual risk</text>
+
+<rect x="450" y="220" width="186" height="48" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="464" y="241" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">ExpoBot.js</text>
+<text x="464" y="257" font-size="11.5" fill="#475569">Chat, tool trace, letters</text>
+
+<rect x="648" y="220" width="186" height="48" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="662" y="241" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">Trust.js</text>
+<text x="662" y="257" font-size="11.5" fill="#475569">Signals, guarantees</text>
+
+<rect x="846" y="220" width="186" height="48" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="860" y="241" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">Brand.js</text>
+<text x="860" y="257" font-size="11.5" fill="#475569">Mark, header chip</text>
+
+<rect x="1044" y="220" width="202" height="48" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
+<text x="1058" y="241" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">privacy/page.js</text>
+<text x="1058" y="257" font-size="11.5" fill="#475569">Art. 13 notice</text>
+
+<!-- client → app -->
+<line x1="650" y1="282" x2="650" y2="314" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="666" y="302" font-size="11.5" fill="#B45309">HTTPS · HSTS · CSP · address, code, signed tokens — never a password</text>
+
+<!-- ══════════ APPLICATION TIER ══════════ -->
+<rect x="30" y="320" width="1240" height="372" rx="8" fill="#F7FBFA" stroke="#9CCCC5" stroke-width="1.4"/>
+<rect x="30" y="320" width="1240" height="28" rx="8" fill="#E6F4F1"/>
+<rect x="30" y="340" width="1240" height="8" fill="#E6F4F1"/>
+<text x="46" y="339" font-size="12.5" font-weight="700" fill="#0F6B63" letter-spacing="1.6">APPLICATION TIER · VERCEL EDGE RUNTIME</text>
+<text x="1254" y="339" font-size="11.5" fill="#0F6B63" text-anchor="end">Stateless · fails closed · no filesystem, no database</text>
+
+<text x="54" y="368" font-size="11" font-weight="700" fill="#0F6B63" letter-spacing="1.3">HTTP ROUTES — thin: validate, limit, delegate</text>
+<rect x="54" y="376" width="288" height="52" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.4"/>
+<text x="68" y="397" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">/api/verify/start</text>
+<text x="68" y="414" font-size="11.5" fill="#475569">Issues the challenge</text>
+
+<rect x="356" y="376" width="288" height="52" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.4"/>
+<text x="370" y="397" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">/api/verify/check</text>
+<text x="370" y="414" font-size="11.5" fill="#475569">Issues the scan token</text>
+
+<rect x="658" y="376" width="288" height="52" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.4"/>
+<text x="672" y="397" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">/api/breach</text>
+<text x="672" y="414" font-size="11.5" fill="#475569">Looks up, scores, signs the report</text>
+
+<rect x="960" y="376" width="286" height="52" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.4"/>
+<text x="974" y="397" font-family="Consolas, Courier New, monospace" font-size="12" fill="#0F172A">/api/chat</text>
+<text x="974" y="414" font-size="11.5" fill="#475569">Runs the bounded agent loop</text>
+
+<line x1="650" y1="436" x2="650" y2="452" stroke="#94A3B8" stroke-width="1.4" marker-end="url(#a)"/>
+
+<text x="54" y="472" font-size="11" font-weight="700" fill="#0F6B63" letter-spacing="1.3">DOMAIN LOGIC — pure functions, no framework, no I/O (except sources.js)</text>
+<rect x="54" y="480" width="166" height="70" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="68" y="501" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">score.js</text>
+<text x="68" y="518" font-size="11.5" fill="#475569">Breach Risk B:</text>
+<text x="68" y="533" font-size="11.5" fill="#475569">severity × decay,</text>
+<text x="68" y="546" font-size="11.5" fill="#475569">tiers, bands</text>
+
+<rect x="232" y="480" width="166" height="70" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="246" y="501" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">playbook.js</text>
+<text x="246" y="518" font-size="11.5" fill="#475569">10 vetted actions,</text>
+<text x="246" y="533" font-size="11.5" fill="#475569">mitigation factors,</text>
+<text x="246" y="546" font-size="11.5" fill="#475569">residual risk</text>
+
+<rect x="410" y="480" width="166" height="70" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="424" y="501" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">sources.js</text>
+<text x="424" y="518" font-size="11.5" fill="#475569">Provider clients,</text>
+<text x="424" y="533" font-size="11.5" fill="#475569">timeout, back-off,</text>
+<text x="424" y="546" font-size="11.5" fill="#475569">cross-source merge</text>
+
+<rect x="588" y="480" width="166" height="70" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="602" y="501" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">expobot.js</text>
+<text x="602" y="518" font-size="11.5" fill="#475569">Guard rails: fence,</text>
+<text x="602" y="533" font-size="11.5" fill="#475569">closed action set,</text>
+<text x="602" y="546" font-size="11.5" fill="#475569">output validation</text>
+
+<rect x="766" y="480" width="166" height="70" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="780" y="501" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">agent.js</text>
+<text x="780" y="518" font-size="11.5" fill="#475569">Tools over the</text>
+<text x="780" y="533" font-size="11.5" fill="#475569">signed report;</text>
+<text x="780" y="546" font-size="11.5" fill="#475569">bounded loop</text>
+
+<rect x="944" y="480" width="150" height="70" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="958" y="501" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">gdpr.js</text>
+<text x="958" y="518" font-size="11.5" fill="#475569">Art. 15 / 17</text>
+<text x="958" y="533" font-size="11.5" fill="#475569">letters — templates,</text>
+<text x="958" y="546" font-size="11.5" fill="#475569">never generated</text>
+
+<rect x="1106" y="480" width="140" height="70" rx="6" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="1120" y="501" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">content.js</text>
+<text x="1120" y="518" font-size="11.5" fill="#475569">Explanatory</text>
+<text x="1120" y="533" font-size="11.5" fill="#475569">text for the</text>
+<text x="1120" y="546" font-size="11.5" fill="#475569">Learn tab</text>
+
+<text x="54" y="584" font-size="11" font-weight="700" fill="#0F6B63" letter-spacing="1.3">PLATFORM LIBRARIES — the zero-storage substrate</text>
+<rect x="54" y="592" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="68" y="613" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">crypto.js</text>
+<text x="68" y="630" font-size="11.5" fill="#475569">HMAC, keyed hashes,</text>
+<text x="68" y="645" font-size="11.5" fill="#475569">unbiased random codes</text>
+
+<rect x="258" y="592" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="272" y="613" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">tokens.js</text>
+<text x="272" y="630" font-size="11.5" fill="#475569">Signed, expiring,</text>
+<text x="272" y="645" font-size="11.5" fill="#475569">type-separated tokens</text>
+
+<rect x="462" y="592" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="476" y="613" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">ratelimit.js</text>
+<text x="476" y="630" font-size="11.5" fill="#475569">Fixed windows keyed</text>
+<text x="476" y="645" font-size="11.5" fill="#475569">by hash; daily caps</text>
+
+<rect x="666" y="592" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="680" y="613" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">http.js</text>
+<text x="680" y="630" font-size="11.5" fill="#475569">Body caps, error codes,</text>
+<text x="680" y="645" font-size="11.5" fill="#475569">input normalisation</text>
+
+<rect x="870" y="592" width="192" height="64" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="884" y="613" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">mailer.js</text>
+<text x="884" y="630" font-size="11.5" fill="#475569">Code delivery; logs</text>
+<text x="884" y="645" font-size="11.5" fill="#475569">status, never recipients</text>
+
+<rect x="1074" y="592" width="172" height="64" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="1088" y="613" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">config.js</text>
+<text x="1088" y="630" font-size="11.5" fill="#475569">One env reader;</text>
+<text x="1088" y="645" font-size="11.5" fill="#475569">test flags gated off</text>
+
+<text x="54" y="678" font-size="11.5" fill="#B45309">Routes never compute. Every figure the user sees originates in score.js or playbook.js, which is why the agent cannot invent one.</text>
+
+<!-- ══════════ ABSENT LAYER ══════════ -->
+<rect x="30" y="712" width="1240" height="74" rx="8" fill="#FFFBEB" stroke="#E3C892" stroke-width="1.6" stroke-dasharray="8 5"/>
+<text x="46" y="737" font-size="12.5" font-weight="700" fill="#B45309" letter-spacing="1.6">PERSISTENCE TIER — ABSENT BY DESIGN</text>
+<text x="46" y="758" font-size="12.5" fill="#92400E">No database, no object store, no session store, no analytics, no cookies, no localStorage. State that must survive a step is signed</text>
+<text x="46" y="776" font-size="12.5" fill="#92400E">and handed back to the browser. The only server-side residue is rate-limit counters keyed by HMAC hash, expiring within 24 hours.</text>
+
+<line x1="650" y1="692" x2="650" y2="708" stroke="#94A3B8" stroke-width="1.4"/>
+<line x1="650" y1="790" x2="650" y2="814" stroke="#475569" stroke-width="1.6" marker-end="url(#a)"/>
+
+<!-- ══════════ EXTERNAL TIER ══════════ -->
+<rect x="30" y="820" width="1240" height="166" rx="8" fill="#FEFCF7" stroke="#E3C892" stroke-width="1.4"/>
+<rect x="30" y="820" width="1240" height="28" rx="8" fill="#FBF3E4"/>
+<rect x="30" y="840" width="1240" height="8" fill="#FBF3E4"/>
+<text x="46" y="839" font-size="12.5" font-weight="700" fill="#8A6420" letter-spacing="1.6">EXTERNAL SERVICES · THIRD-PARTY PROCESSORS</text>
+<text x="1254" y="839" font-size="11.5" fill="#8A6420" text-anchor="end">Each is optional; the system degrades rather than fails</text>
+
+<rect x="54" y="862" width="232" height="104" rx="6" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.3"/>
+<text x="68" y="883" font-size="12.5" font-weight="700" fill="#0F172A">Have I Been Pwned</text>
+<text x="68" y="901" font-size="11.5" fill="#475569">Breach metadata for a</text>
+<text x="68" y="916" font-size="11.5" fill="#475569">verified address</text>
+<text x="68" y="936" font-size="11.5" fill="#0D7D74">Receives: the address</text>
+<text x="68" y="953" font-size="11.5" fill="#475569">CC BY 4.0 · 10 req/min</text>
+
+<rect x="298" y="862" width="232" height="104" rx="6" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.3" stroke-dasharray="5 4"/>
+<text x="312" y="883" font-size="12.5" font-weight="700" fill="#0F172A">DeHashed</text>
+<text x="312" y="901" font-size="11.5" fill="#475569">Second source; raw</text>
+<text x="312" y="916" font-size="11.5" fill="#475569">records, so presence only</text>
+<text x="312" y="936" font-size="11.5" fill="#B45309">Disabled for the study —</text>
+<text x="312" y="953" font-size="11.5" fill="#B45309">pending legal opinion</text>
+
+<rect x="542" y="862" width="232" height="104" rx="6" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.3"/>
+<text x="556" y="883" font-size="12.5" font-weight="700" fill="#0F172A">Pwned Passwords</text>
+<text x="556" y="901" font-size="11.5" fill="#475569">Range API, k-anonymity</text>
+<text x="556" y="916" font-size="11.5" fill="#475569">Called from the browser</text>
+<text x="556" y="936" font-size="11.5" fill="#0D7D74">Receives: 5 hash chars</text>
+<text x="556" y="953" font-size="11.5" fill="#475569">No key required</text>
+
+<rect x="786" y="862" width="232" height="104" rx="6" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.3"/>
+<text x="800" y="883" font-size="12.5" font-weight="700" fill="#0F172A">Resend — Ireland</text>
+<text x="800" y="901" font-size="11.5" fill="#475569">One-time code delivery</text>
+<text x="800" y="916" font-size="11.5" fill="#475569">SPF · DKIM · DMARC</text>
+<text x="800" y="936" font-size="11.5" fill="#0D7D74">Receives: the address</text>
+<text x="800" y="953" font-size="11.5" fill="#475569">EU region — no transfer</text>
+
+<rect x="1030" y="862" width="216" height="104" rx="6" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.3"/>
+<text x="1044" y="883" font-size="12.5" font-weight="700" fill="#0F172A">Anthropic — Claude</text>
+<text x="1044" y="901" font-size="11.5" fill="#475569">Advisory agent only</text>
+<text x="1044" y="916" font-size="11.5" fill="#475569">Tool-forced JSON</text>
+<text x="1044" y="936" font-size="11.5" fill="#0D7D74">Receives: score, company</text>
+<text x="1044" y="953" font-size="11.5" fill="#0D7D74">names — not the address</text>
+
+<!-- ══════════ ASSURANCE ══════════ -->
+<rect x="30" y="1014" width="1240" height="140" rx="8" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.4"/>
+<rect x="30" y="1014" width="1240" height="28" rx="8" fill="#F1F5F9"/>
+<rect x="30" y="1034" width="1240" height="8" fill="#F1F5F9"/>
+<text x="46" y="1033" font-size="12.5" font-weight="700" fill="#334155" letter-spacing="1.6">ASSURANCE — RUNS OFFLINE, NO KEYS, NO NETWORK</text>
+<text x="1254" y="1033" font-size="11.5" fill="#64748B" text-anchor="end">Possible because the domain logic is pure</text>
+
+<rect x="54" y="1056" width="288" height="78" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="68" y="1077" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">npm run selftest</text>
+<text x="68" y="1095" font-size="11.5" fill="#475569">41 cases: scoring, tokens,</text>
+<text x="68" y="1110" font-size="11.5" fill="#475569">limits, agent tools, letters</text>
+<text x="68" y="1127" font-size="11.5" fill="#0D7D74">Is it correct?</text>
+
+<rect x="356" y="1056" width="288" height="78" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="370" y="1077" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">npm run redteam</text>
+<text x="370" y="1095" font-size="11.5" fill="#475569">18 attacks through the real</text>
+<text x="370" y="1110" font-size="11.5" fill="#475569">loop with a hostile model</text>
+<text x="370" y="1127" font-size="11.5" fill="#0D7D74">What can a bad model do?</text>
+
+<rect x="658" y="1056" width="288" height="78" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="672" y="1077" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">npm run sensitivity</text>
+<text x="672" y="1095" font-size="11.5" fill="#475569">Parameter sweeps, model</text>
+<text x="672" y="1110" font-size="11.5" fill="#475569">comparison, rank correlation</text>
+<text x="672" y="1127" font-size="11.5" fill="#0D7D74">Is the model justified?</text>
+
+<rect x="960" y="1056" width="286" height="78" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.3"/>
+<text x="974" y="1077" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#0F172A">npm run evaluate</text>
+<text x="974" y="1095" font-size="11.5" fill="#475569">Scores real addresses off the</text>
+<text x="974" y="1110" font-size="11.5" fill="#475569">web flow; latency percentiles</text>
+<text x="974" y="1127" font-size="11.5" fill="#0D7D74">How does it behave live?</text>
+
+<text x="30" y="1184" font-size="12.5" fill="#475569">Dependencies: next · react · react-dom. No ORM, no database driver, no ML runtime — the scoring model is a published formula, not a trained artefact.</text>
+<text x="30" y="1204" font-size="12.5" fill="#475569">Security headers (CSP, HSTS, X-Frame-Options, Referrer-Policy) are set in next.config.js and verified against the deployed site.</text>
+
+</g>
+</svg>
