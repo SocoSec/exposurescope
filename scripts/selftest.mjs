@@ -10,9 +10,9 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { randomDigits, keyedHashHex, safeEqual } from "../lib/crypto.js";
-import { signToken, verifyToken, emailId, codeTag, codeMatches, TTL } from "../lib/tokens.js";
+import { signToken, verifyToken, emailId, identifierId, codeTag, codeMatches, TTL } from "../lib/tokens.js";
 import { rateLimit, _resetMemoryLimiter } from "../lib/ratelimit.js";
-import { normalizeEmail, normalizeLang } from "../lib/http.js";
+import { normalizeEmail, normalizeLang, normalizePhone, normalizeIdentifier } from "../lib/http.js";
 import { emailReport, passwordReport, attributesOf, tierOf, UNDATED_AGE_DAYS } from "../lib/score.js";
 import { applicableIds, residualScore, estimatedReduction, PLAYBOOK } from "../lib/playbook.js";
 import { mergeBreaches, mockLookup, baseName, cleanTitle } from "../lib/sources.js";
@@ -321,6 +321,49 @@ await check("the agent loop is bounded and always ends in a validated answer", a
   assert.deepEqual(out.reply.used, ["list_actions", "list_actions"], "the tool trace is shown to the user");
   assert.deepEqual(out.reply.actionIds, ["PW_CHANGE"]);
   assert.ok(calls <= MAX_TOOL_ROUNDS + 1);
+});
+
+// The phone path reuses the verification design rather than loosening it.
+// These cover the two places where adding a second identifier type could
+// quietly weaken the binding: namespace separation, and ambiguous bodies.
+console.log("\nphone identifier path");
+await check("E.164 is required, and separators are tolerated", () => {
+  assert.equal(normalizePhone("+36 20 123 4567"), "+36201234567");
+  assert.equal(normalizePhone("+1 (620) 123-4567"), "+16201234567");
+  assert.equal(normalizePhone("06201234567"), null, "a missing country code must be refused, not guessed");
+  assert.equal(normalizePhone("+0201234567"), null, "country codes never start with 0");
+  assert.equal(normalizePhone("+3620123456789012"), null, "E.164 allows at most 15 digits");
+  assert.equal(normalizePhone("+36 20 abc"), null);
+});
+await check("a body carrying both an email and a phone is rejected", () => {
+  assert.equal(normalizeIdentifier({ email: "a@b.com", phone: "+36201234567" }), null,
+    "an ambiguous body must not resolve to whichever field is read first");
+  assert.equal(normalizeIdentifier({}), null);
+  assert.deepEqual(normalizeIdentifier({ email: "A@B.com" }), { kind: "email", value: "a@b.com" });
+  assert.deepEqual(normalizeIdentifier({ phone: "+36 20 123 4567" }), { kind: "phone", value: "+36201234567" });
+});
+await check("email and phone identifier namespaces cannot collide", async () => {
+  const same = "+36201234567";
+  const asEmail = await identifierId(SECRET, "email", same);
+  const asPhone = await identifierId(SECRET, "phone", same);
+  assert.notEqual(asEmail, asPhone, "the kind must form part of the hash context");
+  assert.equal(await identifierId(SECRET, "email", "a@b.com"), await emailId(SECRET, "a@b.com"));
+});
+await check("a phone report scores like an email report but is labelled correctly", () => {
+  const records = [{ title: "Telecom leak", date: daysAgo(400), dataClasses: ["Phone numbers", "Names"] }];
+  const asPhone = emailReport(records, NOW, "phone");
+  const asEmail = emailReport(records, NOW, "email");
+  assert.equal(asPhone.kind, "phone");
+  assert.equal(asEmail.kind, "email");
+  assert.equal(asPhone.score, asEmail.score, "severity comes from the data classes, not the field searched");
+});
+await check("remediation applies to a phone report, not only an email one", () => {
+  const withPassword = emailReport(
+    [{ title: "Combolist", date: daysAgo(200), dataClasses: ["Phone numbers", "Passwords"] }], NOW, "phone");
+  const ids = applicableIds(withPassword);
+  assert.ok(ids.includes("PW_CHANGE"), "leaked passwords need changing whichever field was searched");
+  assert.ok(ids.includes("GDPR_REQUEST"), "erasure rights do not depend on the identifier type");
+  assert.ok(!ids.includes("PW_STOP"), "that action belongs to the password path");
 });
 
 console.log("\nGDPR letters");

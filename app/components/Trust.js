@@ -42,10 +42,11 @@ export function TrustStrip({ T }) {
 // The password wording is the stronger claim, and it is the true one: the
 // plaintext never leaves the browser (see checkPassword in app/page.js).
 export function SafetyNote({ mode, T }) {
+  const text = mode === "password" ? T.safetyPw : mode === "phone" ? T.safetyPhone : T.safetyEmail;
   return (
     <div className="x-safety">
-      <span className="x-tico"><Icon name={mode === "password" ? "shield" : "store"} /></span>
-      <span>{mode === "password" ? T.safetyPw : T.safetyEmail}</span>
+      <span className="x-tico"><Icon name={mode === "password" ? "shield" : mode === "phone" ? "phone" : "store"} /></span>
+      <span>{text}</span>
     </div>
   );
 }
@@ -120,6 +121,14 @@ function Icon({ name }) {
           <path d="M4.5 6v10c0 1.4 2.9 2.6 6.5 2.6 1 0 2-.1 2.8-.3" />
           <path d="M4.5 11c0 1.4 2.9 2.6 6.5 2.6 .7 0 1.4 0 2-.1" />
           <path d="M16 16.5l5 5M21 16.5l-5 5" />
+        </svg>
+      );
+    case "phone": // a handset: the code goes to the device, not the browser
+      return (
+        <svg {...base}>
+          <rect x="7" y="2.5" width="10" height="19" rx="2.2" />
+          <path d="M10.6 5.3h2.8" />
+          <circle cx="12" cy="18.2" r="0.9" fill="currentColor" stroke="none" />
         </svg>
       );
     case "code": // the one-time code: an envelope with a tick

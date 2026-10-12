@@ -73,7 +73,7 @@ export default function Page() {
   const [lang, setLang] = useState("en");
   const L = STR[lang];
   const T = trustFor(lang); // trust copy; see the note above TRUST in strings.js
-  const [mode, setMode] = useState("email"); // "email" | "password"
+  const [mode, setMode] = useState("email"); // "email" | "password" | "phone"
   const [stage, setStage] = useState("form"); // "form" | "code" | "done"
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -86,6 +86,8 @@ export default function Page() {
   const [devCode, setDevCode] = useState("");
   const [resendAt, setResendAt] = useState(0);
   const [now, setNow] = useState(() => Date.now());
+
+  const [phone, setPhone] = useState("");
 
   const [password, setPassword] = useState("");
 
@@ -108,7 +110,7 @@ export default function Page() {
 
   function resetAll() {
     setStage("form"); setBusy(false); setError(""); setCode(""); setChallenge(null); setDevCode("");
-    setPassword(""); setReport(null); setMeta(null); setReportToken(null); setTab("overview"); setDone(new Set());
+    setPassword(""); setPhone(""); setReport(null); setMeta(null); setReportToken(null); setTab("overview"); setDone(new Set());
   }
 
   function switchMode(next) {
@@ -121,10 +123,17 @@ export default function Page() {
     setDone(new Set()); setTab("overview"); setStage("done");
   }
 
-  // Step 1 — ask the server to email a code.
+  // The one identifier this check is about. Exactly one of the two fields is
+  // sent, because the server rejects a body carrying both.
+  function identifierBody() {
+    return mode === "phone" ? { phone: phone.trim() } : { email };
+  }
+  const identifierValue = () => (mode === "phone" ? phone.trim() : email);
+
+  // Step 1 — ask the server to send a code, by email or SMS.
   async function sendCode() {
     setBusy(true); setError("");
-    const { ok, data } = await postJson("/api/verify/start", { email, lang });
+    const { ok, data } = await postJson("/api/verify/start", { ...identifierBody(), lang });
     setBusy(false);
     if (!ok) return setError(errorText(L, data));
     setChallenge(data.challenge);
@@ -138,20 +147,20 @@ export default function Page() {
   // Steps 2 + 3 — prove the code, then run the verified scan.
   async function verifyAndScan() {
     setBusy(true); setError("");
-    const check = await postJson("/api/verify/check", { email, code, challenge });
+    const check = await postJson("/api/verify/check", { ...identifierBody(), code, challenge });
     if (!check.ok) { setBusy(false); return setError(errorText(L, check.data)); }
 
-    const scan = await postJson("/api/breach", { email, scanToken: check.data.scanToken });
+    const scan = await postJson("/api/breach", { ...identifierBody(), scanToken: check.data.scanToken });
     setBusy(false);
     if (scan.ok) {
       return showReport(
         scan.data.report,
-        { sources: scan.data.sources, sourcesFailed: scan.data.sourcesFailed || [], identifier: email, demo: scan.data.demo },
+        { sources: scan.data.sources, sourcesFailed: scan.data.sourcesFailed || [], identifier: identifierValue(), demo: scan.data.demo },
         scan.data.reportToken
       );
     }
     if (scan.data.error === "not_configured") {
-      return showReport(EMPTY_EMAIL_REPORT, { unavailable: true, sources: [], sourcesFailed: [], identifier: email }, null);
+      return showReport(EMPTY_EMAIL_REPORT, { unavailable: true, sources: [], sourcesFailed: [], identifier: identifierValue() }, null);
     }
     if (scan.data.error === "unverified") setStage("form");
     setError(errorText(L, scan.data));
@@ -177,11 +186,12 @@ export default function Page() {
     });
   }
 
-  const canSend = consent && !busy && email.trim().length > 3;
+  const canSend = consent && !busy &&
+    (mode === "phone" ? /^\+[1-9][0-9\s()./-]{6,}$/.test(phone.trim()) : email.trim().length > 3);
   const canCheckPw = consent && !busy && password.length > 0;
   const exposed = report && report.score > 0;
   const band = report ? BAND_COLOR[report.level] : "var(--sig)";
-  const consentText = mode === "email" ? L.consentEmail : L.consentPw;
+  const consentText = mode === "password" ? L.consentPw : mode === "phone" ? L.consentPhone : L.consentEmail;
   const [sentBefore, sentAfter] = L.codeSent.split("{email}");
 
   return (
@@ -210,9 +220,7 @@ export default function Page() {
             <div className="x-modes" role="tablist">
               <button role="tab" aria-selected={mode === "email"} className={"x-mode" + (mode === "email" ? " on" : "")} onClick={() => switchMode("email")}>{L.modeEmail}</button>
               <button role="tab" aria-selected={mode === "password"} className={"x-mode" + (mode === "password" ? " on" : "")} onClick={() => switchMode("password")}>{L.modePassword}</button>
-              <button role="tab" aria-selected={false} className="x-mode" disabled title="Phone checks are paused until phone ownership can be verified.">
-                {L.modePhone}<span className="x-soon">{L.phoneSoon}</span>
-              </button>
+              <button role="tab" aria-selected={mode === "phone"} className={"x-mode" + (mode === "phone" ? " on" : "")} onClick={() => switchMode("phone")}>{L.modePhone}</button>
             </div>
 
             {mode === "email" && stage === "form" && (
@@ -226,9 +234,23 @@ export default function Page() {
               </form>
             )}
 
-            {mode === "email" && stage === "code" && (
+            {mode === "phone" && stage === "form" && (
+              <form onSubmit={(e) => { e.preventDefault(); if (canSend) sendCode(); }}>
+                <label className="x-label" htmlFor="x-phone">{L.phoneLabel}</label>
+                {/* type="tel" brings up the numeric keypad; the country code is
+                    required because guessing it would check a different person. */}
+                <input id="x-phone" className="x-input" type="tel" autoComplete="tel" value={phone}
+                  placeholder={L.phonePlaceholder} onChange={(e) => setPhone(e.target.value)} />
+                <div className="x-kind">{L.phoneHint}</div>
+                <button type="submit" className="x-btn" disabled={!canSend}>
+                  {busy ? <><span className="x-spin" />{L.sending}</> : L.sendCodeSms}
+                </button>
+              </form>
+            )}
+
+            {mode !== "password" && stage === "code" && (
               <form onSubmit={(e) => { e.preventDefault(); if (code.length === 6 && !busy) verifyAndScan(); }}>
-                <div className="x-hint">{sentBefore}<b>{email}</b>{sentAfter}</div>
+                <div className="x-hint">{sentBefore}<b>{mode === "phone" ? phone.trim() : email}</b>{sentAfter}</div>
                 <label className="x-label" htmlFor="x-code">{L.codeLabel}</label>
                 <input id="x-code" className="x-input x-codeinput" inputMode="numeric" autoComplete="one-time-code" maxLength={6}
                   value={code} autoFocus onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))} />

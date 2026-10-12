@@ -59,7 +59,14 @@ ExpoBot agent tools
   ✓ a report token without contribution data is refused by the tools
   ✓ the agent loop is bounded and always ends in a validated answer
 
+phone identifier path
+  ✓ E.164 is required, and separators are tolerated
+  ✓ a body carrying both an email and a phone is rejected
+  ✓ email and phone identifier namespaces cannot collide
+  ✓ a phone report scores like an email report but is labelled correctly
+  ✓ remediation applies to a phone report, not only an email one
+
 GDPR letters
   ✓ access and erasure letters cite the right articles
 
-41 passed, 0 failed
+46 passed, 0 failed
