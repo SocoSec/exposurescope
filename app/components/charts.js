@@ -3,7 +3,6 @@
 // Presentational pieces of the report: icons, flow diagrams, the needle gauge,
 // data-class bars and the breach timeline. Pure render functions — no state,
 // no network. Icon/FlowDiagram/Gauge/Bars are moved from page.js unchanged;
-// Timeline is updated for the new breach record shape (year + severity).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import React from "react";
@@ -97,34 +96,5 @@ export function Bars({ counts, color }) {
         </div>
       ))}
     </div>
-  );
-}
-
-// One dot per dated breach on a year axis; bigger dot = more severe data.
-// Undated records (DeHashed) can't be placed on a timeline, so they're counted
-// underneath instead of being silently dropped.
-export function Timeline({ breaches, color }) {
-  const dated = breaches.filter((b) => b.year);
-  const undated = breaches.length - dated.length;
-  if (dated.length === 0) return <div className="x-secd">Breach dates weren't available from these sources.</div>;
-  const years = dated.map((b) => parseInt(b.year, 10));
-  const max = new Date().getFullYear();
-  const min = Math.min(...years, max - 1);
-  const span = Math.max(1, max - min);
-  return (
-    <>
-      <svg viewBox="0 0 100 22" style={{ width: "100%", height: 60 }} preserveAspectRatio="none" role="img" aria-label="Breach timeline">
-        <line x1="2" y1="14" x2="98" y2="14" stroke="var(--line)" strokeWidth="0.4" />
-        {[min, Math.round((min + max) / 2), max].map((y, i) => (
-          <text key={i} x={2 + i * 48} y="21" fontSize="3" fill="var(--mute)" fontFamily="monospace">{y}</text>
-        ))}
-        {dated.map((b, i) => (
-          <circle key={i} cx={2 + ((parseInt(b.year, 10) - min) / span) * 96} cy="14" r={1.4 + b.severity * 1.6} fill={color} opacity="0.85">
-            <title>{b.title + " (" + b.year + ")"}</title>
-          </circle>
-        ))}
-      </svg>
-      {undated > 0 && <div className="x-secd" style={{ marginTop: 6 }}>+ {undated} undated record{undated > 1 ? "s" : ""} not shown on the timeline.</div>}
-    </>
   );
 }

@@ -18,7 +18,8 @@ import { LANGS, STR, fill, errorText, trustFor } from "./strings.js";
 import { STYLE } from "./styles.js";
 import { BrandHeader } from "./components/Brand.js";
 import { TrustStrip, SafetyNote, HowItWorks, NeverDoes, TrustSeals } from "./components/Trust.js";
-import { Gauge, Bars, Timeline, FlowDiagram, LEAK_FLOW, ATTACK_FLOW } from "./components/charts.js";
+import { Gauge, Bars, FlowDiagram, LEAK_FLOW, ATTACK_FLOW } from "./components/charts.js";
+import BreachExplorer from "./components/BreachMap.js";
 import ActionPlan from "./components/ActionPlan.js";
 import ExpoBot from "./components/ExpoBot.js";
 import { passwordReport, TIERS, ATTRIBUTES } from "../lib/score.js";
@@ -372,11 +373,11 @@ export default function Page() {
                         ? <div className="x-bar"><span className="bl">Breach dumps</span><span className="bt"><span className="bf" style={{ width: "100%", background: band }} /></span><span className="bv">{report.count.toLocaleString()}</span></div>
                         : <Bars counts={report.classCounts} color={band} />}
                     </div>
-                    {report.kind === "email" && (
+                    {report.kind !== "password" && report.breaches.length > 0 && (
                       <div className="x-card">
-                        <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">Breach timeline</span></div>
-                        <div className="x-secd">When the breaches happened. Recent breaches weigh more; older ones fade from the score.</div>
-                        <Timeline breaches={report.breaches} color={band} />
+                        <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">Where your exposure comes from</span></div>
+                        <div className="x-secd">Each breach plotted by when it happened and what class of data it exposed; the bubble is sized by how much it contributes to your score. Select one to highlight it below.</div>
+                        <BreachExplorer breaches={report.breaches} />
                       </div>
                     )}
                     <div className="x-card">

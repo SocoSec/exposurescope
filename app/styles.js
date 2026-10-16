@@ -244,6 +244,54 @@ export const STYLE = `
 .x-botletterrow{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;}
 /* The agent's working: which tools produced the figures in the answer above. */
 .x-bottrace{margin-top:8px;color:var(--mute);font-size:10.5px;letter-spacing:.02em;opacity:.8;}
+/* ── exposure map + breach cards (app/components/BreachMap.js) ───────────── */
+.x-mapwrap{margin-top:4px;}
+.x-map{width:100%;height:auto;display:block;}
+.x-maplegend{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;
+  margin-top:6px;font-size:11px;color:var(--mute);}
+.x-mapkeys{display:flex;flex-wrap:wrap;gap:12px;}
+.x-mapkey{display:inline-flex;align-items:center;gap:5px;}
+.x-mapdot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+/* The score divided in proportion. One segment usually fills most of the bar,
+   which is the point: exposure concentrates in a single breach. */
+.x-ribbonwrap{margin-top:16px;}
+.x-ribbon{display:flex;height:16px;border-radius:6px;overflow:hidden;background:var(--bg);
+  border:1px solid var(--line);}
+.x-ribbonseg{cursor:pointer;transition:filter .15s,opacity .15s;opacity:.78;min-width:4px;
+  border-right:1px solid rgba(8,11,18,.55);}
+.x-ribbonseg:last-child{border-right:none;}
+.x-ribbonseg:hover{opacity:1;}
+.x-ribbonseg.on{opacity:1;filter:brightness(1.25);}
+.x-ribbonnote{margin-top:7px;font-size:12.5px;color:var(--mute);line-height:1.5;}
+.x-ribbonnote b{color:var(--ink);font-weight:650;}
+
+.x-breaches{display:grid;gap:9px;margin-top:16px;}
+/* The left border carries the severity tier colour, so the card and its bubble
+   on the map are recognisably the same record. */
+.x-breach{border:1px solid var(--line);border-left-width:3px;border-radius:11px;padding:12px 14px;
+  background:var(--card2);cursor:pointer;transition:border-color .15s,background .15s;}
+.x-breach:hover{background:#17202F;}
+.x-breach.on{background:#17202F;box-shadow:0 0 0 1px var(--sig-edge);}
+.x-breachtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.x-breachname{font-size:14px;font-weight:650;letter-spacing:-.01em;}
+.x-breachdate{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--mute);white-space:nowrap;}
+.x-breachtier{font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;margin-top:5px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;}
+.x-breachsrc{color:var(--mute);font-weight:400;letter-spacing:.03em;text-transform:none;}
+.x-classes{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;}
+.x-class{font-size:11.5px;color:#C3CDDC;background:rgba(255,255,255,.04);border:1px solid var(--line);
+  border-radius:999px;padding:3px 9px;}
+.x-contrib{display:flex;align-items:center;gap:9px;margin-top:10px;}
+.x-contribbar{flex:1;height:5px;background:var(--bg);border-radius:4px;overflow:hidden;}
+.x-contribbar span{display:block;height:100%;border-radius:4px;}
+.x-contribval{font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);min-width:40px;text-align:right;}
+
+@media (max-width:640px){
+  .x-breachdate{white-space:normal;}
+  .x-maplegend{flex-direction:column;align-items:flex-start;}
+}
+
 .x-assumed{color:var(--amber);}
 /* Small screens: keep the ExpoBot bubble on the bottom edge so it doesn't cover the tabs or content mid-page. */
 @media (max-width:560px){.x-nudge{left:14px;right:14px;width:auto;bottom:90px;}.x-nudge::after{right:34px;}.x-panel{right:8px;bottom:8px;}}
