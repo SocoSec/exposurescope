@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="880" viewBox="0 0 2000 880"
+     font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<title>Exposio technology summary</title>
+<desc>Technology summary table: layer, technology, version and notes.</desc>
+
+<rect width="2000" height="880" fill="#FFFFFF"/>
+<text x="44" y="60" font-size="34" font-weight="700" fill="#101922">Exposio &#8212; technology summary</text>
+<text x="44" y="98" font-size="21" fill="#53627A">Every version and count read from package.json and the repository tree.</text>
+
+<rect x="44" y="132" width="1912" height="62" fill="#E8EDF4" stroke="#7E90A8" stroke-width="2.4"/>
+<text x="72" y="172" font-size="23" font-weight="700" fill="#101922">Layer</text>
+<text x="420" y="172" font-size="23" font-weight="700" fill="#101922">Technology</text>
+<text x="1060" y="172" font-size="23" font-weight="700" fill="#101922">Version</text>
+<text x="1380" y="172" font-size="23" font-weight="700" fill="#101922">Notes</text>
+
+<g font-size="21" fill="#243247">
+  <rect x="44" y="194" width="1912" height="76" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.6"/>
+  <text x="72" y="240" font-weight="650">Presentation</text>
+  <text x="420" y="240">React, Next.js App Router</text>
+  <text x="1060" y="240" font-family="Consolas, monospace">18.3.1 / 14.2.35</text>
+  <text x="1380" y="240" fill="#53627A">8 client components; graphics are inline SVG</text>
+
+  <rect x="44" y="270" width="1912" height="76" fill="#F6F9FC" stroke="#C3D0DF" stroke-width="1.6"/>
+  <text x="72" y="316" font-weight="650">Styling</text>
+  <text x="420" y="316">CSS in a JavaScript string</text>
+  <text x="1060" y="316" font-family="Consolas, monospace">&#8212;</text>
+  <text x="1380" y="316" fill="#53627A">371 lines; no framework, no .css file</text>
+
+  <rect x="44" y="346" width="1912" height="76" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.6"/>
+  <text x="72" y="392" font-weight="650">Application</text>
+  <text x="420" y="392">Next.js Route Handlers, Edge</text>
+  <text x="1060" y="392" font-family="Consolas, monospace">14.2.35</text>
+  <text x="1380" y="392" fill="#53627A">4 endpoints, each <tspan font-family="Consolas, monospace">runtime = &quot;edge&quot;</tspan></text>
+
+  <rect x="44" y="422" width="1912" height="76" fill="#F6F9FC" stroke="#C3D0DF" stroke-width="1.6"/>
+  <text x="72" y="468" font-weight="650">Domain logic</text>
+  <text x="420" y="468">Plain ES modules</text>
+  <text x="1060" y="468" font-family="Consolas, monospace">&#8212;</text>
+  <text x="1380" y="468" fill="#53627A">14 modules, no I/O; shared by server, browser, tests</text>
+
+  <rect x="44" y="498" width="1912" height="76" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.6"/>
+  <text x="72" y="544" font-weight="650">Cryptography</text>
+  <text x="420" y="544">Web Crypto API</text>
+  <text x="1060" y="544" font-family="Consolas, monospace">platform</text>
+  <text x="1380" y="544" fill="#53627A">HMAC-SHA256 tokens; SHA-1 for k-anonymity</text>
+
+  <rect x="44" y="574" width="1912" height="76" fill="#F6F9FC" stroke="#C3D0DF" stroke-width="1.6"/>
+  <text x="72" y="620" font-weight="650">Persistence</text>
+  <text x="420" y="620" font-weight="700" fill="#B8372A">None</text>
+  <text x="1060" y="620" font-family="Consolas, monospace">&#8212;</text>
+  <text x="1380" y="620" fill="#53627A">Signed tokens only; optional Upstash Redis for rate limits</text>
+
+  <rect x="44" y="650" width="1912" height="76" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.6"/>
+  <text x="72" y="696" font-weight="650">Verification</text>
+  <text x="420" y="696">Node assertion scripts</text>
+  <text x="1060" y="696" font-family="Consolas, monospace">Node &#8805; 18.17</text>
+  <text x="1380" y="696" fill="#53627A">selftest, redteam, sensitivity, evaluate; no framework</text>
+
+  <rect x="44" y="726" width="1912" height="76" fill="#F6F9FC" stroke="#C3D0DF" stroke-width="1.6"/>
+  <text x="72" y="772" font-weight="650">Dependencies</text>
+  <text x="420" y="772" font-family="Consolas, monospace">next, react, react-dom</text>
+  <text x="1060" y="772" font-family="Consolas, monospace">3 direct</text>
+  <text x="1380" y="772" fill="#53627A">19 packages incl. transitive; 0 TypeScript, 0 CSS files</text>
+</g>
+
+<text x="44" y="846" font-size="19" fill="#8792A6">MSc research prototype &#183; &#211;buda University</text>
+</svg>

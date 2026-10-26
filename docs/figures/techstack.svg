@@ -1,194 +1,146 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1762" viewBox="0 0 2400 1762"
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1300" viewBox="0 0 2000 1300"
      font-family="Segoe UI, Helvetica, Arial, sans-serif">
-<title>Exposio deployment diagram and technology stack</title>
-<desc>UML deployment diagram: devices, execution environments, artifacts and communication paths, with a technology summary table.</desc>
+<title>Exposio deployment diagram</title>
+<desc>UML deployment diagram: devices, execution environments, artifacts and communication paths.</desc>
 
 <defs>
-  <marker id="ar" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto">
-    <path d="M1 1 L11 6 L1 11" fill="none" stroke="#243247" stroke-width="2"/>
+  <marker id="ar" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+    <path d="M1 1 L11 6 L1 11" fill="none" stroke="#1E2A3C" stroke-width="2.2"/>
   </marker>
-  <marker id="arg" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto">
-    <path d="M1 1 L11 6 L1 11" fill="none" stroke="#15785A" stroke-width="2"/>
+  <marker id="arg" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+    <path d="M1 1 L11 6 L1 11" fill="none" stroke="#136B51" stroke-width="2.2"/>
   </marker>
-  <!-- UML artifact icon: a document with a folded corner -->
   <symbol id="art" viewBox="0 0 40 48">
-    <path d="M3 3 h22 l12 12 v30 h-34 z" fill="#FFFFFF" stroke="#4A5668" stroke-width="2.6"/>
-    <path d="M25 3 v12 h12" fill="none" stroke="#4A5668" stroke-width="2.6"/>
+    <path d="M3 3 h22 l12 12 v30 h-34 z" fill="#FFFFFF" stroke="#4A5668" stroke-width="3"/>
+    <path d="M25 3 v12 h12" fill="none" stroke="#4A5668" stroke-width="3"/>
   </symbol>
 </defs>
 
-<rect width="2400" height="1762" fill="#FFFFFF"/>
-<text x="48" y="60" font-size="36" font-weight="700" fill="#101922">Exposio &#8212; deployment diagram and technology stack</text>
-<text x="48" y="98" font-size="21" fill="#53627A">UML deployment notation. Every version and count below is read from the repository at the current commit.</text>
+<rect width="2000" height="1300" fill="#FFFFFF"/>
+<text x="44" y="62" font-size="37" font-weight="700" fill="#101922">Exposio &#8212; deployment diagram</text>
+<text x="44" y="102" font-size="22" fill="#53627A">UML deployment notation. Figure 1 of 2; the technology summary follows as a table.</text>
 
-<!-- ═══════════ NODE 1 : USER DEVICE ═══════════ -->
-<path d="M64 232 l26 -26 h556 l-26 26 z" fill="#DCE5F0" stroke="#3A4860" stroke-width="3" stroke-linejoin="round"/>
-<path d="M620 232 l26 -26 v474 l-26 26 z" fill="#CBD6E4" stroke="#3A4860" stroke-width="3" stroke-linejoin="round"/>
-<rect x="64" y="232" width="556" height="500" fill="#F4F7FB" stroke="#3A4860" stroke-width="3"/>
-<text x="342" y="272" font-size="19" font-style="italic" fill="#53627A" text-anchor="middle">&#171;device&#187;</text>
-<text x="342" y="304" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">User Device</text>
+<!-- ══════ USER DEVICE ══════ -->
+<path d="M52 196 l24 -24 h520 l-24 24 z" fill="#DCE5F0" stroke="#3A4860" stroke-width="3.2" stroke-linejoin="round"/>
+<path d="M572 196 l24 -24 v566 l-24 24 z" fill="#CBD6E4" stroke="#3A4860" stroke-width="3.2" stroke-linejoin="round"/>
+<rect x="52" y="196" width="520" height="590" fill="#F4F7FB" stroke="#3A4860" stroke-width="3.2"/>
+<text x="312" y="238" font-size="20" font-style="italic" fill="#53627A" text-anchor="middle">&#171;device&#187;</text>
+<text x="312" y="276" font-size="30" font-weight="700" fill="#101922" text-anchor="middle">User Device</text>
 
-<rect x="96" y="332" width="492" height="372" rx="6" fill="#FFFFFF" stroke="#5A6B85" stroke-width="2.6" stroke-dasharray="10 6"/>
-<text x="342" y="364" font-size="17.5" font-style="italic" fill="#53627A" text-anchor="middle">&#171;executionEnvironment&#187;</text>
-<text x="342" y="394" font-size="22" font-weight="700" fill="#101922" text-anchor="middle">Web Browser</text>
+<rect x="82" y="306" width="460" height="452" rx="7" fill="#FFFFFF" stroke="#5A6B85" stroke-width="3" stroke-dasharray="11 7"/>
+<text x="312" y="342" font-size="19" font-style="italic" fill="#53627A" text-anchor="middle">&#171;executionEnvironment&#187;</text>
+<text x="312" y="378" font-size="26" font-weight="700" fill="#101922" text-anchor="middle">Web Browser</text>
 
-<rect x="124" y="416" width="436" height="124" rx="6" fill="#E9F3FB" stroke="#2F86C4" stroke-width="2.6"/>
-<use href="#art" x="142" y="432" width="34" height="41"/>
-<text x="194" y="446" font-size="16.5" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
-<text x="194" y="474" font-size="20" font-weight="700" fill="#101922">exposio page</text>
-<text x="142" y="506" font-size="17" fill="#53627A">React 18.3.1 &#183; Next.js App Router</text>
-<text x="142" y="530" font-size="17" fill="#53627A">8 client components &#183; inline SVG</text>
+<rect x="108" y="404" width="408" height="160" rx="7" fill="#E9F3FB" stroke="#2F86C4" stroke-width="3"/>
+<use href="#art" x="128" y="424" width="40" height="48"/>
+<text x="184" y="442" font-size="19" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
+<text x="184" y="474" font-size="25" font-weight="700" fill="#101922">exposio page</text>
+<text x="128" y="512" font-size="20" fill="#53627A">React 18.3.1 &#183; Next.js</text>
+<text x="128" y="542" font-size="20" fill="#53627A">8 components &#183; inline SVG</text>
 
-<rect x="124" y="556" width="436" height="124" rx="6" fill="#E0F3EB" stroke="#15785A" stroke-width="2.6"/>
-<use href="#art" x="142" y="572" width="34" height="41"/>
-<text x="194" y="586" font-size="16.5" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
-<text x="194" y="614" font-size="20" font-weight="700" fill="#15785A">k-anonymity check</text>
-<text x="142" y="646" font-size="17" fill="#2F6B55">Web Crypto &#183; SHA-1 computed here</text>
-<text x="142" y="670" font-size="17" fill="#2F6B55">5 hex characters sent, nothing more</text>
+<rect x="108" y="584" width="408" height="160" rx="7" fill="#E0F3EB" stroke="#136B51" stroke-width="3"/>
+<use href="#art" x="128" y="604" width="40" height="48"/>
+<text x="184" y="622" font-size="19" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
+<text x="184" y="654" font-size="25" font-weight="700" fill="#136B51">k-anonymity check</text>
+<text x="128" y="692" font-size="20" fill="#2F6B55">Web Crypto &#183; SHA-1 here</text>
+<text x="128" y="722" font-size="20" fill="#2F6B55">5 characters leave, no more</text>
 
-<!-- ═══════════ NODE 2 : VERCEL EDGE ═══════════ -->
-<path d="M786 232 l26 -26 h800 l-26 26 z" fill="#D9E6F2" stroke="#1B6498" stroke-width="3" stroke-linejoin="round"/>
-<path d="M1586 232 l26 -26 v640 l-26 26 z" fill="#C6D9EA" stroke="#1B6498" stroke-width="3" stroke-linejoin="round"/>
-<rect x="786" y="232" width="800" height="666" fill="#EEF5FC" stroke="#1B6498" stroke-width="3"/>
-<text x="1186" y="272" font-size="19" font-style="italic" fill="#1B6498" text-anchor="middle">&#171;device&#187;</text>
-<text x="1186" y="304" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">Vercel Edge Network</text>
+<!-- ══════ VERCEL EDGE ══════ -->
+<path d="M688 196 l24 -24 h588 l-24 24 z" fill="#D9E6F2" stroke="#1B6498" stroke-width="3.2" stroke-linejoin="round"/>
+<path d="M1276 196 l24 -24 v666 l-24 24 z" fill="#C6D9EA" stroke="#1B6498" stroke-width="3.2" stroke-linejoin="round"/>
+<rect x="688" y="196" width="588" height="690" fill="#EEF5FC" stroke="#1B6498" stroke-width="3.2"/>
+<text x="982" y="238" font-size="20" font-style="italic" fill="#1B6498" text-anchor="middle">&#171;device&#187;</text>
+<text x="982" y="276" font-size="30" font-weight="700" fill="#101922" text-anchor="middle">Vercel Edge Network</text>
 
-<rect x="818" y="332" width="736" height="358" rx="6" fill="#FFFFFF" stroke="#2F86C4" stroke-width="2.6" stroke-dasharray="10 6"/>
-<text x="1186" y="364" font-size="17.5" font-style="italic" fill="#53627A" text-anchor="middle">&#171;executionEnvironment&#187;</text>
-<text x="1186" y="394" font-size="22" font-weight="700" fill="#101922" text-anchor="middle">Edge Runtime &#183; V8 isolate</text>
+<rect x="716" y="306" width="532" height="330" rx="7" fill="#FFFFFF" stroke="#2F86C4" stroke-width="3" stroke-dasharray="11 7"/>
+<text x="982" y="342" font-size="19" font-style="italic" fill="#53627A" text-anchor="middle">&#171;executionEnvironment&#187;</text>
+<text x="982" y="378" font-size="26" font-weight="700" fill="#101922" text-anchor="middle">Edge Runtime &#183; V8 isolate</text>
 
-<rect x="846" y="416" width="332" height="118" rx="6" fill="#E9F3FB" stroke="#2F86C4" stroke-width="2.6"/>
-<use href="#art" x="864" y="432" width="34" height="41"/>
-<text x="916" y="446" font-size="16.5" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
-<text x="916" y="474" font-size="20" font-weight="700" fill="#101922">Route Handlers</text>
-<text x="864" y="504" font-size="17" fill="#53627A">Next.js 14.2.35 &#183; 4 endpoints</text>
-<text x="864" y="526" font-size="17" fill="#53627A">verify/start &#183; verify/check</text>
+<rect x="742" y="404" width="480" height="104" rx="7" fill="#E9F3FB" stroke="#2F86C4" stroke-width="3"/>
+<use href="#art" x="760" y="420" width="38" height="46"/>
+<text x="814" y="438" font-size="19" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
+<text x="814" y="468" font-size="25" font-weight="700" fill="#101922">Route Handlers</text>
+<text x="814" y="496" font-size="20" fill="#53627A">Next.js 14.2.35 &#183; 4 endpoints</text>
 
-<rect x="1198" y="416" width="332" height="118" rx="6" fill="#EDE7FA" stroke="#6D55BD" stroke-width="2.6"/>
-<use href="#art" x="1216" y="432" width="34" height="41"/>
-<text x="1268" y="446" font-size="16.5" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
-<text x="1268" y="474" font-size="20" font-weight="700" fill="#101922">lib/ domain modules</text>
-<text x="1216" y="504" font-size="17" fill="#53627A">14 ES modules, no I/O</text>
-<text x="1216" y="526" font-size="17" fill="#53627A">score &#183; tokens &#183; playbook &#183; agent</text>
+<rect x="742" y="522" width="480" height="104" rx="7" fill="#EDE7FA" stroke="#6D55BD" stroke-width="3"/>
+<use href="#art" x="760" y="538" width="38" height="46"/>
+<text x="814" y="556" font-size="19" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
+<text x="814" y="586" font-size="25" font-weight="700" fill="#101922">lib/ domain modules</text>
+<text x="814" y="614" font-size="20" fill="#53627A">14 ES modules &#183; no I/O</text>
 
-<rect x="846" y="556" width="684" height="112" rx="6" fill="#FAE8E4" stroke="#B8372A" stroke-width="2.8"/>
-<text x="872" y="590" font-size="20" font-weight="700" fill="#B8372A">No artifact is deployed for persistence.</text>
-<text x="872" y="620" font-size="17.5" fill="#8A3B2E">This node has no database, object store or session store. Session state is</text>
-<text x="872" y="646" font-size="17.5" fill="#8A3B2E">carried by a signed token held on the User Device and expires with it.</text>
+<rect x="716" y="660" width="532" height="130" rx="7" fill="#FAE8E4" stroke="#B8372A" stroke-width="3.2"/>
+<text x="982" y="700" font-size="24" font-weight="700" fill="#B8372A" text-anchor="middle">No persistence artifact</text>
+<text x="982" y="734" font-size="20" fill="#8A3B2E" text-anchor="middle">is deployed on this node.</text>
+<text x="982" y="768" font-size="20" fill="#8A3B2E" text-anchor="middle">State travels in a signed token.</text>
 
-<text x="818" y="736" font-size="17.5" fill="#53627A">Node constraints:  stateless &#183; no process persists between requests &#183; Node &#8805; 18.17 API surface</text>
-<text x="818" y="766" font-size="17.5" fill="#53627A">Deployed by Vercel from branch <tspan font-family="Consolas, monospace" fill="#101922">main</tspan> on push. No container image, no long-running server.</text>
-<text x="818" y="796" font-size="17.5" fill="#53627A">Dependencies resolved at build: <tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">next</tspan>, <tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">react</tspan>, <tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">react-dom</tspan> &#8212; 19 packages in total.</text>
+<text x="716" y="836" font-size="20" fill="#53627A">Stateless &#183; no process persists between requests</text>
+<text x="716" y="868" font-size="20" fill="#53627A">Deployed from <tspan font-family="Consolas, monospace" fill="#101922">main</tspan> on push &#183; Node &#8805; 18.17</text>
 
-<!-- ═══════════ EXTERNAL NODES ═══════════ -->
+<!-- ══════ EXTERNAL NODES ══════ -->
 <g>
-  <path d="M1760 212 l20 -20 h560 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
-  <path d="M2300 212 l20 -20 v86 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
-  <rect x="1760" y="212" width="540" height="106" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.6"/>
-  <text x="2030" y="244" font-size="16.5" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
-  <text x="2030" y="274" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">Have I Been Pwned</text>
-  <text x="2030" y="302" font-size="16.5" fill="#53627A" text-anchor="middle">breach records for an address</text>
+  <path d="M1444 190 l20 -20 h476 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M1900 190 l20 -20 v80 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.8" stroke-linejoin="round"/>
+  <rect x="1444" y="190" width="456" height="100" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.8"/>
+  <text x="1672" y="222" font-size="18" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
+  <text x="1672" y="256" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">Have I Been Pwned</text>
+  <text x="1672" y="282" font-size="19" fill="#53627A" text-anchor="middle">breach records</text>
 </g>
 <g>
-  <path d="M1760 358 l20 -20 h560 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
-  <path d="M2300 358 l20 -20 v86 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
-  <rect x="1760" y="358" width="540" height="106" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.6"/>
-  <text x="2030" y="390" font-size="16.5" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
-  <text x="2030" y="420" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">DeHashed</text>
-  <text x="2030" y="448" font-size="16.5" fill="#53627A" text-anchor="middle">second source; phone numbers</text>
+  <path d="M1444 330 l20 -20 h476 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M1900 330 l20 -20 v80 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.8" stroke-linejoin="round"/>
+  <rect x="1444" y="330" width="456" height="100" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.8"/>
+  <text x="1672" y="362" font-size="18" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
+  <text x="1672" y="396" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">DeHashed</text>
+  <text x="1672" y="422" font-size="19" fill="#53627A" text-anchor="middle">second source &#183; phones</text>
 </g>
 <g>
-  <path d="M1760 504 l20 -20 h560 l-20 20 z" fill="#CFE6DB" stroke="#15785A" stroke-width="2.6" stroke-linejoin="round"/>
-  <path d="M2300 504 l20 -20 v86 l-20 20 z" fill="#BCDCCD" stroke="#15785A" stroke-width="2.6" stroke-linejoin="round"/>
-  <rect x="1760" y="504" width="540" height="106" fill="#F1FAF5" stroke="#15785A" stroke-width="2.6"/>
-  <text x="2030" y="536" font-size="16.5" font-style="italic" fill="#15785A" text-anchor="middle">&#171;device&#187;</text>
-  <text x="2030" y="566" font-size="21" font-weight="700" fill="#15785A" text-anchor="middle">Pwned Passwords</text>
-  <text x="2030" y="594" font-size="16.5" fill="#2F6B55" text-anchor="middle">range API &#183; reached by the browser</text>
+  <path d="M1444 470 l20 -20 h476 l-20 20 z" fill="#CFE6DB" stroke="#136B51" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M1900 470 l20 -20 v80 l-20 20 z" fill="#BCDCCD" stroke="#136B51" stroke-width="2.8" stroke-linejoin="round"/>
+  <rect x="1444" y="470" width="456" height="100" fill="#F1FAF5" stroke="#136B51" stroke-width="2.8"/>
+  <text x="1672" y="502" font-size="18" font-style="italic" fill="#136B51" text-anchor="middle">&#171;device&#187;</text>
+  <text x="1672" y="536" font-size="25" font-weight="700" fill="#136B51" text-anchor="middle">Pwned Passwords</text>
+  <text x="1672" y="562" font-size="19" fill="#2F6B55" text-anchor="middle">reached by the browser</text>
 </g>
 <g>
-  <path d="M1760 650 l20 -20 h560 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
-  <path d="M2300 650 l20 -20 v86 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
-  <rect x="1760" y="650" width="540" height="106" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.6"/>
-  <text x="2030" y="682" font-size="16.5" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
-  <text x="2030" y="712" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">Resend &#183; Twilio</text>
-  <text x="2030" y="740" font-size="16.5" fill="#53627A" text-anchor="middle">deliver the one-time code</text>
+  <path d="M1444 610 l20 -20 h476 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M1900 610 l20 -20 v80 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.8" stroke-linejoin="round"/>
+  <rect x="1444" y="610" width="456" height="100" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.8"/>
+  <text x="1672" y="642" font-size="18" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
+  <text x="1672" y="676" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">Resend &#183; Twilio</text>
+  <text x="1672" y="702" font-size="19" fill="#53627A" text-anchor="middle">deliver the one-time code</text>
 </g>
 <g>
-  <path d="M1760 796 l20 -20 h560 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
-  <path d="M2300 796 l20 -20 v86 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
-  <rect x="1760" y="796" width="540" height="106" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.6"/>
-  <text x="2030" y="828" font-size="16.5" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
-  <text x="2030" y="858" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">Anthropic API</text>
-  <text x="2030" y="886" font-size="16.5" fill="#53627A" text-anchor="middle">wording for the advisory agent</text>
+  <path d="M1444 750 l20 -20 h476 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M1900 750 l20 -20 v80 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.8" stroke-linejoin="round"/>
+  <rect x="1444" y="750" width="456" height="100" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.8"/>
+  <text x="1672" y="782" font-size="18" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
+  <text x="1672" y="816" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">Anthropic API</text>
+  <text x="1672" y="842" font-size="19" fill="#53627A" text-anchor="middle">wording for the agent</text>
 </g>
 <g>
-  <path d="M1760 942 l20 -20 h560 l-20 20 z" fill="#E4E4EC" stroke="#6A6A82" stroke-width="2.6" stroke-linejoin="round" stroke-dasharray="8 5"/>
-  <path d="M2300 942 l20 -20 v86 l-20 20 z" fill="#D6D6E2" stroke="#6A6A82" stroke-width="2.6" stroke-linejoin="round" stroke-dasharray="8 5"/>
-  <rect x="1760" y="942" width="540" height="106" fill="#F7F7FA" stroke="#6A6A82" stroke-width="2.6" stroke-dasharray="8 5"/>
-  <text x="2030" y="974" font-size="16.5" font-style="italic" fill="#6A6A82" text-anchor="middle">&#171;device&#187; &#183; optional</text>
-  <text x="2030" y="1004" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">Upstash Redis</text>
-  <text x="2030" y="1032" font-size="16.5" fill="#53627A" text-anchor="middle">rate-limit counters only</text>
+  <path d="M1444 890 l20 -20 h476 l-20 20 z" fill="#E4E4EC" stroke="#6A6A82" stroke-width="2.8" stroke-linejoin="round" stroke-dasharray="9 6"/>
+  <path d="M1900 890 l20 -20 v80 l-20 20 z" fill="#D6D6E2" stroke="#6A6A82" stroke-width="2.8" stroke-linejoin="round" stroke-dasharray="9 6"/>
+  <rect x="1444" y="890" width="456" height="100" fill="#F7F7FA" stroke="#6A6A82" stroke-width="2.8" stroke-dasharray="9 6"/>
+  <text x="1672" y="922" font-size="18" font-style="italic" fill="#6A6A82" text-anchor="middle">&#171;device&#187; &#183; optional</text>
+  <text x="1672" y="956" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">Upstash Redis</text>
+  <text x="1672" y="982" font-size="19" fill="#53627A" text-anchor="middle">rate-limit counters only</text>
 </g>
 
-<!-- ═══════════ COMMUNICATION PATHS ═══════════ -->
-<path d="M646 486 L780 486" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
-<text x="713" y="466" font-size="17" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
-<text x="713" y="518" font-size="16.5" fill="#53627A" text-anchor="middle">JSON</text>
+<!-- ══════ COMMUNICATION PATHS ══════ -->
+<path d="M598 470 L682 470" stroke="#1E2A3C" stroke-width="3.4" fill="none" marker-end="url(#ar)"/>
+<text x="640" y="446" font-size="20" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
 
-<path d="M560 600 C 900 1140, 1500 1160, 1960 620" stroke="#15785A" stroke-width="3.2" fill="none"
-      stroke-dasharray="12 7" marker-end="url(#arg)"/>
-<text x="1240" y="1168" font-size="18.5" font-weight="700" fill="#15785A" text-anchor="middle">&#171;HTTPS&#187; hash prefix &#8212; this path does not traverse the Vercel node</text>
+<path d="M1306 400 L1438 250" stroke="#1E2A3C" stroke-width="3.4" fill="none" marker-end="url(#ar)"/>
+<path d="M1306 430 L1438 384" stroke="#1E2A3C" stroke-width="3.4" fill="none" marker-end="url(#ar)"/>
+<path d="M1306 560 L1438 664" stroke="#1E2A3C" stroke-width="3.4" fill="none" marker-end="url(#ar)"/>
+<path d="M1306 600 L1438 804" stroke="#1E2A3C" stroke-width="3.4" fill="none" marker-end="url(#ar)"/>
+<path d="M1306 700 L1438 944" stroke="#6A6A82" stroke-width="3" fill="none" stroke-dasharray="10 7" marker-end="url(#ar)"/>
+<text x="1374" y="312" font-size="20" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
+<text x="1372" y="616" font-size="20" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
 
-<path d="M1616 420 L1754 280" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
-<path d="M1616 440 L1754 412" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
-<path d="M1616 560 L1754 700" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
-<path d="M1616 600 L1754 846" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
-<path d="M1616 700 L1754 988" stroke="#6A6A82" stroke-width="2.6" fill="none" stroke-dasharray="9 6" marker-end="url(#ar)"/>
-<text x="1690" y="352" font-size="17" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
-<text x="1686" y="640" font-size="17" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
-<text x="1664" y="900" font-size="16.5" font-style="italic" fill="#6A6A82" text-anchor="middle">&#171;HTTPS&#187; optional</text>
+<path d="M516 744 C 700 1110, 1150 1130, 1350 1020 C 1424 978, 1408 630, 1438 542" stroke="#136B51" stroke-width="4" fill="none"
+      stroke-dasharray="14 8" marker-end="url(#arg)"/>
+<text x="880" y="1178" font-size="23" font-weight="700" fill="#136B51" text-anchor="middle">&#171;HTTPS&#187; hash prefix &#8212; this path never touches the Vercel node</text>
 
-<!-- ═══════════ TECHNOLOGY SUMMARY TABLE ═══════════ -->
-<text x="48" y="1236" font-size="25" font-weight="700" fill="#101922">Technology summary</text>
-
-<rect x="48" y="1258" width="2304" height="52" fill="#E8EDF4" stroke="#8798AE" stroke-width="2"/>
-<text x="72" y="1292" font-size="19" font-weight="700" fill="#101922">Layer</text>
-<text x="560" y="1292" font-size="19" font-weight="700" fill="#101922">Technology</text>
-<text x="1320" y="1292" font-size="19" font-weight="700" fill="#101922">Version</text>
-<text x="1660" y="1292" font-size="19" font-weight="700" fill="#101922">Notes</text>
-
-<g font-size="18" fill="#243247">
-  <rect x="48" y="1310" width="2304" height="46" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.4"/>
-  <text x="72" y="1340" font-weight="650">Presentation</text><text x="560" y="1340">React, Next.js App Router</text>
-  <text x="1320" y="1340" font-family="Consolas, monospace">18.3.1 / 14.2.35</text><text x="1660" y="1340" fill="#53627A">8 client components; graphics are inline SVG</text>
-
-  <rect x="48" y="1356" width="2304" height="46" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="1.4"/>
-  <text x="72" y="1386" font-weight="650">Styling</text><text x="560" y="1386">CSS in a JavaScript string</text>
-  <text x="1320" y="1386" font-family="Consolas, monospace">&#8212;</text><text x="1660" y="1386" fill="#53627A">371 lines; no framework, no .css file</text>
-
-  <rect x="48" y="1402" width="2304" height="46" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.4"/>
-  <text x="72" y="1432" font-weight="650">Application</text><text x="560" y="1432">Next.js Route Handlers, Edge runtime</text>
-  <text x="1320" y="1432" font-family="Consolas, monospace">14.2.35</text><text x="1660" y="1432" fill="#53627A">4 endpoints, each <tspan font-family="Consolas, monospace">runtime = &quot;edge&quot;</tspan></text>
-
-  <rect x="48" y="1448" width="2304" height="46" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="1.4"/>
-  <text x="72" y="1478" font-weight="650">Domain logic</text><text x="560" y="1478">Plain ES modules</text>
-  <text x="1320" y="1478" font-family="Consolas, monospace">&#8212;</text><text x="1660" y="1478" fill="#53627A">14 modules, no I/O; shared by server, browser and tests</text>
-
-  <rect x="48" y="1494" width="2304" height="46" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.4"/>
-  <text x="72" y="1524" font-weight="650">Cryptography</text><text x="560" y="1524">Web Crypto API</text>
-  <text x="1320" y="1524" font-family="Consolas, monospace">platform</text><text x="1660" y="1524" fill="#53627A">HMAC-SHA256 tokens; SHA-1 for k-anonymity</text>
-
-  <rect x="48" y="1540" width="2304" height="46" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="1.4"/>
-  <text x="72" y="1570" font-weight="650">Persistence</text><text x="560" y="1570" font-weight="650" fill="#B8372A">None</text>
-  <text x="1320" y="1570" font-family="Consolas, monospace">&#8212;</text><text x="1660" y="1570" fill="#53627A">Signed tokens only; optional Upstash Redis for rate limits</text>
-
-  <rect x="48" y="1586" width="2304" height="46" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.4"/>
-  <text x="72" y="1616" font-weight="650">Verification</text><text x="560" y="1616">Node assertion scripts</text>
-  <text x="1320" y="1616" font-family="Consolas, monospace">Node &#8805; 18.17</text><text x="1660" y="1616" fill="#53627A">selftest, redteam, sensitivity, evaluate; no test framework</text>
-
-  <rect x="48" y="1632" width="2304" height="46" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="1.4"/>
-  <text x="72" y="1662" font-weight="650">Dependencies</text><text x="560" y="1662" font-family="Consolas, monospace">next, react, react-dom</text>
-  <text x="1320" y="1662" font-family="Consolas, monospace">3 direct</text><text x="1660" y="1662" fill="#53627A">19 packages including transitive; 0 TypeScript, 0 CSS files</text>
-</g>
-<text x="48" y="1724" font-size="17" fill="#8792A6">MSc research prototype &#183; &#211;buda University &#183; nodes and artifacts follow UML deployment notation; versions and counts are read from package.json and the repository tree.</text>
+<text x="44" y="1268" font-size="19" fill="#8792A6">MSc research prototype &#183; &#211;buda University</text>
 </svg>
