@@ -18,14 +18,15 @@ import { LANGS, STR, fill, errorText, trustFor } from "./strings.js";
 import { STYLE } from "./styles.js";
 import { BrandHeader } from "./components/Brand.js";
 import { TrustStrip, SafetyNote, MoreAbout, TrustSeals } from "./components/Trust.js";
-import { Gauge, FlowDiagram, LEAK_FLOW, ATTACK_FLOW } from "./components/charts.js";
+import { Gauge } from "./components/charts.js";
 import BreachExplorer from "./components/BreachMap.js";
 import ExposureMatrix from "./components/DataMatrix.js";
+import { StoryStrip, LessonCard } from "./components/Explain.js";
 import ActionPlan from "./components/ActionPlan.js";
 import ExpoBot from "./components/ExpoBot.js";
 import { passwordReport, TIERS, ATTRIBUTES } from "../lib/score.js";
 import { residualScore } from "../lib/playbook.js";
-import { howLeaked, howWeaponised, footprint } from "../lib/content.js";
+import { LEAK_STORY, howWeaponised, footprint } from "../lib/content.js";
 
 const BAND_COLOR = { safe: "var(--sig)", low: "var(--sig)", medium: "var(--amber)", high: "var(--coral)" };
 const TIER_SHORT = { financial: "Financial", "financial-only": "Payment", credentials: "Credentials", contact: "Contact", email: "Email" };
@@ -402,11 +403,16 @@ export default function Page() {
 
                 {tab === "learn" && (
                   <div className="x-panelfade">
-                    <InfoCard n="01" title="How your data leaked" desc="The path your data takes from a signup form to an aggregated profile." flow={LEAK_FLOW} color={band}
-                      items={howLeaked(report.attrs, report.breaches.length)} />
-                    <InfoCard n="02" title="How attackers could use it" desc="Awareness, not instructions — understanding the risk is how you defend against it." flow={ATTACK_FLOW} color={band}
+                    <div className="x-card">
+                      <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">How your data got out</span></div>
+                      <div className="x-secd">The whole thing in four steps. None of them were yours to prevent.</div>
+                      <StoryStrip panels={LEAK_STORY} accent={band} />
+                    </div>
+                    <LessonCard n="02" title="What someone could try" accent={band}
+                      desc="Based on what actually leaked in your result. Awareness, not instructions — open a row for the precise version."
                       items={howWeaponised(report.attrs)} />
-                    <InfoCard n="03" title="Your public footprint" desc="Exposio doesn't fetch anyone's public profiles or posts. Use these self-checks to inspect your own footprint." color={band}
+                    <LessonCard n="03" title="What you can check yourself" accent={band}
+                      desc="Exposio looks up nobody's public profiles. These are checks you run on your own footprint."
                       items={footprint(report.attrs, meta.identifier, report.kind)} />
                   </div>
                 )}
@@ -514,20 +520,3 @@ function PasswordModel({ report, band }) {
   );
 }
 
-// ---- Learn tab card ------------------------------------------------------------
-function InfoCard({ n, title, desc, flow, color, items }) {
-  return (
-    <div className="x-card">
-      <div className="x-sech"><span className="x-secn">{n}</span><span className="x-sect">{title}</span></div>
-      <div className="x-secd">{desc}</div>
-      {flow && <FlowDiagram steps={flow} color={color} />}
-      {items.map((it, i) => (
-        <div className="x-info" key={i}>
-          <div className="x-infot">{it.title}</div>
-          <div className="x-infob">{it.body}</div>
-          {it.action && <a className="x-fplink" href={it.action.url} target="_blank" rel="noopener noreferrer">{it.action.label} ↗</a>}
-        </div>
-      ))}
-    </div>
-  );
-}

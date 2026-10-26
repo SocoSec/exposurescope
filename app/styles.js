@@ -111,6 +111,38 @@ export const STYLE = `
 .x-mxdot{width:11px;height:11px;border-radius:50%;display:block;}
 .x-mxcell.on{border-color:transparent;}
 .x-mxfoot{margin-top:12px;font-size:11px;color:var(--mute);line-height:1.55;}
+/* ---- Learn: the story strip ---- */
+.x-story{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:12px;
+  grid-template-columns:repeat(4,1fr);counter-reset:none;}
+.x-storyp{position:relative;padding:16px 14px 15px;border:1px solid var(--line);border-radius:14px;
+  background:var(--bg);display:flex;flex-direction:column;}
+.x-storyp:not(:last-child)::after{content:"";position:absolute;right:-8px;top:50%;width:6px;height:6px;
+  border-top:1.6px solid var(--line);border-right:1.6px solid var(--line);
+  transform:translateY(-50%) rotate(45deg);}
+.x-storyn{font-family:ui-monospace,monospace;font-size:10px;color:var(--mute);letter-spacing:.14em;}
+.x-storyart{margin:10px 0 12px;display:grid;place-items:center;min-height:62px;}
+.x-scene{display:block;max-width:118px;}
+.x-storyh{font-size:13px;font-weight:650;line-height:1.3;margin-bottom:6px;letter-spacing:-.01em;}
+.x-storyb{font-size:11.5px;color:var(--mute);line-height:1.55;}
+
+/* ---- Learn: one lesson ---- */
+.x-lessons-wrap{display:grid;gap:10px;margin-top:16px;}
+.x-lesson{display:grid;grid-template-columns:104px 1fr;gap:16px;align-items:start;
+  padding:15px 16px;border:1px solid var(--line);border-radius:14px;background:var(--bg);}
+.x-lessonart{display:grid;place-items:center;padding-top:2px;}
+.x-lessonart .x-scene{max-width:100px;}
+.x-lessonh{font-size:14.5px;font-weight:660;letter-spacing:-.012em;line-height:1.3;}
+.x-lessons{font-size:12.5px;color:var(--mute);line-height:1.6;margin-top:5px;}
+.x-lessonmore{margin-top:9px;}
+.x-lessonmore summary{list-style:none;cursor:pointer;font-size:11px;color:var(--mute);
+  font-family:ui-monospace,monospace;letter-spacing:.02em;display:inline-flex;gap:6px;align-items:center;}
+.x-lessonmore summary::-webkit-details-marker{display:none;}
+.x-lessonmore summary::before{content:"+";font-size:12px;opacity:.7;}
+.x-lessonmore[open] summary::before{content:"−";}
+.x-lessonmore summary:hover{color:var(--ink);}
+.x-lessonp{font-size:12px;color:var(--mute);line-height:1.6;margin-top:7px;
+  padding-left:11px;border-left:2px solid var(--line);}
+
 .x-seals{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px;}
 .x-seal{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid var(--line);
   border-radius:999px;font-size:11px;color:var(--mute);text-decoration:none;transition:border-color .15s,color .15s;}
@@ -122,6 +154,10 @@ export const STYLE = `
 /* One column on phones: three-across turns into unreadable slivers. */
 @media (max-width:640px){
   .x-trust,.x-steps{grid-template-columns:1fr;}
+  .x-story{grid-template-columns:1fr 1fr;}
+  .x-storyp:not(:last-child)::after{display:none;}
+  .x-lesson{grid-template-columns:1fr;gap:10px;}
+  .x-lessonart{justify-items:start;}
   .x-title{font-size:27px;}
   .x-lede{font-size:13.5px;}
 }
