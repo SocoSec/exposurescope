@@ -39,7 +39,7 @@ import { DECAY_PER_DAY } from "../../lib/score.js";
 const MONTHS = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
-const TIER_COLOUR = {
+export const TIER_COLOUR = {
   financial: "#E56A5A",
   "financial-only": "#E08A4E",
   credentials: "#E6B057",

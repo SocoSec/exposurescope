@@ -17,9 +17,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { LANGS, STR, fill, errorText, trustFor } from "./strings.js";
 import { STYLE } from "./styles.js";
 import { BrandHeader } from "./components/Brand.js";
-import { TrustStrip, SafetyNote, HowItWorks, NeverDoes, TrustSeals } from "./components/Trust.js";
-import { Gauge, Bars, FlowDiagram, LEAK_FLOW, ATTACK_FLOW } from "./components/charts.js";
+import { TrustStrip, SafetyNote, MoreAbout, TrustSeals } from "./components/Trust.js";
+import { Gauge, FlowDiagram, LEAK_FLOW, ATTACK_FLOW } from "./components/charts.js";
 import BreachExplorer from "./components/BreachMap.js";
+import ExposureMatrix from "./components/DataMatrix.js";
 import ActionPlan from "./components/ActionPlan.js";
 import ExpoBot from "./components/ExpoBot.js";
 import { passwordReport, TIERS, ATTRIBUTES } from "../lib/score.js";
@@ -211,10 +212,6 @@ export default function Page() {
         <h1 className="x-title">{L.title}</h1>
         <p className="x-lede">{L.lede}</p>
 
-        {/* The three signals sit ABOVE the input on the first screen: someone
-            should be able to decide whether to trust this before they type. */}
-        {stage === "form" && <TrustStrip T={T} />}
-
         {/* ───────── input card ───────── */}
         {stage !== "done" && (
           <div className="x-card">
@@ -367,11 +364,11 @@ export default function Page() {
                 {tab === "details" && (
                   <div className="x-panelfade">
                     <div className="x-card">
-                      <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Exposure breakdown</span></div>
-                      <div className="x-secd">What kinds of your data appear, and how often, across what was found.</div>
+                      <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Every kind of data that leaked</span></div>
+                      <div className="x-secd">Each row is one kind of your data; each column is one breach. A dot means that breach exposed it.</div>
                       {report.kind === "password"
                         ? <div className="x-bar"><span className="bl">Breach dumps</span><span className="bt"><span className="bf" style={{ width: "100%", background: band }} /></span><span className="bv">{report.count.toLocaleString()}</span></div>
-                        : <Bars counts={report.classCounts} color={band} />}
+                        : <ExposureMatrix breaches={report.breaches} />}
                     </div>
                     {report.kind !== "password" && report.breaches.length > 0 && (
                       <div className="x-card">
@@ -428,13 +425,12 @@ export default function Page() {
             the page's job is the result, not the pitch. */}
         {stage === "form" && (
           <>
-            <HowItWorks T={T} />
-            <NeverDoes T={T} />
+            <TrustStrip T={T} />
+            <MoreAbout T={T} />
           </>
         )}
 
         {stage !== "done" && <TrustSeals T={T} />}
-        {stage === "form" && <p className="x-disclaimer">{T.disclaimer}</p>}
 
         <div className="x-foot">
           {L.footer1}<br />
