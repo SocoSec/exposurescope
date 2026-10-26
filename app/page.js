@@ -25,7 +25,7 @@ import { StoryStrip, LessonCard } from "./components/Explain.js";
 import ActionPlan from "./components/ActionPlan.js";
 import ExpoBot from "./components/ExpoBot.js";
 import { IDENTITY_WEIGHTS, passwordReport, TIERS, ATTRIBUTES } from "../lib/score.js";
-import { residualScore } from "../lib/playbook.js";
+import { residualScore, applicableIds } from "../lib/playbook.js";
 import { LEAK_STORY, howWeaponised, footprint } from "../lib/content.js";
 
 const BAND_COLOR = { safe: "var(--sig)", low: "var(--sig)", medium: "var(--amber)", high: "var(--coral)" };
@@ -110,6 +110,13 @@ export default function Page() {
 
   // Residual risk is derived, never stored: recomputed whenever a tick changes.
   const residual = useMemo(() => (report ? residualScore(report, done) : null), [report, done]);
+  // The score this report can be driven down to with every applicable action
+  // completed. Before anyone ticks anything the residual tile would simply
+  // repeat the exposure figure beside it, which tells the reader nothing; the
+  // floor tells them what the plan is worth, and what it cannot reach.
+  const bestCase = useMemo(
+    () => (report ? residualScore(report, applicableIds(report)) : null),
+    [report]);
 
   function resetAll() {
     setStage("form"); setBusy(false); setError(""); setCode(""); setChallenge(null); setDevCode("");
@@ -333,9 +340,15 @@ export default function Page() {
                     {exposed && residual && (
                       <div className="x-duo">
                         <div className="x-duocell"><div className="x-duolabel">{L.exposureLabel}</div><div className="x-duonum" style={{ color: band }}>{report.score}</div></div>
-                        <div className="x-duocell"><div className="x-duolabel">{L.residualLabel}</div><div className="x-duonum" style={{ color: BAND_COLOR[residual.level] }}>{residual.score}</div></div>
+                        <div className="x-duocell">
+                          <div className="x-duolabel">{done.size === 0 ? L.bestCaseLabel : L.residualLabel}</div>
+                          <div className="x-duonum" style={{ color: BAND_COLOR[(done.size === 0 ? bestCase : residual).level] }}>
+                            {(done.size === 0 ? bestCase : residual).score}
+                          </div>
+                        </div>
                       </div>
                     )}
+                    {exposed && residual && done.size === 0 && <div className="x-scorenote">{L.bestCaseHint}</div>}
                     {report.kind === "email" && exposed && <div className="x-scorenote">{L.scoreNote}</div>}
                     {meta.sources.length > 0 && (
                       <div className="x-src">
