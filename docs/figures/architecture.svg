@@ -1,126 +1,273 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="930" viewBox="0 0 1180 930"
+<svg xmlns="http://www.w3.org/2000/svg" width="1980" height="1120" viewBox="0 0 1980 1120"
      font-family="Segoe UI, Helvetica, Arial, sans-serif">
 <title>Exposio system architecture</title>
-<desc>Three tiers: the browser, stateless edge functions, and third-party services. No database.</desc>
+<desc>Client-side k-anonymity, an ownership gate, stateless edge functions, and no persistence layer.</desc>
+
 <defs>
-  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0 0 L10 5 L0 10 z" fill="#44506A"/>
+  <marker id="a" viewBox="0 0 10 10" refX="9.2" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+    <path d="M0 0 L10 5 L0 10 z" fill="#2B3A52"/>
   </marker>
-  <marker id="arG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0 0 L10 5 L0 10 z" fill="#0E7C5A"/>
+  <marker id="ag" viewBox="0 0 10 10" refX="9.2" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+    <path d="M0 0 L10 5 L0 10 z" fill="#1A8A63"/>
   </marker>
+  <marker id="ar" viewBox="0 0 10 10" refX="9.2" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+    <path d="M0 0 L10 5 L0 10 z" fill="#C4402C"/>
+  </marker>
+
+  <symbol id="fn" viewBox="0 0 64 64">
+    <rect x="3" y="3" width="58" height="58" rx="11" fill="#E8F3FC" stroke="#3E92CC" stroke-width="2.4"/>
+    <path d="M36 11 L21 36 h10 l-4 17 16-25 H29 z" fill="#F5A623" stroke="#C97F12" stroke-width="1.6" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="mod" viewBox="0 0 64 64">
+    <path d="M32 5 L56 18.5 v27 L32 59 L8 45.5 v-27 z" fill="#EFEAFA" stroke="#7A63C4" stroke-width="2.6"/>
+    <path d="M23 32 h18 M32 23 v18" stroke="#7A63C4" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="db" viewBox="0 0 64 64">
+    <ellipse cx="32" cy="14" rx="23" ry="8.5" fill="#E6F0F8" stroke="#3E92CC" stroke-width="2.4"/>
+    <path d="M9 14 v34 c0 4.7 10.3 8.5 23 8.5 s23-3.8 23-8.5 V14" fill="#E6F0F8" stroke="#3E92CC" stroke-width="2.4"/>
+    <path d="M9 31 c0 4.7 10.3 8.5 23 8.5 s23-3.8 23-8.5" fill="none" stroke="#3E92CC" stroke-width="2.4"/>
+  </symbol>
+  <symbol id="nodb" viewBox="0 0 64 64">
+    <ellipse cx="32" cy="14" rx="23" ry="8.5" fill="#FBEFEC" stroke="#C4402C" stroke-width="2.4"/>
+    <path d="M9 14 v34 c0 4.7 10.3 8.5 23 8.5 s23-3.8 23-8.5 V14" fill="#FBEFEC" stroke="#C4402C" stroke-width="2.4"/>
+    <path d="M9 31 c0 4.7 10.3 8.5 23 8.5 s23-3.8 23-8.5" fill="none" stroke="#C4402C" stroke-width="2.4"/>
+    <path d="M12 54 L52 10" stroke="#C4402C" stroke-width="5.4" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="mail" viewBox="0 0 64 64">
+    <rect x="6" y="15" width="52" height="34" rx="5" fill="#E8F3FC" stroke="#3E92CC" stroke-width="2.4"/>
+    <path d="M6.5 18 L32 37 L57.5 18" fill="none" stroke="#3E92CC" stroke-width="2.4"/>
+  </symbol>
+  <symbol id="sms" viewBox="0 0 64 64">
+    <rect x="19" y="5" width="26" height="54" rx="6" fill="#E8F3FC" stroke="#3E92CC" stroke-width="2.4"/>
+    <path d="M28 12 h8" stroke="#3E92CC" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="32" cy="52" r="2.6" fill="#3E92CC"/>
+  </symbol>
+  <symbol id="ai" viewBox="0 0 64 64">
+    <path d="M32 5 L56 18.5 v27 L32 59 L8 45.5 v-27 z" fill="#FDF0E3" stroke="#D98324" stroke-width="2.6"/>
+    <path d="M32 18 l3.6 8.8 8.8 3.6 -8.8 3.6 -3.6 8.8 -3.6 -8.8 -8.8 -3.6 8.8 -3.6 z" fill="#D98324"/>
+  </symbol>
+  <symbol id="lock" viewBox="0 0 64 64">
+    <rect x="14" y="27" width="36" height="28" rx="5" fill="#E6F6EF" stroke="#1A8A63" stroke-width="2.8"/>
+    <path d="M22 27 v-7 a10 10 0 0 1 20 0 v7" fill="none" stroke="#1A8A63" stroke-width="2.8"/>
+    <circle cx="32" cy="40" r="3.4" fill="#1A8A63"/>
+  </symbol>
+  <symbol id="gate" viewBox="0 0 64 64">
+    <path d="M32 5 L55 14 v18.5 C55 46 45.3 56.6 32 60 18.7 56.6 9 46 9 32.5 V14 z"
+          fill="#FBEFEC" stroke="#C4402C" stroke-width="2.8"/>
+    <path d="M22 32.5 l7.2 7.2 13.4 -14.6" fill="none" stroke="#C4402C" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </defs>
-<rect width="1180" height="930" fill="#FFFFFF"/>
 
-<text x="40" y="44" font-size="23" font-weight="700" fill="#141A24">Exposio &#8212; system architecture</text>
-<text x="40" y="68" font-size="13.5" fill="#55607A">Stateless: no database, no accounts. No breach lookup happens until the person has proved the identifier is theirs.</text>
+<rect width="1980" height="1120" fill="#FFFFFF"/>
+<text x="40" y="48" font-size="27" font-weight="700" fill="#15202E">Exposio &#8212; system architecture</text>
+<text x="40" y="78" font-size="16" fill="#5A6678">Ownership-verified breach exposure assessment. No database, no accounts, no analytics &#8212; every request is answered from a signed token and then discarded.</text>
 
-<rect x="40" y="92" width="1100" height="128" rx="10" fill="#F4F7FB" stroke="#CFD8E6"/>
-<text x="58" y="115" font-size="12" font-weight="700" fill="#44506A" letter-spacing="1.2">1 &#183; THE BROWSER</text>
-<rect x="62" y="128" width="246" height="74" rx="8" fill="#FFFFFF" stroke="#8FA2BE" stroke-width="1.4"/>
-<text x="185" y="153" font-size="14" font-weight="650" fill="#141A24" text-anchor="middle">Exposio page</text>
-<text x="185" y="172" font-size="11.5" fill="#55607A" text-anchor="middle">React &#183; score, charts, action plan,</text>
-<text x="185" y="188" font-size="11.5" fill="#55607A" text-anchor="middle">drawn from the signed report</text>
-<rect x="330" y="128" width="272" height="74" rx="8" fill="#FFFFFF" stroke="#0E7C5A" stroke-width="1.7"/>
-<text x="466" y="151" font-size="13.5" font-weight="650" fill="#0E7C5A" text-anchor="middle">Password check (k-anonymity)</text>
-<text x="466" y="171" font-size="11.5" fill="#2F6B55" text-anchor="middle">SHA-1 computed here. Only the first</text>
-<text x="466" y="187" font-size="11.5" fill="#2F6B55" text-anchor="middle">5 hex characters are ever sent.</text>
-<rect x="624" y="128" width="216" height="74" rx="8" fill="#FFFFFF" stroke="#CFD8E6"/>
-<text x="732" y="153" font-size="13" font-weight="650" fill="#141A24" text-anchor="middle">Memory only</text>
-<text x="732" y="173" font-size="11.5" fill="#55607A" text-anchor="middle">closing the tab ends it;</text>
-<text x="732" y="189" font-size="11.5" fill="#55607A" text-anchor="middle">nothing is written down</text>
-<rect x="862" y="128" width="256" height="74" rx="8" fill="#FBF1EF" stroke="#D99A8E"/>
-<text x="990" y="153" font-size="13" font-weight="650" fill="#B23A2C" text-anchor="middle">No database. No accounts.</text>
-<text x="990" y="173" font-size="11.5" fill="#8C4336" text-anchor="middle">Nothing to breach, subpoena</text>
-<text x="990" y="189" font-size="11.5" fill="#8C4336" text-anchor="middle">or sell later.</text>
+<!-- ══════════ REGION A : THE BROWSER ══════════ -->
+<rect x="396" y="168" width="330" height="700" rx="22" fill="#FEF4E7" stroke="#E8A33D" stroke-width="2.2"/>
+<text x="561" y="208" font-size="21" font-weight="700" fill="#A9661A" text-anchor="middle">The Browser</text>
+<text x="561" y="231" font-size="13.5" fill="#A9661A" text-anchor="middle">everything here runs on the person&#8217;s own device</text>
 
-<rect x="40" y="276" width="1100" height="248" rx="10" fill="#F7F5FB" stroke="#D3CCE6"/>
-<text x="58" y="299" font-size="12" font-weight="700" fill="#4B4472" letter-spacing="1.2">2 &#183; EXPOSIO &#8212; STATELESS EDGE FUNCTIONS (Vercel)</text>
-<rect x="62" y="312" width="238" height="86" rx="8" fill="#FFFFFF" stroke="#9A8FC4" stroke-width="1.4"/>
-<text x="181" y="334" font-size="12.5" font-weight="700" fill="#4B4472" text-anchor="middle">/api/verify/start</text>
-<text x="181" y="355" font-size="11.5" fill="#55607A" text-anchor="middle">makes a one-time code and a</text>
-<text x="181" y="371" font-size="11.5" fill="#55607A" text-anchor="middle">signed challenge token</text>
-<text x="181" y="390" font-size="11" fill="#8A7FB5" text-anchor="middle">rate limited per address and per IP</text>
-<rect x="314" y="312" width="238" height="86" rx="8" fill="#FFFFFF" stroke="#B23A2C" stroke-width="1.8"/>
-<text x="433" y="334" font-size="12.5" font-weight="700" fill="#B23A2C" text-anchor="middle">/api/verify/check</text>
-<text x="433" y="355" font-size="11.5" fill="#55607A" text-anchor="middle">checks the code, returns a</text>
-<text x="433" y="371" font-size="11.5" fill="#55607A" text-anchor="middle">scan token, valid 15 minutes</text>
-<text x="433" y="390" font-size="11" font-weight="700" fill="#B23A2C" text-anchor="middle">THE OWNERSHIP GATE</text>
-<rect x="566" y="312" width="238" height="86" rx="8" fill="#FFFFFF" stroke="#9A8FC4" stroke-width="1.4"/>
-<text x="685" y="334" font-size="12.5" font-weight="700" fill="#4B4472" text-anchor="middle">/api/breach</text>
-<text x="685" y="355" font-size="11.5" fill="#55607A" text-anchor="middle">checks the token, queries the</text>
-<text x="685" y="371" font-size="11.5" fill="#55607A" text-anchor="middle">sources, scores, builds a report</text>
-<text x="685" y="390" font-size="11" fill="#8A7FB5" text-anchor="middle">refuses without a matching token</text>
-<rect x="818" y="312" width="238" height="86" rx="8" fill="#FFFFFF" stroke="#9A8FC4" stroke-width="1.4"/>
-<text x="937" y="334" font-size="12.5" font-weight="700" fill="#4B4472" text-anchor="middle">/api/chat</text>
-<text x="937" y="355" font-size="11.5" fill="#55607A" text-anchor="middle">ExpoBot &#8212; a bounded tool loop</text>
-<text x="937" y="371" font-size="11.5" fill="#55607A" text-anchor="middle">over the signed report</text>
-<text x="937" y="390" font-size="11" fill="#8A7FB5" text-anchor="middle">may name only vetted actions</text>
+<rect x="420" y="252" width="282" height="150" rx="12" fill="#FFFFFF" stroke="#E8A33D" stroke-width="2"/>
+<use href="#lock" x="438" y="274" width="52" height="52"/>
+<text x="502" y="290" font-size="16.5" font-weight="700" fill="#15202E">Password check</text>
+<text x="502" y="312" font-size="13.5" fill="#5A6678">SHA-1 computed here.</text>
+<text x="502" y="332" font-size="13.5" fill="#5A6678">Only 5 hex characters leave.</text>
+<rect x="438" y="352" width="246" height="32" rx="7" fill="#E6F6EF" stroke="#1A8A63"/>
+<text x="561" y="373" font-size="12.5" font-weight="650" fill="#1A8A63" text-anchor="middle">k-anonymity &#183; the server never sees it</text>
 
-<rect x="62" y="418" width="994" height="88" rx="8" fill="#FFFFFF" stroke="#CFD8E6" stroke-dasharray="5 4"/>
-<text x="82" y="440" font-size="12" font-weight="700" fill="#44506A">Pure modules &#8212; no network, no storage. The same code runs on the server, in the browser and in the offline tests.</text>
-<text x="82" y="464" font-size="11.5" fill="#55607A"><tspan font-weight="650" fill="#141A24">tokens.js</tspan> HMAC-SHA256; keyed hash of the identifier &#160;&#183;&#160; <tspan font-weight="650" fill="#141A24">score.js</tspan> two-clock Breach Risk &#160;&#183;&#160; <tspan font-weight="650" fill="#141A24">playbook.js</tspan> vetted actions, residual risk</text>
-<text x="82" y="484" font-size="11.5" fill="#55607A"><tspan font-weight="650" fill="#141A24">sources.js</tspan> query and merge &#160;&#183;&#160; <tspan font-weight="650" fill="#141A24">agent.js</tspan> bounded loop &#160;&#183;&#160; <tspan font-weight="650" fill="#141A24">ratelimit.js</tspan> &#160;&#183;&#160; <tspan font-weight="650" fill="#141A24">mailer.js / sms.js</tspan> log a status code, never the recipient</text>
+<rect x="420" y="430" width="282" height="190" rx="12" fill="#FFFFFF" stroke="#E8A33D" stroke-width="2"/>
+<text x="561" y="462" font-size="16.5" font-weight="700" fill="#15202E" text-anchor="middle">Exposio page (React)</text>
+<text x="561" y="488" font-size="13.5" fill="#5A6678" text-anchor="middle">score &#183; exposure map &#183; data matrix</text>
+<text x="561" y="510" font-size="13.5" fill="#5A6678" text-anchor="middle">action plan &#183; residual risk</text>
+<rect x="438" y="528" width="246" height="76" rx="8" fill="#F6F8FB" stroke="#C8D3E0"/>
+<text x="561" y="552" font-size="13" fill="#5A6678" text-anchor="middle">rendered entirely from the signed</text>
+<text x="561" y="572" font-size="13" fill="#5A6678" text-anchor="middle">report, held in memory</text>
+<text x="561" y="594" font-size="12.5" font-weight="700" fill="#C4402C" text-anchor="middle">closing the tab ends it</text>
 
-<rect x="40" y="610" width="1100" height="120" rx="10" fill="#FBF9F3" stroke="#E0D6BE"/>
-<text x="58" y="633" font-size="12" font-weight="700" fill="#6B5B2E" letter-spacing="1.2">3 &#183; THIRD-PARTY SERVICES</text>
-<rect x="62" y="646" width="180" height="66" rx="8" fill="#FFFFFF" stroke="#C9B785"/>
-<text x="152" y="669" font-size="12.5" font-weight="650" fill="#141A24" text-anchor="middle">Have I Been Pwned</text>
-<text x="152" y="687" font-size="11" fill="#55607A" text-anchor="middle">breaches for an address,</text>
-<text x="152" y="702" font-size="11" fill="#55607A" text-anchor="middle">and Pwned Passwords</text>
-<rect x="258" y="646" width="162" height="66" rx="8" fill="#FFFFFF" stroke="#C9B785"/>
-<text x="339" y="669" font-size="12.5" font-weight="650" fill="#141A24" text-anchor="middle">DeHashed</text>
-<text x="339" y="687" font-size="11" fill="#55607A" text-anchor="middle">second source, and the</text>
-<text x="339" y="702" font-size="11" fill="#55607A" text-anchor="middle">only one for phones</text>
-<rect x="436" y="646" width="148" height="66" rx="8" fill="#FFFFFF" stroke="#C9B785"/>
-<text x="510" y="675" font-size="12.5" font-weight="650" fill="#141A24" text-anchor="middle">Resend</text>
-<text x="510" y="694" font-size="11" fill="#55607A" text-anchor="middle">sends the email code</text>
-<rect x="600" y="646" width="148" height="66" rx="8" fill="#FFFFFF" stroke="#C9B785"/>
-<text x="674" y="675" font-size="12.5" font-weight="650" fill="#141A24" text-anchor="middle">Twilio</text>
-<text x="674" y="694" font-size="11" fill="#55607A" text-anchor="middle">sends the SMS code</text>
-<rect x="764" y="646" width="182" height="66" rx="8" fill="#FFFFFF" stroke="#C9B785"/>
-<text x="855" y="669" font-size="12.5" font-weight="650" fill="#141A24" text-anchor="middle">Anthropic API</text>
-<text x="855" y="687" font-size="11" fill="#55607A" text-anchor="middle">phrases the answer; states</text>
-<text x="855" y="702" font-size="11" fill="#55607A" text-anchor="middle">no number it was not given</text>
-<rect x="962" y="646" width="156" height="66" rx="8" fill="#F6F8FB" stroke="#CFD8E6" stroke-dasharray="4 3"/>
-<text x="1040" y="675" font-size="12" font-weight="650" fill="#55607A" text-anchor="middle">No analytics.</text>
-<text x="1040" y="694" font-size="11" fill="#55607A" text-anchor="middle">No trackers. No cookies.</text>
+<rect x="420" y="648" width="282" height="104" rx="12" fill="#FBEFEC" stroke="#D98B7A" stroke-width="2"/>
+<use href="#nodb" x="438" y="668" width="54" height="54"/>
+<text x="506" y="688" font-size="16" font-weight="700" fill="#C4402C">No local storage</text>
+<text x="506" y="710" font-size="13" fill="#8C4336">no cookies, no localStorage,</text>
+<text x="506" y="730" font-size="13" fill="#8C4336">no analytics, no trackers</text>
 
-<path d="M140 204 L165 308" stroke="#44506A" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-<text x="92" y="262" font-size="11" font-weight="700" fill="#44506A">1</text>
-<text x="104" y="262" font-size="10.5" fill="#55607A">address</text>
-<path d="M238 204 L404 308" stroke="#44506A" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-<text x="286" y="248" font-size="11" font-weight="700" fill="#44506A">3</text>
-<text x="298" y="248" font-size="10.5" fill="#55607A">the code they received</text>
-<path d="M286 204 L656 308" stroke="#44506A" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-<text x="540" y="238" font-size="11" font-weight="700" fill="#44506A">4</text>
-<text x="552" y="238" font-size="10.5" fill="#55607A">address + scan token</text>
-<path d="M300 204 L908 308" stroke="#44506A" stroke-width="1.2" fill="none" marker-end="url(#ar)" stroke-dasharray="4 4"/>
-<text x="770" y="288" font-size="11" font-weight="700" fill="#44506A">6</text>
-<text x="782" y="288" font-size="10.5" fill="#55607A">question + report token</text>
+<!-- ══════════ REGION B : EDGE RUNTIME ══════════ -->
+<rect x="806" y="168" width="690" height="760" rx="22" fill="#EDF5FC" stroke="#4A9BD4" stroke-width="2.4" stroke-dasharray="11 7"/>
+<text x="1151" y="208" font-size="21" font-weight="700" fill="#1F6FA8" text-anchor="middle">Exposio Edge Runtime (Vercel)</text>
+<text x="1151" y="231" font-size="13.5" fill="#1F6FA8" text-anchor="middle">serverless functions &#183; nothing is kept between one request and the next</text>
 
-<path d="M180 508 L158 642" stroke="#44506A" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
-<path d="M300 508 L334 642" stroke="#44506A" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
-<text x="196" y="580" font-size="11" font-weight="700" fill="#44506A">5</text>
-<text x="208" y="580" font-size="10.5" fill="#55607A">look up, merge, score</text>
-<path d="M500 508 L508 642" stroke="#44506A" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
-<path d="M660 508 L672 642" stroke="#44506A" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
-<text x="536" y="580" font-size="11" font-weight="700" fill="#44506A">2</text>
-<text x="548" y="580" font-size="10.5" fill="#55607A">the one-time code goes out</text>
-<path d="M880 508 L858 642" stroke="#44506A" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
-<text x="886" y="580" font-size="10.5" fill="#55607A">report contents</text>
+<!-- routes, one column, so every client arrow enters horizontally -->
+<rect x="828" y="252" width="300" height="88" rx="12" fill="#FFFFFF" stroke="#3E92CC" stroke-width="2"/>
+<use href="#fn" x="844" y="268" width="50" height="50"/>
+<text x="906" y="286" font-size="16" font-weight="700" fill="#15202E">/api/verify/start</text>
+<text x="906" y="307" font-size="12.5" fill="#5A6678">issues a one-time code and a signed</text>
+<text x="906" y="325" font-size="12.5" fill="#5A6678">challenge token &#183; rate limited</text>
 
-<path d="M466 126 L466 84 L22 84 L22 679 L58 679" stroke="#0E7C5A" stroke-width="2" fill="none"
-      stroke-dasharray="7 5" marker-end="url(#arG)"/>
-<text x="16" y="400" font-size="11.5" font-weight="700" fill="#0E7C5A" transform="rotate(-90 16 400)" text-anchor="middle">the password path never reaches the Exposio server</text>
+<rect x="828" y="356" width="300" height="88" rx="12" fill="#FFFFFF" stroke="#C4402C" stroke-width="3"/>
+<use href="#gate" x="844" y="372" width="50" height="50"/>
+<text x="906" y="390" font-size="16" font-weight="700" fill="#C4402C">/api/verify/check</text>
+<text x="906" y="410" font-size="12.5" fill="#5A6678">returns a scan token, valid 15 minutes</text>
+<text x="906" y="429" font-size="12.5" font-weight="700" fill="#C4402C">THE OWNERSHIP GATE</text>
 
-<rect x="40" y="752" width="1100" height="60" rx="9" fill="#EEF6F2" stroke="#9FCBB8"/>
-<text x="62" y="776" font-size="12.5" font-weight="700" fill="#1F5C47">State lives in the token, not on a server.</text>
-<text x="62" y="797" font-size="11.5" fill="#2F6B55">A token reads <tspan font-family="Consolas, monospace">v1.&lt;payload&gt;.&lt;signature&gt;</tspan>. The signature is checked before the payload is parsed, and the payload carries a <tspan font-weight="650">keyed hash</tspan> of the identifier &#8212; never the address itself.</text>
+<rect x="828" y="460" width="300" height="88" rx="12" fill="#FFFFFF" stroke="#3E92CC" stroke-width="2"/>
+<use href="#fn" x="844" y="476" width="50" height="50"/>
+<text x="906" y="494" font-size="16" font-weight="700" fill="#15202E">/api/breach</text>
+<text x="906" y="514" font-size="12.5" fill="#5A6678">queries the sources, scores, builds</text>
+<text x="906" y="533" font-size="12.5" font-weight="700" fill="#C4402C">refuses without a matching token</text>
 
-<text x="40" y="844" font-size="12" font-weight="700" fill="#141A24">What crosses each boundary</text>
-<text x="40" y="864" font-size="11.5" fill="#55607A">Browser to server: the address being checked, and the token proving it was verified. Never the password.</text>
-<text x="40" y="882" font-size="11.5" fill="#55607A">Server to third parties: the address, to the breach sources; the report contents, to the language model. Never a stored record, because none exists.</text>
-<text x="40" y="900" font-size="11.5" fill="#55607A">Server to disk: nothing at all.</text>
-<text x="40" y="920" font-size="11" fill="#8A93A6">MSc research prototype &#183; &#211;buda University &#183; the diagram covers Breach Risk (component B of the Exposure Score)</text>
+<rect x="828" y="564" width="300" height="88" rx="12" fill="#FFFFFF" stroke="#3E92CC" stroke-width="2"/>
+<use href="#fn" x="844" y="580" width="50" height="50"/>
+<text x="906" y="598" font-size="16" font-weight="700" fill="#15202E">/api/chat</text>
+<text x="906" y="618" font-size="12.5" fill="#5A6678">ExpoBot &#8212; a bounded tool loop</text>
+<text x="906" y="637" font-size="12.5" fill="#5A6678">may name only vetted actions</text>
+
+<!-- pure module layer -->
+<rect x="1156" y="252" width="318" height="400" rx="16" fill="#E3EEFA" stroke="#6AA7D8" stroke-width="2" stroke-dasharray="8 5"/>
+<text x="1315" y="282" font-size="17.5" font-weight="700" fill="#1F6FA8" text-anchor="middle">Pure Module Layer</text>
+<text x="1315" y="302" font-size="12" fill="#1F6FA8" text-anchor="middle">no network, no storage &#183; the same code runs</text>
+<text x="1315" y="319" font-size="12" fill="#1F6FA8" text-anchor="middle">on the server, in the browser, in the tests</text>
+
+<use href="#mod" x="1176" y="334" width="40" height="40"/>
+<text x="1228" y="350" font-size="14" font-weight="700" fill="#15202E">tokens.js</text>
+<text x="1228" y="368" font-size="12" fill="#5A6678">HMAC-SHA256 &#183; keyed hash</text>
+<use href="#mod" x="1176" y="388" width="40" height="40"/>
+<text x="1228" y="404" font-size="14" font-weight="700" fill="#15202E">score.js</text>
+<text x="1228" y="422" font-size="12" fill="#5A6678">two-clock Breach Risk</text>
+<use href="#mod" x="1176" y="442" width="40" height="40"/>
+<text x="1228" y="458" font-size="14" font-weight="700" fill="#15202E">playbook.js</text>
+<text x="1228" y="476" font-size="12" fill="#5A6678">vetted actions, residual risk</text>
+<use href="#mod" x="1176" y="496" width="40" height="40"/>
+<text x="1228" y="512" font-size="14" font-weight="700" fill="#15202E">sources.js</text>
+<text x="1228" y="530" font-size="12" fill="#5A6678">query and merge</text>
+<use href="#mod" x="1176" y="550" width="40" height="40"/>
+<text x="1228" y="566" font-size="14" font-weight="700" fill="#15202E">agent.js</text>
+<text x="1228" y="584" font-size="12" fill="#5A6678">bounded loop, 4 rounds</text>
+<use href="#mod" x="1176" y="604" width="40" height="40"/>
+<text x="1228" y="620" font-size="14" font-weight="700" fill="#15202E">mailer.js / sms.js</text>
+<text x="1228" y="638" font-size="12" fill="#5A6678">logs a status code only</text>
+
+<!-- where a storage layer would be -->
+<rect x="828" y="686" width="646" height="214" rx="16" fill="#FBEFEC" stroke="#C4402C" stroke-width="2.4" stroke-dasharray="9 6"/>
+<use href="#nodb" x="862" y="736" width="84" height="84"/>
+<text x="976" y="738" font-size="20" font-weight="700" fill="#C4402C">No Persistence Layer</text>
+<text x="976" y="768" font-size="14" fill="#8C4336">No database. No object store. No accounts.</text>
+<text x="976" y="792" font-size="14" fill="#8C4336">No record of who asked about what.</text>
+<text x="976" y="824" font-size="14" fill="#8C4336">The whole of the session lives in a signed token</text>
+<text x="976" y="848" font-size="14" fill="#8C4336">held by the browser, and expires with it.</text>
+<text x="976" y="878" font-size="14" font-weight="700" fill="#C4402C">Nothing to breach, subpoena, sell or leak later.</text>
+
+<!-- ══════════ THIRD PARTIES ══════════ -->
+<text x="1730" y="208" font-size="21" font-weight="700" fill="#15202E" text-anchor="middle">Third-Party Services</text>
+<text x="1730" y="231" font-size="13.5" fill="#5A6678" text-anchor="middle">queried live, once per request</text>
+
+<use href="#db" x="1560" y="258" width="56" height="56"/>
+<text x="1634" y="278" font-size="16" font-weight="700" fill="#15202E">Have I Been Pwned</text>
+<text x="1634" y="299" font-size="13" fill="#5A6678">breaches for an address,</text>
+<text x="1634" y="318" font-size="13" fill="#5A6678">and Pwned Passwords</text>
+
+<use href="#db" x="1560" y="366" width="56" height="56"/>
+<text x="1634" y="386" font-size="16" font-weight="700" fill="#15202E">DeHashed</text>
+<text x="1634" y="407" font-size="13" fill="#5A6678">second source, and the</text>
+<text x="1634" y="426" font-size="13" fill="#5A6678">only one for phone numbers</text>
+
+<use href="#mail" x="1560" y="474" width="56" height="56"/>
+<text x="1634" y="500" font-size="16" font-weight="700" fill="#15202E">Resend</text>
+<text x="1634" y="521" font-size="13" fill="#5A6678">delivers the email code</text>
+
+<use href="#sms" x="1560" y="566" width="56" height="56"/>
+<text x="1634" y="592" font-size="16" font-weight="700" fill="#15202E">Twilio</text>
+<text x="1634" y="613" font-size="13" fill="#5A6678">delivers the SMS code</text>
+
+<use href="#ai" x="1560" y="664" width="56" height="56"/>
+<text x="1634" y="684" font-size="16" font-weight="700" fill="#15202E">Anthropic API</text>
+<text x="1634" y="705" font-size="13" fill="#5A6678">phrases the answer; states no</text>
+<text x="1634" y="724" font-size="13" fill="#5A6678">number it was not handed</text>
+
+<!-- ══════════ CLIENT DEVICE ══════════ -->
+<rect x="96" y="408" width="206" height="124" rx="9" fill="#FFFFFF" stroke="#44506A" stroke-width="2.6"/>
+<rect x="110" y="422" width="178" height="96" rx="4" fill="#F0F4F9" stroke="#8FA2BE"/>
+<rect x="130" y="444" width="138" height="26" rx="6" fill="#FFFFFF" stroke="#8FA2BE"/>
+<text x="142" y="463" font-size="15" fill="#44506A" letter-spacing="3">&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;</text>
+<rect x="130" y="482" width="138" height="22" rx="6" fill="#1A8A63"/>
+<text x="199" y="498" font-size="11.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">CHECK</text>
+<path d="M72 548 h254 l-19 15 H91 z" fill="#D8E0EA" stroke="#44506A" stroke-width="2.2" stroke-linejoin="round"/>
+<rect x="44" y="436" width="42" height="74" rx="7" fill="#FFFFFF" stroke="#44506A" stroke-width="2.4"/>
+<rect x="50" y="446" width="30" height="52" rx="3" fill="#F0F4F9"/>
+<circle cx="65" cy="504" r="2.8" fill="#44506A"/>
+<text x="186" y="596" font-size="17" font-weight="700" fill="#15202E" text-anchor="middle">The person</text>
+<text x="186" y="617" font-size="13.5" fill="#5A6678" text-anchor="middle">checking their own address</text>
+
+<rect x="30" y="168" width="334" height="170" rx="10" fill="#F1F3F6" stroke="#9AA6B8" stroke-width="1.8"/>
+<text x="52" y="200" font-size="15.5" font-weight="700" fill="#15202E">What the person does</text>
+<text x="52" y="228" font-size="13.5" fill="#2B3A52"><tspan font-weight="700">1.</tspan>  Enters their email address or phone</text>
+<text x="52" y="254" font-size="13.5" fill="#2B3A52"><tspan font-weight="700">2.</tspan>  Receives a 6-digit one-time code</text>
+<text x="52" y="280" font-size="13.5" fill="#2B3A52"><tspan font-weight="700">3.</tspan>  Types it back, proving ownership</text>
+<text x="52" y="312" font-size="13" font-style="italic" fill="#5A6678">Until step 3 completes, no lookup occurs.</text>
+<path d="M197 338 L197 400" stroke="#9AA6B8" stroke-width="1.8" stroke-dasharray="5 4" fill="none" marker-end="url(#a)"/>
+
+<rect x="30" y="700" width="334" height="156" rx="10" fill="#F1F3F6" stroke="#9AA6B8" stroke-width="1.8"/>
+<text x="52" y="732" font-size="15.5" font-weight="700" fill="#15202E">The password path is different</text>
+<text x="52" y="760" font-size="13.5" fill="#2B3A52">The password is hashed on the device, and</text>
+<text x="52" y="782" font-size="13.5" fill="#2B3A52">only the first 5 characters of that hash are</text>
+<text x="52" y="804" font-size="13.5" fill="#2B3A52">sent &#8212; to Pwned Passwords, directly.</text>
+<text x="52" y="834" font-size="13.5" font-weight="700" fill="#1A8A63">Exposio never receives it in any form.</text>
+<path d="M364 744 L414 390" stroke="#9AA6B8" stroke-width="1.8" stroke-dasharray="5 4" fill="none" marker-end="url(#a)"/>
+
+<!-- sticky note -->
+<path d="M1536 772 h378 v128 l-28 28 h-350 z" fill="#FDF6D8" stroke="#D4BD57" stroke-width="2"/>
+<path d="M1914 900 h-28 v28 z" fill="#EDE2A8" stroke="#D4BD57" stroke-width="2"/>
+<text x="1558" y="804" font-size="15.5" font-weight="700" fill="#7A6411">State lives in the token</text>
+<text x="1558" y="830" font-size="13" fill="#7A6411">v1.&lt;payload&gt;.&lt;signature&gt; &#8212; the signature is</text>
+<text x="1558" y="851" font-size="13" fill="#7A6411">checked before the payload is parsed, and the</text>
+<text x="1558" y="872" font-size="13" fill="#7A6411">payload carries a <tspan font-weight="700">keyed hash</tspan> of the identifier,</text>
+<text x="1558" y="893" font-size="13" fill="#7A6411">never the address itself.</text>
+
+<!-- ══════════ ARROWS : client to each route, all horizontal ══════════ -->
+<path d="M302 470 L414 470" stroke="#2B3A52" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+
+<path d="M708 296 L822 296" stroke="#2B3A52" stroke-width="2.6" fill="none" marker-end="url(#a)"/>
+<text x="765" y="286" font-size="13" font-weight="700" fill="#2B3A52" text-anchor="middle">1  address</text>
+
+<path d="M708 400 L822 400" stroke="#C4402C" stroke-width="2.8" fill="none" marker-end="url(#ar)"/>
+<text x="765" y="390" font-size="13" font-weight="700" fill="#C4402C" text-anchor="middle">3  the code</text>
+
+<path d="M708 504 L822 504" stroke="#2B3A52" stroke-width="2.6" fill="none" marker-end="url(#a)"/>
+<text x="765" y="494" font-size="13" font-weight="700" fill="#2B3A52" text-anchor="middle">4  address +</text>
+<text x="765" y="524" font-size="13" font-weight="700" fill="#2B3A52" text-anchor="middle">scan token</text>
+
+<path d="M708 608 L822 608" stroke="#2B3A52" stroke-width="2.2" fill="none" stroke-dasharray="6 5" marker-end="url(#a)"/>
+<text x="765" y="598" font-size="13" font-weight="700" fill="#2B3A52" text-anchor="middle">6  question +</text>
+<text x="765" y="628" font-size="13" font-weight="700" fill="#2B3A52" text-anchor="middle">report token</text>
+
+<!-- routes to modules -->
+<path d="M1132 296 L1150 296" stroke="#2B3A52" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<path d="M1132 400 L1150 400" stroke="#2B3A52" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<path d="M1132 504 L1150 504" stroke="#2B3A52" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<path d="M1132 608 L1150 608" stroke="#2B3A52" stroke-width="2" fill="none" marker-end="url(#a)"/>
+
+<!-- modules to third parties -->
+<path d="M1480 516 L1554 300" stroke="#2B3A52" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+<path d="M1480 520 L1554 400" stroke="#2B3A52" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+<text x="1498" y="470" font-size="13" font-weight="700" fill="#2B3A52">5  look up, merge, score</text>
+<path d="M1480 620 L1554 506" stroke="#2B3A52" stroke-width="2.2" fill="none" marker-end="url(#a)"/>
+<path d="M1480 626 L1554 594" stroke="#2B3A52" stroke-width="2.2" fill="none" marker-end="url(#a)"/>
+<text x="1484" y="662" font-size="13" font-weight="700" fill="#2B3A52">2  the code goes out</text>
+<path d="M1480 572 L1554 692" stroke="#2B3A52" stroke-width="2.2" fill="none" stroke-dasharray="6 5" marker-end="url(#a)"/>
+<text x="1490" y="712" font-size="13" fill="#5A6678">report contents</text>
+
+<!-- the report comes back -->
+<path d="M822 666 C 770 690, 740 676, 712 660" stroke="#2B3A52" stroke-width="2.2" fill="none" marker-end="url(#a)"/>
+<text x="765" y="686" font-size="13" font-weight="700" fill="#2B3A52" text-anchor="middle">report +</text>
+<text x="765" y="704" font-size="13" font-weight="700" fill="#2B3A52" text-anchor="middle">report token</text>
+
+<!-- the password path, over the top of everything -->
+<path d="M702 300 C 900 120, 1300 104, 1566 252" stroke="#1A8A63" stroke-width="3.2" fill="none"
+      stroke-dasharray="10 6" marker-end="url(#ag)"/>
+<text x="1140" y="112" font-size="15.5" font-weight="700" fill="#1A8A63" text-anchor="middle">the password path goes straight to Pwned Passwords, over the top of Exposio</text>
+
+<!-- footer -->
+<text x="40" y="978" font-size="16" font-weight="700" fill="#15202E">What crosses each boundary</text>
+<text x="40" y="1006" font-size="14" fill="#5A6678">Browser &#8594; Exposio: the address being checked, and the token proving it was verified. Never the password, in any form.</text>
+<text x="40" y="1032" font-size="14" fill="#5A6678">Exposio &#8594; third parties: the address, to the breach sources; the contents of the report, to the language model. Never a stored record, because none exists.</text>
+<text x="40" y="1058" font-size="14" fill="#5A6678">Exposio &#8594; disk: nothing at all. The mail and SMS modules log a status code, and never the recipient.</text>
+<text x="40" y="1094" font-size="13.5" fill="#8A93A6">MSc research prototype &#183; &#211;buda University &#183; the diagram covers Breach Risk, component B of the Exposure Score</text>
 </svg>
