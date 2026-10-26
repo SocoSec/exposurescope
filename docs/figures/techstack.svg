@@ -1,187 +1,194 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2240" height="1340" viewBox="0 0 2240 1340"
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1762" viewBox="0 0 2400 1762"
      font-family="Segoe UI, Helvetica, Arial, sans-serif">
-<title>Exposio technology stack</title>
-<desc>Layered technology stack: presentation, edge runtime, pure domain logic, platform APIs, state, and external services.</desc>
+<title>Exposio deployment diagram and technology stack</title>
+<desc>UML deployment diagram: devices, execution environments, artifacts and communication paths, with a technology summary table.</desc>
 
 <defs>
-  <marker id="a" viewBox="0 0 10 10" refX="9.2" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-    <path d="M0 0 L10 5 L0 10 z" fill="#243247"/>
+  <marker id="ar" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto">
+    <path d="M1 1 L11 6 L1 11" fill="none" stroke="#243247" stroke-width="2"/>
   </marker>
-  <symbol id="win" viewBox="0 0 64 64">
-    <rect x="5" y="10" width="54" height="44" rx="6" fill="#E4F1FB" stroke="#2F86C4" stroke-width="3"/>
-    <path d="M5 23 h54" stroke="#2F86C4" stroke-width="3"/>
-    <circle cx="14" cy="16.5" r="2.6" fill="#2F86C4"/><circle cx="23" cy="16.5" r="2.6" fill="#2F86C4"/>
-  </symbol>
-  <symbol id="fn" viewBox="0 0 64 64">
-    <rect x="3" y="3" width="58" height="58" rx="11" fill="#E4F1FB" stroke="#2F86C4" stroke-width="3"/>
-    <path d="M36 11 L21 36 h10 l-4 17 16-25 H29 z" fill="#F5A623" stroke="#B9760E" stroke-width="1.8" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="mod" viewBox="0 0 64 64">
-    <path d="M32 5 L56 18.5 v27 L32 59 L8 45.5 v-27 z" fill="#EDE7FA" stroke="#6D55BD" stroke-width="3.2"/>
-    <path d="M23 32 h18 M32 23 v18" stroke="#6D55BD" stroke-width="3.6" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="chip" viewBox="0 0 64 64">
-    <rect x="16" y="16" width="32" height="32" rx="4" fill="#E0F3EB" stroke="#15785A" stroke-width="3"/>
-    <path d="M24 16 v-8 M32 16 v-8 M40 16 v-8 M24 48 v8 M32 48 v8 M40 48 v8
-             M16 24 h-8 M16 32 h-8 M16 40 h-8 M48 24 h8 M48 32 h8 M48 40 h8"
-          stroke="#15785A" stroke-width="3" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="nodb" viewBox="0 0 64 64">
-    <ellipse cx="32" cy="14" rx="23" ry="8.5" fill="#FAE8E4" stroke="#B8372A" stroke-width="3"/>
-    <path d="M9 14 v34 c0 4.7 10.3 8.5 23 8.5 s23-3.8 23-8.5 V14" fill="#FAE8E4" stroke="#B8372A" stroke-width="3"/>
-    <path d="M9 31 c0 4.7 10.3 8.5 23 8.5 s23-3.8 23-8.5" fill="none" stroke="#B8372A" stroke-width="3"/>
-    <path d="M11 55 L53 9" stroke="#B8372A" stroke-width="6.5" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="cloud" viewBox="0 0 64 64">
-    <path d="M18 46 a12 12 0 0 1 1-24 a15 15 0 0 1 28 4 a10 10 0 0 1 -2 20 z"
-          fill="#FCEEDD" stroke="#C97612" stroke-width="3"/>
-  </symbol>
-  <symbol id="check" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="26" fill="#E0F3EB" stroke="#15785A" stroke-width="3"/>
-    <path d="M20 33 l8.5 8.5 16 -18" fill="none" stroke="#15785A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <marker id="arg" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto">
+    <path d="M1 1 L11 6 L1 11" fill="none" stroke="#15785A" stroke-width="2"/>
+  </marker>
+  <!-- UML artifact icon: a document with a folded corner -->
+  <symbol id="art" viewBox="0 0 40 48">
+    <path d="M3 3 h22 l12 12 v30 h-34 z" fill="#FFFFFF" stroke="#4A5668" stroke-width="2.6"/>
+    <path d="M25 3 v12 h12" fill="none" stroke="#4A5668" stroke-width="2.6"/>
   </symbol>
 </defs>
 
-<rect width="2240" height="1340" fill="#FFFFFF"/>
-<text x="44" y="56" font-size="33" font-weight="700" fill="#101922">Exposio &#8212; technology stack</text>
-<text x="44" y="90" font-size="18.5" fill="#53627A">What the system is built of. Every item below is in the repository; nothing is aspirational.</text>
+<rect width="2400" height="1762" fill="#FFFFFF"/>
+<text x="48" y="60" font-size="36" font-weight="700" fill="#101922">Exposio &#8212; deployment diagram and technology stack</text>
+<text x="48" y="98" font-size="21" fill="#53627A">UML deployment notation. Every version and count below is read from the repository at the current commit.</text>
 
-<!-- ══════ LAYER 1 ══════ -->
-<rect x="44" y="134" width="1480" height="166" rx="16" fill="#F4F9FD" stroke="#9EC6E4" stroke-width="2.4"/>
-<rect x="44" y="134" width="250" height="166" rx="16" fill="#E4F1FB"/>
-<rect x="276" y="134" width="18" height="166" fill="#E4F1FB"/>
-<use href="#win" x="74" y="162" width="52" height="52"/>
-<text x="74" y="244" font-size="20" font-weight="700" fill="#1B6498">Presentation</text>
-<text x="74" y="268" font-size="15" fill="#1B6498">runs in the browser</text>
-<text x="320" y="176" font-size="17" font-weight="700" fill="#101922">React 18.3.1  &#183;  Next.js App Router (client components)  &#183;  8 components</text>
-<text x="320" y="208" font-size="16" fill="#53627A">Charts, icons and the exposure map are hand-written inline SVG &#8212; <tspan font-weight="650" fill="#101922">no chart library, no icon font</tspan>.</text>
-<text x="320" y="236" font-size="16" fill="#53627A">Styling is one 371-line JavaScript string injected at render &#8212; <tspan font-weight="650" fill="#101922">no CSS framework, no .css file</tspan>.</text>
-<text x="320" y="264" font-size="16" fill="#53627A">Web Crypto computes the password hash here, so the secret never leaves the device.</text>
+<!-- ═══════════ NODE 1 : USER DEVICE ═══════════ -->
+<path d="M64 232 l26 -26 h556 l-26 26 z" fill="#DCE5F0" stroke="#3A4860" stroke-width="3" stroke-linejoin="round"/>
+<path d="M620 232 l26 -26 v474 l-26 26 z" fill="#CBD6E4" stroke="#3A4860" stroke-width="3" stroke-linejoin="round"/>
+<rect x="64" y="232" width="556" height="500" fill="#F4F7FB" stroke="#3A4860" stroke-width="3"/>
+<text x="342" y="272" font-size="19" font-style="italic" fill="#53627A" text-anchor="middle">&#171;device&#187;</text>
+<text x="342" y="304" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">User Device</text>
 
-<!-- ══════ LAYER 2 ══════ -->
-<rect x="44" y="318" width="1480" height="150" rx="16" fill="#F7F5FC" stroke="#A99BD6" stroke-width="2.4"/>
-<rect x="44" y="318" width="250" height="150" rx="16" fill="#EDE7FA"/>
-<rect x="276" y="318" width="18" height="150" fill="#EDE7FA"/>
-<use href="#fn" x="74" y="344" width="52" height="52"/>
-<text x="74" y="420" font-size="20" font-weight="700" fill="#4B3E8E">Application</text>
-<text x="74" y="444" font-size="15" fill="#4B3E8E">Vercel Edge Runtime</text>
-<text x="320" y="358" font-size="17" font-weight="700" fill="#101922">Next.js 14.2.35 Route Handlers  &#183;  <tspan font-family="Consolas, monospace">runtime = &quot;edge&quot;</tspan> on all four endpoints</text>
-<text x="320" y="392" font-size="16" fill="#53627A"><tspan font-family="Consolas, monospace" fill="#101922">/api/verify/start</tspan> issue a one-time code</text>
-<text x="940" y="392" font-size="16" fill="#53627A"><tspan font-family="Consolas, monospace" fill="#101922">/api/breach</tspan> look up, merge, score</text>
-<text x="320" y="420" font-size="16" fill="#53627A"><tspan font-family="Consolas, monospace" fill="#101922">/api/verify/check</tspan> the ownership gate</text>
-<text x="940" y="420" font-size="16" fill="#53627A"><tspan font-family="Consolas, monospace" fill="#101922">/api/chat</tspan> the bounded agent loop</text>
-<text x="320" y="450" font-size="15.5" fill="#53627A">No long-running server, no container, no process to keep alive between requests.</text>
+<rect x="96" y="332" width="492" height="372" rx="6" fill="#FFFFFF" stroke="#5A6B85" stroke-width="2.6" stroke-dasharray="10 6"/>
+<text x="342" y="364" font-size="17.5" font-style="italic" fill="#53627A" text-anchor="middle">&#171;executionEnvironment&#187;</text>
+<text x="342" y="394" font-size="22" font-weight="700" fill="#101922" text-anchor="middle">Web Browser</text>
 
-<!-- ══════ LAYER 3 ══════ -->
-<rect x="44" y="486" width="1480" height="186" rx="16" fill="#F7F5FC" stroke="#A99BD6" stroke-width="2.4"/>
-<rect x="44" y="486" width="250" height="186" rx="16" fill="#EDE7FA"/>
-<rect x="276" y="486" width="18" height="186" fill="#EDE7FA"/>
-<use href="#mod" x="74" y="514" width="52" height="52"/>
-<text x="74" y="596" font-size="20" font-weight="700" fill="#4B3E8E">Domain logic</text>
-<text x="74" y="620" font-size="15" fill="#4B3E8E">pure JavaScript, no I/O</text>
-<text x="74" y="644" font-size="15" fill="#4B3E8E">14 modules in lib/</text>
-<text x="320" y="524" font-size="17" font-weight="700" fill="#101922">The same files run on the server, in the browser and in the offline tests.</text>
-<g font-size="15.5" fill="#53627A">
-  <text x="320" y="558"><tspan font-weight="700" fill="#101922">score.js</tspan>  two-clock Breach Risk</text>
-  <text x="700" y="558"><tspan font-weight="700" fill="#101922">tokens.js</tspan>  HMAC-SHA256, keyed hash</text>
-  <text x="1120" y="558"><tspan font-weight="700" fill="#101922">crypto.js</tspan>  Web Crypto helpers</text>
-  <text x="320" y="590"><tspan font-weight="700" fill="#101922">playbook.js</tspan>  actions, residual risk</text>
-  <text x="700" y="590"><tspan font-weight="700" fill="#101922">sources.js</tspan>  query and merge</text>
-  <text x="1120" y="590"><tspan font-weight="700" fill="#101922">agent.js</tspan>  bounded tool loop</text>
-  <text x="320" y="622"><tspan font-weight="700" fill="#101922">expobot.js</tspan>  prompt, fencing</text>
-  <text x="700" y="622"><tspan font-weight="700" fill="#101922">ratelimit.js</tspan>  fixed window</text>
-  <text x="1120" y="622"><tspan font-weight="700" fill="#101922">gdpr.js</tspan>  Art. 15 / 17 letters</text>
-  <text x="320" y="654"><tspan font-weight="700" fill="#101922">http.js</tspan>  parse, normalise</text>
-  <text x="700" y="654"><tspan font-weight="700" fill="#101922">mailer.js / sms.js</tspan>  delivery</text>
-  <text x="1120" y="654"><tspan font-weight="700" fill="#101922">config.js &#183; content.js</tspan></text>
+<rect x="124" y="416" width="436" height="124" rx="6" fill="#E9F3FB" stroke="#2F86C4" stroke-width="2.6"/>
+<use href="#art" x="142" y="432" width="34" height="41"/>
+<text x="194" y="446" font-size="16.5" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
+<text x="194" y="474" font-size="20" font-weight="700" fill="#101922">exposio page</text>
+<text x="142" y="506" font-size="17" fill="#53627A">React 18.3.1 &#183; Next.js App Router</text>
+<text x="142" y="530" font-size="17" fill="#53627A">8 client components &#183; inline SVG</text>
+
+<rect x="124" y="556" width="436" height="124" rx="6" fill="#E0F3EB" stroke="#15785A" stroke-width="2.6"/>
+<use href="#art" x="142" y="572" width="34" height="41"/>
+<text x="194" y="586" font-size="16.5" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
+<text x="194" y="614" font-size="20" font-weight="700" fill="#15785A">k-anonymity check</text>
+<text x="142" y="646" font-size="17" fill="#2F6B55">Web Crypto &#183; SHA-1 computed here</text>
+<text x="142" y="670" font-size="17" fill="#2F6B55">5 hex characters sent, nothing more</text>
+
+<!-- ═══════════ NODE 2 : VERCEL EDGE ═══════════ -->
+<path d="M786 232 l26 -26 h800 l-26 26 z" fill="#D9E6F2" stroke="#1B6498" stroke-width="3" stroke-linejoin="round"/>
+<path d="M1586 232 l26 -26 v640 l-26 26 z" fill="#C6D9EA" stroke="#1B6498" stroke-width="3" stroke-linejoin="round"/>
+<rect x="786" y="232" width="800" height="666" fill="#EEF5FC" stroke="#1B6498" stroke-width="3"/>
+<text x="1186" y="272" font-size="19" font-style="italic" fill="#1B6498" text-anchor="middle">&#171;device&#187;</text>
+<text x="1186" y="304" font-size="25" font-weight="700" fill="#101922" text-anchor="middle">Vercel Edge Network</text>
+
+<rect x="818" y="332" width="736" height="358" rx="6" fill="#FFFFFF" stroke="#2F86C4" stroke-width="2.6" stroke-dasharray="10 6"/>
+<text x="1186" y="364" font-size="17.5" font-style="italic" fill="#53627A" text-anchor="middle">&#171;executionEnvironment&#187;</text>
+<text x="1186" y="394" font-size="22" font-weight="700" fill="#101922" text-anchor="middle">Edge Runtime &#183; V8 isolate</text>
+
+<rect x="846" y="416" width="332" height="118" rx="6" fill="#E9F3FB" stroke="#2F86C4" stroke-width="2.6"/>
+<use href="#art" x="864" y="432" width="34" height="41"/>
+<text x="916" y="446" font-size="16.5" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
+<text x="916" y="474" font-size="20" font-weight="700" fill="#101922">Route Handlers</text>
+<text x="864" y="504" font-size="17" fill="#53627A">Next.js 14.2.35 &#183; 4 endpoints</text>
+<text x="864" y="526" font-size="17" fill="#53627A">verify/start &#183; verify/check</text>
+
+<rect x="1198" y="416" width="332" height="118" rx="6" fill="#EDE7FA" stroke="#6D55BD" stroke-width="2.6"/>
+<use href="#art" x="1216" y="432" width="34" height="41"/>
+<text x="1268" y="446" font-size="16.5" font-style="italic" fill="#53627A">&#171;artifact&#187;</text>
+<text x="1268" y="474" font-size="20" font-weight="700" fill="#101922">lib/ domain modules</text>
+<text x="1216" y="504" font-size="17" fill="#53627A">14 ES modules, no I/O</text>
+<text x="1216" y="526" font-size="17" fill="#53627A">score &#183; tokens &#183; playbook &#183; agent</text>
+
+<rect x="846" y="556" width="684" height="112" rx="6" fill="#FAE8E4" stroke="#B8372A" stroke-width="2.8"/>
+<text x="872" y="590" font-size="20" font-weight="700" fill="#B8372A">No artifact is deployed for persistence.</text>
+<text x="872" y="620" font-size="17.5" fill="#8A3B2E">This node has no database, object store or session store. Session state is</text>
+<text x="872" y="646" font-size="17.5" fill="#8A3B2E">carried by a signed token held on the User Device and expires with it.</text>
+
+<text x="818" y="736" font-size="17.5" fill="#53627A">Node constraints:  stateless &#183; no process persists between requests &#183; Node &#8805; 18.17 API surface</text>
+<text x="818" y="766" font-size="17.5" fill="#53627A">Deployed by Vercel from branch <tspan font-family="Consolas, monospace" fill="#101922">main</tspan> on push. No container image, no long-running server.</text>
+<text x="818" y="796" font-size="17.5" fill="#53627A">Dependencies resolved at build: <tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">next</tspan>, <tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">react</tspan>, <tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">react-dom</tspan> &#8212; 19 packages in total.</text>
+
+<!-- ═══════════ EXTERNAL NODES ═══════════ -->
+<g>
+  <path d="M1760 212 l20 -20 h560 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M2300 212 l20 -20 v86 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
+  <rect x="1760" y="212" width="540" height="106" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.6"/>
+  <text x="2030" y="244" font-size="16.5" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
+  <text x="2030" y="274" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">Have I Been Pwned</text>
+  <text x="2030" y="302" font-size="16.5" fill="#53627A" text-anchor="middle">breach records for an address</text>
+</g>
+<g>
+  <path d="M1760 358 l20 -20 h560 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M2300 358 l20 -20 v86 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
+  <rect x="1760" y="358" width="540" height="106" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.6"/>
+  <text x="2030" y="390" font-size="16.5" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
+  <text x="2030" y="420" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">DeHashed</text>
+  <text x="2030" y="448" font-size="16.5" fill="#53627A" text-anchor="middle">second source; phone numbers</text>
+</g>
+<g>
+  <path d="M1760 504 l20 -20 h560 l-20 20 z" fill="#CFE6DB" stroke="#15785A" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M2300 504 l20 -20 v86 l-20 20 z" fill="#BCDCCD" stroke="#15785A" stroke-width="2.6" stroke-linejoin="round"/>
+  <rect x="1760" y="504" width="540" height="106" fill="#F1FAF5" stroke="#15785A" stroke-width="2.6"/>
+  <text x="2030" y="536" font-size="16.5" font-style="italic" fill="#15785A" text-anchor="middle">&#171;device&#187;</text>
+  <text x="2030" y="566" font-size="21" font-weight="700" fill="#15785A" text-anchor="middle">Pwned Passwords</text>
+  <text x="2030" y="594" font-size="16.5" fill="#2F6B55" text-anchor="middle">range API &#183; reached by the browser</text>
+</g>
+<g>
+  <path d="M1760 650 l20 -20 h560 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M2300 650 l20 -20 v86 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
+  <rect x="1760" y="650" width="540" height="106" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.6"/>
+  <text x="2030" y="682" font-size="16.5" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
+  <text x="2030" y="712" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">Resend &#183; Twilio</text>
+  <text x="2030" y="740" font-size="16.5" fill="#53627A" text-anchor="middle">deliver the one-time code</text>
+</g>
+<g>
+  <path d="M1760 796 l20 -20 h560 l-20 20 z" fill="#E8DFC9" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M2300 796 l20 -20 v86 l-20 20 z" fill="#DCD0B4" stroke="#8A6D2F" stroke-width="2.6" stroke-linejoin="round"/>
+  <rect x="1760" y="796" width="540" height="106" fill="#FBF8F1" stroke="#8A6D2F" stroke-width="2.6"/>
+  <text x="2030" y="828" font-size="16.5" font-style="italic" fill="#8A6D2F" text-anchor="middle">&#171;device&#187;</text>
+  <text x="2030" y="858" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">Anthropic API</text>
+  <text x="2030" y="886" font-size="16.5" fill="#53627A" text-anchor="middle">wording for the advisory agent</text>
+</g>
+<g>
+  <path d="M1760 942 l20 -20 h560 l-20 20 z" fill="#E4E4EC" stroke="#6A6A82" stroke-width="2.6" stroke-linejoin="round" stroke-dasharray="8 5"/>
+  <path d="M2300 942 l20 -20 v86 l-20 20 z" fill="#D6D6E2" stroke="#6A6A82" stroke-width="2.6" stroke-linejoin="round" stroke-dasharray="8 5"/>
+  <rect x="1760" y="942" width="540" height="106" fill="#F7F7FA" stroke="#6A6A82" stroke-width="2.6" stroke-dasharray="8 5"/>
+  <text x="2030" y="974" font-size="16.5" font-style="italic" fill="#6A6A82" text-anchor="middle">&#171;device&#187; &#183; optional</text>
+  <text x="2030" y="1004" font-size="21" font-weight="700" fill="#101922" text-anchor="middle">Upstash Redis</text>
+  <text x="2030" y="1032" font-size="16.5" fill="#53627A" text-anchor="middle">rate-limit counters only</text>
 </g>
 
-<!-- ══════ LAYER 4 ══════ -->
-<rect x="44" y="690" width="1480" height="142" rx="16" fill="#F2FAF6" stroke="#8FC6B0" stroke-width="2.4"/>
-<rect x="44" y="690" width="250" height="142" rx="16" fill="#E0F3EB"/>
-<rect x="276" y="690" width="18" height="142" fill="#E0F3EB"/>
-<use href="#chip" x="74" y="714" width="52" height="52"/>
-<text x="74" y="790" font-size="20" font-weight="700" fill="#15785A">Platform APIs</text>
-<text x="74" y="814" font-size="15" fill="#15785A">used instead of libraries</text>
-<text x="320" y="728" font-size="17" font-weight="700" fill="#101922">Standard web APIs, available in both the browser and the edge runtime.</text>
-<text x="320" y="762" font-size="16" fill="#53627A"><tspan font-weight="700" fill="#101922">Web Crypto</tspan>  importKey, sign, verify &#8212; the signed tokens, and SHA-1 for k-anonymity</text>
-<text x="320" y="790" font-size="16" fill="#53627A"><tspan font-weight="700" fill="#101922">fetch</tspan> every outbound call</text>
-<text x="940" y="790" font-size="16" fill="#53627A"><tspan font-weight="700" fill="#101922">TextEncoder</tspan>, <tspan font-weight="700" fill="#101922">btoa</tspan> encoding and Basic auth</text>
-<text x="320" y="818" font-size="15.5" font-weight="650" fill="#15785A">No crypto library. No HTTP client. No polyfills.</text>
+<!-- ═══════════ COMMUNICATION PATHS ═══════════ -->
+<path d="M646 486 L780 486" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+<text x="713" y="466" font-size="17" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
+<text x="713" y="518" font-size="16.5" fill="#53627A" text-anchor="middle">JSON</text>
 
-<!-- ══════ LAYER 5 ══════ -->
-<rect x="44" y="850" width="1480" height="142" rx="16" fill="#FDF4F2" stroke="#D99B8C" stroke-width="2.4"/>
-<rect x="44" y="850" width="250" height="142" rx="16" fill="#FAE8E4"/>
-<rect x="276" y="850" width="18" height="142" fill="#FAE8E4"/>
-<use href="#nodb" x="74" y="874" width="52" height="52"/>
-<text x="74" y="950" font-size="20" font-weight="700" fill="#B8372A">State</text>
-<text x="74" y="974" font-size="15" fill="#B8372A">there isn&#8217;t any</text>
-<text x="320" y="888" font-size="17" font-weight="700" fill="#B8372A">No database. No ORM. No session store. No object storage. No log of who asked what.</text>
-<text x="320" y="922" font-size="16" fill="#53627A">Session state travels in a signed token held by the browser: <tspan font-family="Consolas, monospace" fill="#101922">v1.&lt;payload&gt;.&lt;signature&gt;</tspan></text>
-<text x="320" y="950" font-size="16" fill="#53627A"><tspan font-weight="700" fill="#101922">Optional:</tspan> Upstash Redis over REST, holding only rate-limit counters keyed by a hash.</text>
-<text x="320" y="978" font-size="15.5" fill="#53627A">Without it the limiter falls back to an in-memory window, per instance.</text>
+<path d="M560 600 C 900 1140, 1500 1160, 1960 620" stroke="#15785A" stroke-width="3.2" fill="none"
+      stroke-dasharray="12 7" marker-end="url(#arg)"/>
+<text x="1240" y="1168" font-size="18.5" font-weight="700" fill="#15785A" text-anchor="middle">&#171;HTTPS&#187; hash prefix &#8212; this path does not traverse the Vercel node</text>
 
-<!-- ══════ LAYER 6 ══════ -->
-<rect x="44" y="1010" width="1480" height="166" rx="16" fill="#FFFAF2" stroke="#DCAE6B" stroke-width="2.4"/>
-<rect x="44" y="1010" width="250" height="166" rx="16" fill="#FCEEDD"/>
-<rect x="276" y="1010" width="18" height="166" fill="#FCEEDD"/>
-<use href="#cloud" x="74" y="1038" width="52" height="52"/>
-<text x="74" y="1118" font-size="20" font-weight="700" fill="#A2620D">External services</text>
-<text x="74" y="1142" font-size="15" fill="#A2620D">queried per request</text>
-<g font-size="16.5" fill="#53627A">
-  <text x="320" y="1052"><tspan font-weight="700" fill="#101922">Have I Been Pwned</tspan>  breach records for an address</text>
-  <text x="940" y="1052"><tspan font-weight="700" fill="#101922">Pwned Passwords</tspan>  range API, called by the browser</text>
-  <text x="320" y="1090"><tspan font-weight="700" fill="#101922">DeHashed</tspan>  second source; the only one for phones</text>
-  <text x="940" y="1090"><tspan font-weight="700" fill="#101922">Anthropic API</tspan>  wording for the advisory agent</text>
-  <text x="320" y="1128"><tspan font-weight="700" fill="#101922">Resend</tspan>  delivers the email code</text>
-  <text x="940" y="1128"><tspan font-weight="700" fill="#101922">Twilio</tspan>  delivers the SMS code</text>
-  <text x="320" y="1160" font-size="15.5">Each is reached with <tspan font-family="Consolas, monospace">fetch</tspan> and an API key held in the environment; none holds an account for the user.</text>
+<path d="M1616 420 L1754 280" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+<path d="M1616 440 L1754 412" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+<path d="M1616 560 L1754 700" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+<path d="M1616 600 L1754 846" stroke="#243247" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+<path d="M1616 700 L1754 988" stroke="#6A6A82" stroke-width="2.6" fill="none" stroke-dasharray="9 6" marker-end="url(#ar)"/>
+<text x="1690" y="352" font-size="17" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
+<text x="1686" y="640" font-size="17" font-style="italic" fill="#53627A" text-anchor="middle">&#171;HTTPS&#187;</text>
+<text x="1664" y="900" font-size="16.5" font-style="italic" fill="#6A6A82" text-anchor="middle">&#171;HTTPS&#187; optional</text>
+
+<!-- ═══════════ TECHNOLOGY SUMMARY TABLE ═══════════ -->
+<text x="48" y="1236" font-size="25" font-weight="700" fill="#101922">Technology summary</text>
+
+<rect x="48" y="1258" width="2304" height="52" fill="#E8EDF4" stroke="#8798AE" stroke-width="2"/>
+<text x="72" y="1292" font-size="19" font-weight="700" fill="#101922">Layer</text>
+<text x="560" y="1292" font-size="19" font-weight="700" fill="#101922">Technology</text>
+<text x="1320" y="1292" font-size="19" font-weight="700" fill="#101922">Version</text>
+<text x="1660" y="1292" font-size="19" font-weight="700" fill="#101922">Notes</text>
+
+<g font-size="18" fill="#243247">
+  <rect x="48" y="1310" width="2304" height="46" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.4"/>
+  <text x="72" y="1340" font-weight="650">Presentation</text><text x="560" y="1340">React, Next.js App Router</text>
+  <text x="1320" y="1340" font-family="Consolas, monospace">18.3.1 / 14.2.35</text><text x="1660" y="1340" fill="#53627A">8 client components; graphics are inline SVG</text>
+
+  <rect x="48" y="1356" width="2304" height="46" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="1.4"/>
+  <text x="72" y="1386" font-weight="650">Styling</text><text x="560" y="1386">CSS in a JavaScript string</text>
+  <text x="1320" y="1386" font-family="Consolas, monospace">&#8212;</text><text x="1660" y="1386" fill="#53627A">371 lines; no framework, no .css file</text>
+
+  <rect x="48" y="1402" width="2304" height="46" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.4"/>
+  <text x="72" y="1432" font-weight="650">Application</text><text x="560" y="1432">Next.js Route Handlers, Edge runtime</text>
+  <text x="1320" y="1432" font-family="Consolas, monospace">14.2.35</text><text x="1660" y="1432" fill="#53627A">4 endpoints, each <tspan font-family="Consolas, monospace">runtime = &quot;edge&quot;</tspan></text>
+
+  <rect x="48" y="1448" width="2304" height="46" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="1.4"/>
+  <text x="72" y="1478" font-weight="650">Domain logic</text><text x="560" y="1478">Plain ES modules</text>
+  <text x="1320" y="1478" font-family="Consolas, monospace">&#8212;</text><text x="1660" y="1478" fill="#53627A">14 modules, no I/O; shared by server, browser and tests</text>
+
+  <rect x="48" y="1494" width="2304" height="46" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.4"/>
+  <text x="72" y="1524" font-weight="650">Cryptography</text><text x="560" y="1524">Web Crypto API</text>
+  <text x="1320" y="1524" font-family="Consolas, monospace">platform</text><text x="1660" y="1524" fill="#53627A">HMAC-SHA256 tokens; SHA-1 for k-anonymity</text>
+
+  <rect x="48" y="1540" width="2304" height="46" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="1.4"/>
+  <text x="72" y="1570" font-weight="650">Persistence</text><text x="560" y="1570" font-weight="650" fill="#B8372A">None</text>
+  <text x="1320" y="1570" font-family="Consolas, monospace">&#8212;</text><text x="1660" y="1570" fill="#53627A">Signed tokens only; optional Upstash Redis for rate limits</text>
+
+  <rect x="48" y="1586" width="2304" height="46" fill="#FFFFFF" stroke="#C3D0DF" stroke-width="1.4"/>
+  <text x="72" y="1616" font-weight="650">Verification</text><text x="560" y="1616">Node assertion scripts</text>
+  <text x="1320" y="1616" font-family="Consolas, monospace">Node &#8805; 18.17</text><text x="1660" y="1616" fill="#53627A">selftest, redteam, sensitivity, evaluate; no test framework</text>
+
+  <rect x="48" y="1632" width="2304" height="46" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="1.4"/>
+  <text x="72" y="1662" font-weight="650">Dependencies</text><text x="560" y="1662" font-family="Consolas, monospace">next, react, react-dom</text>
+  <text x="1320" y="1662" font-family="Consolas, monospace">3 direct</text><text x="1660" y="1662" fill="#53627A">19 packages including transitive; 0 TypeScript, 0 CSS files</text>
 </g>
-
-<!-- ══════ RIGHT: the headline ══════ -->
-<rect x="1560" y="134" width="640" height="280" rx="16" fill="#E0F3EB" stroke="#15785A" stroke-width="3"/>
-<use href="#check" x="1590" y="162" width="52" height="52"/>
-<text x="1664" y="186" font-size="21" font-weight="700" fill="#15785A">The whole dependency list</text>
-<text x="1664" y="212" font-size="16" fill="#1F5C47">in package.json, in full:</text>
-<text x="1590" y="256" font-size="19" font-family="Consolas, monospace" font-weight="700" fill="#101922">next 14.2.35</text>
-<text x="1590" y="288" font-size="19" font-family="Consolas, monospace" font-weight="700" fill="#101922">react 18.3.1</text>
-<text x="1590" y="320" font-size="19" font-family="Consolas, monospace" font-weight="700" fill="#101922">react-dom 18.3.1</text>
-<text x="1590" y="358" font-size="16" fill="#1F5C47"><tspan font-weight="700">19</tspan> packages in node_modules, counting</text>
-<text x="1590" y="382" font-size="16" fill="#1F5C47">everything those three pull in with them.</text>
-
-<!-- ══════ RIGHT: build and verification ══════ -->
-<rect x="1560" y="440" width="640" height="358" rx="16" fill="#F7F9FC" stroke="#C3D0DF" stroke-width="2.4"/>
-<text x="1590" y="478" font-size="20" font-weight="700" fill="#101922">Build and verification</text>
-<text x="1590" y="512" font-size="16" fill="#53627A">Node &#8805; 18.17  &#183;  ES modules  &#183;  no build step beyond Next</text>
-<text x="1590" y="548" font-size="16.5" font-weight="700" fill="#101922">npm run &#8230;</text>
-<g font-size="16" fill="#53627A">
-  <text x="1590" y="580"><tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">selftest</tspan>      end-to-end correctness</text>
-  <text x="1590" y="612"><tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">redteam</tspan>      18 attacks on the agent</text>
-  <text x="1590" y="644"><tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">sensitivity</tspan>   2,000-profile model analysis</text>
-  <text x="1590" y="676"><tspan font-family="Consolas, monospace" font-weight="700" fill="#101922">evaluate</tspan>      offline evaluation harness</text>
-</g>
-<text x="1590" y="714" font-size="16" fill="#53627A">Plain Node assertions &#8212; <tspan font-weight="650" fill="#101922">no test framework</tspan>,</text>
-<text x="1590" y="738" font-size="16" fill="#53627A">so the suites have no dependencies either.</text>
-<text x="1590" y="774" font-size="16" fill="#53627A">Deployed by Vercel from <tspan font-family="Consolas, monospace" fill="#101922">main</tspan>, on push.</text>
-
-<!-- ══════ RIGHT: what is absent ══════ -->
-<rect x="1560" y="824" width="640" height="352" rx="16" fill="#FDF4F2" stroke="#D99B8C" stroke-width="2.4"/>
-<text x="1590" y="862" font-size="20" font-weight="700" fill="#B8372A">Deliberately absent</text>
-<g font-size="16" fill="#8A3B2E">
-  <text x="1590" y="898">TypeScript &#8212; 0 .ts files</text>
-  <text x="1590" y="930">CSS framework &#8212; 0 .css files</text>
-  <text x="1590" y="962">Chart library &#8212; the SVG is written out</text>
-  <text x="1590" y="994">Icon font &#8212; icons are inline paths</text>
-  <text x="1590" y="1026">State manager &#8212; React state suffices</text>
-  <text x="1590" y="1058">ORM, database driver, session store</text>
-  <text x="1590" y="1090">Analytics, tag manager, cookie banner</text>
-  <text x="1590" y="1122">Auth provider &#8212; there are no accounts</text>
-</g>
-<text x="1590" y="1158" font-size="15.5" font-style="italic" fill="#B8372A">Each absence is a smaller attack surface to argue for.</text>
-
-<!-- footer -->
-<text x="44" y="1226" font-size="17" font-weight="700" fill="#101922">Why so little</text>
-<text x="44" y="1256" font-size="16" fill="#53627A">A tool that asks people to trust it with an email address has to be auditable, and a reader can only audit what they can finish reading. 6,559 lines</text>
-<text x="44" y="1282" font-size="16" fill="#53627A">of application code and three dependencies can be read in an afternoon; the privacy claims in Chapter 8 are checkable rather than promised.</text>
-<text x="44" y="1316" font-size="15" fill="#8792A6">MSc research prototype &#183; &#211;buda University &#183; counts taken from the repository at the current commit</text>
+<text x="48" y="1724" font-size="17" fill="#8792A6">MSc research prototype &#183; &#211;buda University &#183; nodes and artifacts follow UML deployment notation; versions and counts are read from package.json and the repository tree.</text>
 </svg>
