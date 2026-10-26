@@ -309,10 +309,10 @@ for (const undated of [180, 365, 730, 1460, 2920]) {
     "   " + mean(ss).toFixed(1).padStart(5) + "   " + pctDist(bandDist(ss), N).padEnd(30) +
     spearman(base, ss).toFixed(3) + tag);
 }
-console.log("\n   Reading: this is the model's most consequential free parameter, because");
-console.log("   18% of records carry no date and the assumption is applied to all of them.");
-console.log("   It is also the one the thesis currently leaves unstated.");
-
+console.log("   Reading: under the single-clock model this was the most consequential free");
+console.log("   parameter. Separating the clocks confines it to the credential half, and the");
+console.log("   whole sweep now stays above rho = 0.951 against 0.769 before. It still matters");
+console.log("   for undated records that carry credentials, such as combination lists.");
 // ── 6. tier weights ──────────────────────────────────────────────────────────
 console.log("\n6. ROBUSTNESS OF THE SEVERITY TIER WEIGHTS (Monte Carlo)");
 console.log("-".repeat(78));
