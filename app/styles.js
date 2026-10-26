@@ -54,30 +54,94 @@ export const STYLE = `
   border-radius:999px;padding:4px 11px;margin-top:2px;}
 .x-secureline b{color:var(--sig);font-weight:700;}
 
-.x-trust{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px;}
-.x-tsig{display:flex;gap:10px;align-items:flex-start;padding:14px;border:1px solid var(--line);
-  border-radius:13px;background:var(--card);background-image:var(--lift);}
-.x-tico{color:var(--sig);flex-shrink:0;display:grid;place-items:center;width:28px;height:28px;
+.x-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px;}
+.x-tsig{display:inline-flex;gap:7px;align-items:center;padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:var(--card);background-image:var(--lift);cursor:default;}
+.x-tico{color:var(--sig);flex-shrink:0;display:grid;place-items:center;width:18px;height:18px;
   border-radius:9px;background:var(--sig-dim);border:1px solid var(--sig-edge);}
-.x-tsigt{font-size:12.5px;font-weight:650;margin-bottom:4px;letter-spacing:-.005em;}
-.x-tsigd{font-size:11.5px;color:var(--mute);line-height:1.5;}
+.x-tsigt{font-size:12px;font-weight:620;letter-spacing:-.005em;white-space:nowrap;}
+
 
 /* The guarantee sits beside the field itself, at the moment of the decision. */
 .x-safety{display:flex;gap:10px;align-items:flex-start;margin-top:15px;padding:11px 13px;border-radius:11px;
   background:var(--sig-dim);border:1px solid var(--sig-edge);font-size:12px;line-height:1.55;color:#C6D3E6;}
 
-.x-how{margin-top:28px;}
+.x-more{margin-top:20px;border:1px solid var(--line);border-radius:14px;background:var(--card);
+  background-image:var(--lift);overflow:hidden;}
+.x-moresum{list-style:none;cursor:pointer;padding:14px 18px;font-size:12.5px;font-weight:620;
+  display:flex;align-items:center;justify-content:center;gap:8px;color:var(--mute);}
+.x-moresum::-webkit-details-marker{display:none;}
+.x-moresum:hover{color:var(--ink);}
+.x-morearrow{font-size:10px;transition:transform .18s;}
+.x-more[open] .x-morearrow{transform:rotate(180deg);}
+.x-more[open] .x-moresum{border-bottom:1px solid var(--line);color:var(--ink);}
+.x-more .x-steps{padding:18px 18px 4px;}
+.x-more .x-nevert{margin-top:18px;}
+.x-more .x-neverl{padding:0 18px 18px;}
+.x-more .x-disclaimer{padding:0 18px 18px;margin-top:0;}
 .x-howt,.x-nevert{font-size:13px;font-weight:650;margin:0 0 12px;text-align:center;letter-spacing:.01em;}
 .x-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.x-step{padding:15px 14px;border:1px solid var(--line);border-radius:13px;background:var(--card);background-image:var(--lift);}
+.x-step{padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);}
 .x-stepn{font-family:ui-monospace,monospace;font-size:10.5px;color:var(--sig);letter-spacing:.12em;}
 .x-stept{font-size:12.5px;font-weight:650;margin:7px 0 4px;}
 .x-stepd{font-size:11.5px;color:var(--mute);line-height:1.5;}
 
-.x-never{margin-top:22px;padding:17px 19px;border:1px solid var(--line);border-radius:14px;background:var(--card);background-image:var(--lift);}
+
 .x-neverl{list-style:none;margin:0;padding:0;display:grid;gap:9px;}
 .x-neverl li{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--mute);line-height:1.5;}
 .x-neverx{color:var(--coral);font-weight:700;flex-shrink:0;font-size:11px;line-height:1.55;}
+
+.x-mx{margin-top:4px;}
+.x-mxscroll{overflow-x:auto;padding-bottom:4px;}
+.x-mxgrid{display:grid;gap:3px;min-width:min-content;align-items:center;justify-content:start;}
+.x-mxcorner{font-size:10.5px;color:var(--mute);font-family:ui-monospace,monospace;
+  align-self:end;padding-bottom:7px;letter-spacing:.02em;}
+.x-mxcount{color:var(--ink);font-weight:650;}
+.x-mxhead{height:96px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;}
+.x-mxhead span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:10.5px;font-weight:600;
+  white-space:nowrap;letter-spacing:.01em;opacity:.82;transition:opacity .12s;}
+.x-mxhead.hot span{opacity:1;}
+.x-mxrow{display:flex;align-items:center;gap:8px;padding:5px 10px 5px 0;min-height:26px;}
+.x-mxlabel{font-size:11.5px;color:var(--mute);line-height:1.3;transition:color .12s;}
+.x-mxrow.hot .x-mxlabel{color:var(--ink);}
+.x-mxn{margin-left:auto;font-family:ui-monospace,monospace;font-size:10px;color:var(--mute);
+  border:1px solid var(--line);border-radius:5px;padding:1px 5px;flex-shrink:0;}
+.x-mxcell{height:26px;border-radius:6px;background:var(--bg);border:1px solid var(--line);
+  display:grid;place-items:center;transition:background .12s,border-color .12s;}
+.x-mxcell.lit{border-color:#2A3650;}
+.x-mxdot{width:11px;height:11px;border-radius:50%;display:block;}
+.x-mxcell.on{border-color:transparent;}
+.x-mxfoot{margin-top:12px;font-size:11px;color:var(--mute);line-height:1.55;}
+/* ---- Learn: the story strip ---- */
+.x-story{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:12px;
+  grid-template-columns:repeat(4,1fr);counter-reset:none;}
+.x-storyp{position:relative;padding:16px 14px 15px;border:1px solid var(--line);border-radius:14px;
+  background:var(--bg);display:flex;flex-direction:column;}
+.x-storyp:not(:last-child)::after{content:"";position:absolute;right:-8px;top:50%;width:6px;height:6px;
+  border-top:1.6px solid var(--line);border-right:1.6px solid var(--line);
+  transform:translateY(-50%) rotate(45deg);}
+.x-storyn{font-family:ui-monospace,monospace;font-size:10px;color:var(--mute);letter-spacing:.14em;}
+.x-storyart{margin:10px 0 12px;display:grid;place-items:center;min-height:62px;}
+.x-scene{display:block;max-width:118px;}
+.x-storyh{font-size:13px;font-weight:650;line-height:1.3;margin-bottom:6px;letter-spacing:-.01em;}
+.x-storyb{font-size:11.5px;color:var(--mute);line-height:1.55;}
+
+/* ---- Learn: one lesson ---- */
+.x-lessons-wrap{display:grid;gap:10px;margin-top:16px;}
+.x-lesson{display:grid;grid-template-columns:104px 1fr;gap:16px;align-items:start;
+  padding:15px 16px;border:1px solid var(--line);border-radius:14px;background:var(--bg);}
+.x-lessonart{display:grid;place-items:center;padding-top:2px;}
+.x-lessonart .x-scene{max-width:100px;}
+.x-lessonh{font-size:14.5px;font-weight:660;letter-spacing:-.012em;line-height:1.3;}
+.x-lessons{font-size:12.5px;color:var(--mute);line-height:1.6;margin-top:5px;}
+.x-lessonmore{margin-top:9px;}
+.x-lessonmore summary{list-style:none;cursor:pointer;font-size:11px;color:var(--mute);
+  font-family:ui-monospace,monospace;letter-spacing:.02em;display:inline-flex;gap:6px;align-items:center;}
+.x-lessonmore summary::-webkit-details-marker{display:none;}
+.x-lessonmore summary::before{content:"+";font-size:12px;opacity:.7;}
+.x-lessonmore[open] summary::before{content:"−";}
+.x-lessonmore summary:hover{color:var(--ink);}
+.x-lessonp{font-size:12px;color:var(--mute);line-height:1.6;margin-top:7px;
+  padding-left:11px;border-left:2px solid var(--line);}
 
 .x-seals{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px;}
 .x-seal{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid var(--line);
@@ -90,6 +154,10 @@ export const STYLE = `
 /* One column on phones: three-across turns into unreadable slivers. */
 @media (max-width:640px){
   .x-trust,.x-steps{grid-template-columns:1fr;}
+  .x-story{grid-template-columns:1fr 1fr;}
+  .x-storyp:not(:last-child)::after{display:none;}
+  .x-lesson{grid-template-columns:1fr;gap:10px;}
+  .x-lessonart{justify-items:start;}
   .x-title{font-size:27px;}
   .x-lede{font-size:13.5px;}
 }
@@ -151,6 +219,10 @@ export const STYLE = `
 .x-btrow .cbar{height:6px;border-radius:4px;flex:0 0 auto;}
 .x-btfoot{display:flex;justify-content:space-between;padding:9px 2px;font-size:12.5px;border-bottom:1px solid var(--line);font-family:ui-monospace,monospace;color:var(--mute);}
 .x-btfoot:last-child{border-bottom:none;font-weight:700;color:var(--ink);}
+.x-btrow.x-idrow{grid-template-columns:1.4fr 1.4fr .5fr;}
+.x-btrow.x-idrow span:last-child{text-align:right;font-family:ui-monospace,monospace;font-size:11px;}
+.x-idfrom{color:var(--mute);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.x-btfoot.x-bttotal{color:var(--ink);font-weight:650;border-top:1px solid var(--line);margin-top:2px;}
 .x-fpfound{border:1px dashed var(--line);border-radius:12px;padding:14px 15px;margin-bottom:14px;background:rgba(103,116,139,.05);}
 .x-fpfoundh{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:6px;}
 .x-fpfoundb{color:var(--mute);font-size:12.5px;line-height:1.55;}
@@ -244,6 +316,54 @@ export const STYLE = `
 .x-botletterrow{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;}
 /* The agent's working: which tools produced the figures in the answer above. */
 .x-bottrace{margin-top:8px;color:var(--mute);font-size:10.5px;letter-spacing:.02em;opacity:.8;}
+/* ── exposure map + breach cards (app/components/BreachMap.js) ───────────── */
+.x-mapwrap{margin-top:4px;}
+.x-map{width:100%;height:auto;display:block;}
+.x-maplegend{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;
+  margin-top:6px;font-size:11px;color:var(--mute);}
+.x-mapkeys{display:flex;flex-wrap:wrap;gap:12px;}
+.x-mapkey{display:inline-flex;align-items:center;gap:5px;}
+.x-mapdot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+/* The score divided in proportion. One segment usually fills most of the bar,
+   which is the point: exposure concentrates in a single breach. */
+.x-ribbonwrap{margin-top:16px;}
+.x-ribbon{display:flex;height:16px;border-radius:6px;overflow:hidden;background:var(--bg);
+  border:1px solid var(--line);}
+.x-ribbonseg{cursor:pointer;transition:filter .15s,opacity .15s;opacity:.78;min-width:4px;
+  border-right:1px solid rgba(8,11,18,.55);}
+.x-ribbonseg:last-child{border-right:none;}
+.x-ribbonseg:hover{opacity:1;}
+.x-ribbonseg.on{opacity:1;filter:brightness(1.25);}
+.x-ribbonnote{margin-top:7px;font-size:12.5px;color:var(--mute);line-height:1.5;}
+.x-ribbonnote b{color:var(--ink);font-weight:650;}
+
+.x-breaches{display:grid;gap:9px;margin-top:16px;}
+/* The left border carries the severity tier colour, so the card and its bubble
+   on the map are recognisably the same record. */
+.x-breach{border:1px solid var(--line);border-left-width:3px;border-radius:11px;padding:12px 14px;
+  background:var(--card2);cursor:pointer;transition:border-color .15s,background .15s;}
+.x-breach:hover{background:#17202F;}
+.x-breach.on{background:#17202F;box-shadow:0 0 0 1px var(--sig-edge);}
+.x-breachtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.x-breachname{font-size:14px;font-weight:650;letter-spacing:-.01em;}
+.x-breachdate{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--mute);white-space:nowrap;}
+.x-breachtier{font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;margin-top:5px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;}
+.x-breachsrc{color:var(--mute);font-weight:400;letter-spacing:.03em;text-transform:none;}
+.x-classes{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;}
+.x-class{font-size:11.5px;color:#C3CDDC;background:rgba(255,255,255,.04);border:1px solid var(--line);
+  border-radius:999px;padding:3px 9px;}
+.x-contrib{display:flex;align-items:center;gap:9px;margin-top:10px;}
+.x-contribbar{flex:1;height:5px;background:var(--bg);border-radius:4px;overflow:hidden;}
+.x-contribbar span{display:block;height:100%;border-radius:4px;}
+.x-contribval{font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);min-width:40px;text-align:right;}
+
+@media (max-width:640px){
+  .x-breachdate{white-space:normal;}
+  .x-maplegend{flex-direction:column;align-items:flex-start;}
+}
+
 .x-assumed{color:var(--amber);}
 /* Small screens: keep the ExpoBot bubble on the bottom edge so it doesn't cover the tabs or content mid-page. */
 @media (max-width:560px){.x-nudge{left:14px;right:14px;width:auto;bottom:90px;}.x-nudge::after{right:34px;}.x-panel{right:8px;bottom:8px;}}

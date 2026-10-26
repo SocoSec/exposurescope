@@ -36,13 +36,18 @@ const S = {
 const PROCESSING = [
   {
     what: "Your email address — verification",
-    where: "Resend (email delivery provider)",
-    why: "To send you a one-time code proving the address is yours. The code itself is never stored; your browser holds a signed, expiring token instead.",
+    where: "Resend (email delivery provider), EU region — Ireland",
+    why: "To send you a one-time code proving the address is yours. The code itself is never stored; your browser holds a signed, expiring token instead. Mail is sent from exposio.eu, authenticated with SPF, DKIM and DMARC, and processed inside the EU.",
   },
   {
-    what: "Your verified email address — breach lookup",
-    where: "Have I Been Pwned; DeHashed (only if enabled on this deployment)",
-    why: "To find which known breaches include the address. Only breach names, dates and the TYPES of data exposed are used; leaked values are never shown or kept.",
+    what: "Your phone number — verification (only if you use the phone check)",
+    where: "Twilio (SMS delivery provider)",
+    why: "To send you a one-time code by SMS proving the number is yours. The number is used for that message and the lookup, and is never stored. Phone checks are only possible on deployments where SMS is configured.",
+  },
+  {
+    what: "Your verified email address or phone number — breach lookup",
+    where: "Have I Been Pwned (email only); DeHashed (only if enabled on this deployment)",
+    why: "To find which known breaches include the identifier. Only breach names, dates and the TYPES of data exposed are used; leaked values are never shown or kept. Have I Been Pwned has no phone search, so a phone check uses DeHashed alone and the report says so.",
   },
   {
     what: "A 5-character fragment of your password's hash",
@@ -72,7 +77,7 @@ export default function PrivacyPage() {
       <div style={S.wrap}>
         <div style={S.brand}>Exposio</div>
         <h1 style={S.h1}>Privacy notice</h1>
-        <p style={S.meta}>Research prototype · last updated September 2026</p>
+        <p style={S.meta}>Research prototype · last updated October 2026</p>
 
         <h2 style={S.h2}>Who runs this tool</h2>
         <p style={S.p}>

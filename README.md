@@ -39,6 +39,7 @@ counters keyed by HMAC hashes, which expire within 24 hours.
 | `lib/ratelimit.js` | Fixed-window limits (Upstash or in-memory) |
 | `lib/http.js` | JSON responses, error codes, body size caps, input normalisation |
 | `lib/mailer.js` | Verification email via Resend |
+| `lib/sms.js` | Verification SMS via Twilio (phone path; absent by default) |
 | `lib/sources.js` | HIBP + DeHashed lookups, cross-source merge, demo fixtures |
 | `lib/score.js` | Thesis Breach Risk component B (pure functions) |
 | `lib/playbook.js` | Vetted actions + residual-risk model |

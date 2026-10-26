@@ -1,0 +1,7 @@
+# One address per line. Blank lines and # comments are ignored.
+#
+# Only put addresses here that you OWN, or that a participant has given you
+# written informed consent to check. This file is gitignored.
+#
+# your.old.account@gmail.com
+# you@university.edu

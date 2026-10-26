@@ -23,15 +23,12 @@ const HIBP_URL = "https://haveibeenpwned.com";
 // First screen, before the input: what happens to your data, in one line each.
 export function TrustStrip({ T }) {
   return (
-    <div className="x-trust">
+    <div className="x-trust" role="list">
       {T.signals.map((s) => (
-        <div className="x-tsig" key={s.k}>
+        <span className="x-tsig" key={s.k} role="listitem" title={s.d}>
           <span className="x-tico"><Icon name={s.k} /></span>
-          <div>
-            <div className="x-tsigt">{s.t}</div>
-            <div className="x-tsigd">{s.d}</div>
-          </div>
-        </div>
+          <span className="x-tsigt">{s.t}</span>
+        </span>
       ))}
     </div>
   );
@@ -42,19 +39,28 @@ export function TrustStrip({ T }) {
 // The password wording is the stronger claim, and it is the true one: the
 // plaintext never leaves the browser (see checkPassword in app/page.js).
 export function SafetyNote({ mode, T }) {
+  const text = mode === "password" ? T.safetyPw : mode === "phone" ? T.safetyPhone : T.safetyEmail;
   return (
     <div className="x-safety">
-      <span className="x-tico"><Icon name={mode === "password" ? "shield" : "store"} /></span>
-      <span>{mode === "password" ? T.safetyPw : T.safetyEmail}</span>
+      <span className="x-tico"><Icon name={mode === "password" ? "shield" : mode === "phone" ? "phone" : "store"} /></span>
+      <span>{text}</span>
     </div>
   );
 }
 
-// ── how it works, in three steps ─────────────────────────────────────────────
-export function HowItWorks({ T }) {
+// ── the detail, for the reader who wants it ──────────────────────────
+// Both halves of the old below-the-fold pitch live here, closed by default.
+// The first screen's job is the input; someone who wants to audit the claims
+// before typing can open this, and everyone else sees a page that gets out of
+// the way. The content is unchanged — only its prominence is.
+export function MoreAbout({ T }) {
   return (
-    <section className="x-how" aria-label={T.howTitle}>
-      <h2 className="x-howt">{T.howTitle}</h2>
+    <details className="x-more">
+      <summary className="x-moresum">
+        {T.howTitle}
+        <span className="x-morearrow" aria-hidden="true">▾</span>
+      </summary>
+
       <div className="x-steps">
         {T.steps.map((s) => (
           <div className="x-step" key={s.n}>
@@ -64,23 +70,16 @@ export function HowItWorks({ T }) {
           </div>
         ))}
       </div>
-    </section>
-  );
-}
 
-// ── what it never does ───────────────────────────────────────────────────────
-// A promise is easier to check when it is stated as a limit. Each line here
-// corresponds to something the code refuses to do, not to an intention.
-export function NeverDoes({ T }) {
-  return (
-    <section className="x-never" aria-label={T.neverTitle}>
-      <h2 className="x-nevert">{T.neverTitle}</h2>
+      <h3 className="x-nevert">{T.neverTitle}</h3>
       <ul className="x-neverl">
         {T.never.map((item) => (
           <li key={item}><span className="x-neverx" aria-hidden="true">✕</span>{item}</li>
         ))}
       </ul>
-    </section>
+
+      <p className="x-disclaimer">{T.disclaimer}</p>
+    </details>
   );
 }
 
@@ -120,6 +119,14 @@ function Icon({ name }) {
           <path d="M4.5 6v10c0 1.4 2.9 2.6 6.5 2.6 1 0 2-.1 2.8-.3" />
           <path d="M4.5 11c0 1.4 2.9 2.6 6.5 2.6 .7 0 1.4 0 2-.1" />
           <path d="M16 16.5l5 5M21 16.5l-5 5" />
+        </svg>
+      );
+    case "phone": // a handset: the code goes to the device, not the browser
+      return (
+        <svg {...base}>
+          <rect x="7" y="2.5" width="10" height="19" rx="2.2" />
+          <path d="M10.6 5.3h2.8" />
+          <circle cx="12" cy="18.2" r="0.9" fill="currentColor" stroke="none" />
         </svg>
       );
     case "code": // the one-time code: an envelope with a tick

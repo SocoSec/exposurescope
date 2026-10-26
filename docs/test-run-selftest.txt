@@ -1,0 +1,72 @@
+
+> exposurescope@1.2.0 selftest
+> node --no-warnings scripts/selftest.mjs
+
+
+crypto & tokens
+  ✓ verification codes are 6 random digits
+  ✓ keyed hash hides the input and depends on the secret
+  ✓ safeEqual compares correctly
+  ✓ a valid token round-trips
+  ✓ tampered token is rejected
+  ✓ token signed with another secret is rejected
+  ✓ expired token is rejected
+  ✓ a scan token cannot be used as a report token
+  ✓ garbage input never throws
+  ✓ the right code matches its challenge, a wrong code does not
+
+request validation & rate limiting
+  ✓ emails are normalised and junk rejected
+  ✓ unknown languages fall back to English (safe to put in prompts)
+  ✓ rate limiter blocks after the limit and resets next window
+
+scoring (thesis Breach Risk component)
+  ✓ 'Email addresses' is NOT counted as a physical address (old bug)
+  ✓ 'Password hints' alone is not a password
+  ✓ thesis worked example 1 reproduces with CORRECT arithmetic (B = 0.64)
+  ✓ undated records use the visible 2-year assumption
+  ✓ no breaches → score 0 and band 'safe'
+  ✓ any exposure scores at least 1
+  ✓ password report scores 35–70 by prevalence
+
+playbook & residual risk
+  ✓ only relevant actions apply
+  ✓ every playbook entry has an id, title, steps and valid factors
+  ✓ completing actions lowers residual risk but never exposure
+  ✓ actions with no mitigation don't change the score
+  ✓ password check: stopping the password removes most risk
+
+sources
+  ✓ base names line up across providers
+  ✓ HIBP and DeHashed duplicates merge; HIBP date and title win
+  ✓ third-party titles are stripped of markup and capped
+
+ExpoBot guard rails
+  ✓ system prompt fences breach names as untrusted data
+  ✓ the response tool only allows this report's action IDs
+  ✓ model output: unknown IDs dropped, links removed, capped at 3
+  ✓ malformed model output is rejected
+  ✓ conversation is cleaned: roles fixed, must start and end with user
+
+testing switches are gated to dev/preview
+  ✓ EXPOSIO_DEMO / EXPOSIO_SHOW_CODE are ignored on production
+
+ExpoBot agent tools
+  ✓ list_actions reports the same reductions as the Actions tab
+  ✓ simulate_fixes matches residualScore exactly
+  ✓ breach_details ranks by contribution and never exceeds the report
+  ✓ an agent answer keeps only vetted IDs and the user's own companies
+  ✓ a report token without contribution data is refused by the tools
+  ✓ the agent loop is bounded and always ends in a validated answer
+
+phone identifier path
+  ✓ E.164 is required, and separators are tolerated
+  ✓ a body carrying both an email and a phone is rejected
+  ✓ email and phone identifier namespaces cannot collide
+  ✓ a phone report scores like an email report but is labelled correctly
+  ✓ remediation applies to a phone report, not only an email one
+
+GDPR letters
+  ✓ access and erasure letters cite the right articles
+
+46 passed, 0 failed

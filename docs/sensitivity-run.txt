@@ -1,0 +1,121 @@
+
+> exposurescope@1.2.0 sensitivity
+> node --no-warnings scripts/sensitivity.mjs
+
+
+BREACH RISK SCORE — SENSITIVITY ANALYSIS AND MODEL COMPARISON
+==============================================================================
+Corpus: 2000 synthetic identities, seed 20261009, reference date 2026-01-01
+
+  Breach count per identity   geometric, mean ~4, capped at 25
+                              (long tail: most people few, some many)
+  Breach age                  uniform over 2007-2026, i.e. the span of the
+                              public corpus; converted to days before NOW
+  Undated proportion          18% of records carry no date
+                              (DeHashed-style records frequently lack one)
+  Data classes                email 100% (it is the lookup key)
+                              password 28%, phone 39%, address 14%, payment 4%
+                              frequencies follow the breach-corpus figures
+                              cited in the thesis (Section 1.2)
+
+1. VALIDATION — does this script score identically to lib/score.js?
+------------------------------------------------------------------------------
+   compared 2000 identities against lib/score.js: 0 mismatches
+   ✓ every result below therefore describes the deployed model, not an approximation
+
+2. OPERATIONAL MEANING OF THE CONSTANTS
+------------------------------------------------------------------------------
+   λ = 0.002/day  →  half-life = ln2/λ = 347 days (0.95 years)
+   A breach's contribution halves every 11.4 months.
+
+   financial       sev 1 — alone reaches 100 if younger than 112 days
+   financial-only  sev 0.7 — cannot reach 100 alone (sev < B_MAX)
+   credentials     sev 0.7 — cannot reach 100 alone (sev < B_MAX)
+   contact         sev 0.4 — cannot reach 100 alone (sev < B_MAX)
+   email           sev 0.2 — cannot reach 100 alone (sev < B_MAX)
+
+   B_MAX = 0.8 therefore defines the top of the scale as:
+   "one payment-data-plus-password breach about 112 days old".
+   This is the interpretation the thesis must state, because it is what
+   chooses B_MAX: the constant is a definition of the ceiling, not a fitted value.
+
+   band low/medium (36)    needs B_raw = 0.288  ≈ one credential breach 444 days old
+   band medium/high (66)   needs B_raw = 0.528  ≈ one credential breach 141 days old
+
+3. SENSITIVITY TO λ (decay rate)
+------------------------------------------------------------------------------
+   λ         half-life   mean    median   safe/low/med/high             ρ vs default
+   0.0005    1386d      56.1       56   0.0%  37.5%  18.4%  44.1%     0.902  
+   0.001      693d      38.8       28   0.0%  54.1%  20.9%  25.1%     0.972  
+   0.002      347d      21.3       12   0.0%  78.5%  13.2%  8.3%      1.000 *
+   0.004      173d       8.8        3   0.0%  93.8%  4.2%  2.0%       0.950  
+   0.008       87d       3.9        1   0.0%  97.5%  2.0%  0.6%       0.606  
+
+   Reading: ρ stays high across a 16-fold change in λ, so λ controls the
+   LEVEL of the score far more than the ORDER of people within it. The band
+   distribution does move, which is why λ must be justified against what the
+   bands are meant to mean, not chosen for ranking performance.
+
+4. SENSITIVITY TO B_MAX (normaliser)
+------------------------------------------------------------------------------
+   B_MAX     mean    at ceiling   safe/low/med/high             ρ vs default
+   0.4        36.1       12.8%   0.0%  57.3%  19.1%  23.6%     0.996  
+   0.6        27.1        6.0%   0.0%  70.8%  15.9%  13.3%     0.998  
+   0.8        21.3        2.2%   0.0%  78.5%  13.2%  8.3%      1.000 *
+   1          17.5        1.3%   0.0%  84.4%  11.1%  4.5%      0.998  
+   1.5        11.9        0.1%   0.0%  92.0%  6.6%  1.4%       0.996  
+
+   Reading: B_MAX is a monotone rescaling, so it cannot change the ordering
+   at all — ρ = 1.000 throughout. It changes only where the bands fall and how
+   many identities saturate. It is a presentation decision, and should be
+   defended as one rather than as a risk-modelling parameter.
+
+5. SENSITIVITY TO THE UNDATED-RECORD ASSUMPTION
+------------------------------------------------------------------------------
+   assumed age   implied rec   mean    safe/low/med/high             ρ vs default
+   180d             0.6977    34.8   0.0%  61.2%  16.2%  22.6%     0.961  
+   365d             0.4819    29.4   0.0%  64.3%  18.9%  16.9%     0.982  
+   730d             0.2322    21.3   0.0%  78.5%  13.2%  8.3%      1.000 *
+   1460d            0.0539    14.8   0.0%  87.1%  7.7%  5.2%       0.941  
+   2920d            0.0029    13.0   0.0%  88.0%  7.3%  4.7%       0.769  
+
+   Reading: this is the model's most consequential free parameter, because
+   18% of records carry no date and the assumption is applied to all of them.
+   It is also the one the thesis currently leaves unstated.
+
+6. ROBUSTNESS OF THE SEVERITY TIER WEIGHTS (Monte Carlo)
+------------------------------------------------------------------------------
+   weights perturbed ±10%:  mean ρ = 0.999   min ρ = 0.998   band agreement = 98.4%
+   weights perturbed ±20%:  mean ρ = 0.998   min ρ = 0.995   band agreement = 96.6%
+   weights perturbed ±30%:  mean ρ = 0.996   min ρ = 0.989   band agreement = 95.0%
+
+   Reading: the ordering is robust to substantial error in the tier weights.
+   This is the defensible claim to make — not that the weights are correct, but
+   that the conclusions a user draws are insensitive to getting them somewhat wrong.
+
+7. COMPARISON WITH ALTERNATIVE WEIGHTING SCHEMES
+------------------------------------------------------------------------------
+   model                      mean    ρ vs proposed   τ-b     band agreement
+   M1 count only              38.3         0.641       0.470    63.3%
+   M2 severity, no decay      49.3         0.659       0.478    50.8%
+   M3 worst breach only       14.1         0.966       0.880    83.8%
+   M4 linear decay (10y)      29.7         0.926       0.774    63.4%
+   M5 binary credential       70.2         0.405       0.321    43.4%
+   M6 log-count × severity    38.9         0.640       0.458    60.3%
+
+   Reading: M3 (worst breach only) correlates most closely, which tells us
+   the proposed model is dominated by each person's single worst recent breach.
+   That is a finding about the model, and the thesis should state it: the
+   summation adds little over the maximum, because exponential decay suppresses
+   older records so aggressively. Either justify the sum, or adopt the simpler
+   model — but do not present aggregation as a contribution without evidence.
+
+8. HOW MUCH OF THE SCORE COMES FROM THE SINGLE LARGEST CONTRIBUTOR?
+------------------------------------------------------------------------------
+   top contributor's share of B_raw:  median 92.0%   mean 80.2%
+   identities where one breach is >80% of the score: 59.2%
+
+==============================================================================
+Reproduce: npm run sensitivity   (deterministic — seed 20261009)
+==============================================================================
+

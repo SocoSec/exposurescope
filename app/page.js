@@ -17,13 +17,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import { LANGS, STR, fill, errorText, trustFor } from "./strings.js";
 import { STYLE } from "./styles.js";
 import { BrandHeader } from "./components/Brand.js";
-import { TrustStrip, SafetyNote, HowItWorks, NeverDoes, TrustSeals } from "./components/Trust.js";
-import { Gauge, Bars, Timeline, FlowDiagram, LEAK_FLOW, ATTACK_FLOW } from "./components/charts.js";
+import { TrustStrip, SafetyNote, MoreAbout, TrustSeals } from "./components/Trust.js";
+import { Gauge } from "./components/charts.js";
+import BreachExplorer from "./components/BreachMap.js";
+import ExposureMatrix from "./components/DataMatrix.js";
+import { StoryStrip, LessonCard } from "./components/Explain.js";
 import ActionPlan from "./components/ActionPlan.js";
 import ExpoBot from "./components/ExpoBot.js";
-import { passwordReport, TIERS, ATTRIBUTES } from "../lib/score.js";
-import { residualScore } from "../lib/playbook.js";
-import { howLeaked, howWeaponised, footprint } from "../lib/content.js";
+import { IDENTITY_WEIGHTS, passwordReport, TIERS, ATTRIBUTES } from "../lib/score.js";
+import { residualScore, applicableIds } from "../lib/playbook.js";
+import { LEAK_STORY, howWeaponised, footprint } from "../lib/content.js";
 
 const BAND_COLOR = { safe: "var(--sig)", low: "var(--sig)", medium: "var(--amber)", high: "var(--coral)" };
 const TIER_SHORT = { financial: "Financial", "financial-only": "Payment", credentials: "Credentials", contact: "Contact", email: "Email" };
@@ -73,7 +76,7 @@ export default function Page() {
   const [lang, setLang] = useState("en");
   const L = STR[lang];
   const T = trustFor(lang); // trust copy; see the note above TRUST in strings.js
-  const [mode, setMode] = useState("email"); // "email" | "password"
+  const [mode, setMode] = useState("email"); // "email" | "password" | "phone"
   const [stage, setStage] = useState("form"); // "form" | "code" | "done"
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -86,6 +89,8 @@ export default function Page() {
   const [devCode, setDevCode] = useState("");
   const [resendAt, setResendAt] = useState(0);
   const [now, setNow] = useState(() => Date.now());
+
+  const [phone, setPhone] = useState("");
 
   const [password, setPassword] = useState("");
 
@@ -105,10 +110,17 @@ export default function Page() {
 
   // Residual risk is derived, never stored: recomputed whenever a tick changes.
   const residual = useMemo(() => (report ? residualScore(report, done) : null), [report, done]);
+  // The score this report can be driven down to with every applicable action
+  // completed. Before anyone ticks anything the residual tile would simply
+  // repeat the exposure figure beside it, which tells the reader nothing; the
+  // floor tells them what the plan is worth, and what it cannot reach.
+  const bestCase = useMemo(
+    () => (report ? residualScore(report, applicableIds(report)) : null),
+    [report]);
 
   function resetAll() {
     setStage("form"); setBusy(false); setError(""); setCode(""); setChallenge(null); setDevCode("");
-    setPassword(""); setReport(null); setMeta(null); setReportToken(null); setTab("overview"); setDone(new Set());
+    setPassword(""); setPhone(""); setReport(null); setMeta(null); setReportToken(null); setTab("overview"); setDone(new Set());
   }
 
   function switchMode(next) {
@@ -121,10 +133,17 @@ export default function Page() {
     setDone(new Set()); setTab("overview"); setStage("done");
   }
 
-  // Step 1 — ask the server to email a code.
+  // The one identifier this check is about. Exactly one of the two fields is
+  // sent, because the server rejects a body carrying both.
+  function identifierBody() {
+    return mode === "phone" ? { phone: phone.trim() } : { email };
+  }
+  const identifierValue = () => (mode === "phone" ? phone.trim() : email);
+
+  // Step 1 — ask the server to send a code, by email or SMS.
   async function sendCode() {
     setBusy(true); setError("");
-    const { ok, data } = await postJson("/api/verify/start", { email, lang });
+    const { ok, data } = await postJson("/api/verify/start", { ...identifierBody(), lang });
     setBusy(false);
     if (!ok) return setError(errorText(L, data));
     setChallenge(data.challenge);
@@ -138,20 +157,20 @@ export default function Page() {
   // Steps 2 + 3 — prove the code, then run the verified scan.
   async function verifyAndScan() {
     setBusy(true); setError("");
-    const check = await postJson("/api/verify/check", { email, code, challenge });
+    const check = await postJson("/api/verify/check", { ...identifierBody(), code, challenge });
     if (!check.ok) { setBusy(false); return setError(errorText(L, check.data)); }
 
-    const scan = await postJson("/api/breach", { email, scanToken: check.data.scanToken });
+    const scan = await postJson("/api/breach", { ...identifierBody(), scanToken: check.data.scanToken });
     setBusy(false);
     if (scan.ok) {
       return showReport(
         scan.data.report,
-        { sources: scan.data.sources, sourcesFailed: scan.data.sourcesFailed || [], identifier: email, demo: scan.data.demo },
+        { sources: scan.data.sources, sourcesFailed: scan.data.sourcesFailed || [], identifier: identifierValue(), demo: scan.data.demo },
         scan.data.reportToken
       );
     }
     if (scan.data.error === "not_configured") {
-      return showReport(EMPTY_EMAIL_REPORT, { unavailable: true, sources: [], sourcesFailed: [], identifier: email }, null);
+      return showReport(EMPTY_EMAIL_REPORT, { unavailable: true, sources: [], sourcesFailed: [], identifier: identifierValue() }, null);
     }
     if (scan.data.error === "unverified") setStage("form");
     setError(errorText(L, scan.data));
@@ -177,11 +196,12 @@ export default function Page() {
     });
   }
 
-  const canSend = consent && !busy && email.trim().length > 3;
+  const canSend = consent && !busy &&
+    (mode === "phone" ? /^\+[1-9][0-9\s()./-]{6,}$/.test(phone.trim()) : email.trim().length > 3);
   const canCheckPw = consent && !busy && password.length > 0;
   const exposed = report && report.score > 0;
   const band = report ? BAND_COLOR[report.level] : "var(--sig)";
-  const consentText = mode === "email" ? L.consentEmail : L.consentPw;
+  const consentText = mode === "password" ? L.consentPw : mode === "phone" ? L.consentPhone : L.consentEmail;
   const [sentBefore, sentAfter] = L.codeSent.split("{email}");
 
   return (
@@ -200,19 +220,13 @@ export default function Page() {
         <h1 className="x-title">{L.title}</h1>
         <p className="x-lede">{L.lede}</p>
 
-        {/* The three signals sit ABOVE the input on the first screen: someone
-            should be able to decide whether to trust this before they type. */}
-        {stage === "form" && <TrustStrip T={T} />}
-
         {/* ───────── input card ───────── */}
         {stage !== "done" && (
           <div className="x-card">
             <div className="x-modes" role="tablist">
               <button role="tab" aria-selected={mode === "email"} className={"x-mode" + (mode === "email" ? " on" : "")} onClick={() => switchMode("email")}>{L.modeEmail}</button>
               <button role="tab" aria-selected={mode === "password"} className={"x-mode" + (mode === "password" ? " on" : "")} onClick={() => switchMode("password")}>{L.modePassword}</button>
-              <button role="tab" aria-selected={false} className="x-mode" disabled title="Phone checks are paused until phone ownership can be verified.">
-                {L.modePhone}<span className="x-soon">{L.phoneSoon}</span>
-              </button>
+              <button role="tab" aria-selected={mode === "phone"} className={"x-mode" + (mode === "phone" ? " on" : "")} onClick={() => switchMode("phone")}>{L.modePhone}</button>
             </div>
 
             {mode === "email" && stage === "form" && (
@@ -226,9 +240,23 @@ export default function Page() {
               </form>
             )}
 
-            {mode === "email" && stage === "code" && (
+            {mode === "phone" && stage === "form" && (
+              <form onSubmit={(e) => { e.preventDefault(); if (canSend) sendCode(); }}>
+                <label className="x-label" htmlFor="x-phone">{L.phoneLabel}</label>
+                {/* type="tel" brings up the numeric keypad; the country code is
+                    required because guessing it would check a different person. */}
+                <input id="x-phone" className="x-input" type="tel" autoComplete="tel" value={phone}
+                  placeholder={L.phonePlaceholder} onChange={(e) => setPhone(e.target.value)} />
+                <div className="x-kind">{L.phoneHint}</div>
+                <button type="submit" className="x-btn" disabled={!canSend}>
+                  {busy ? <><span className="x-spin" />{L.sending}</> : L.sendCodeSms}
+                </button>
+              </form>
+            )}
+
+            {mode !== "password" && stage === "code" && (
               <form onSubmit={(e) => { e.preventDefault(); if (code.length === 6 && !busy) verifyAndScan(); }}>
-                <div className="x-hint">{sentBefore}<b>{email}</b>{sentAfter}</div>
+                <div className="x-hint">{sentBefore}<b>{mode === "phone" ? phone.trim() : email}</b>{sentAfter}</div>
                 <label className="x-label" htmlFor="x-code">{L.codeLabel}</label>
                 <input id="x-code" className="x-input x-codeinput" inputMode="numeric" autoComplete="one-time-code" maxLength={6}
                   value={code} autoFocus onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))} />
@@ -312,9 +340,15 @@ export default function Page() {
                     {exposed && residual && (
                       <div className="x-duo">
                         <div className="x-duocell"><div className="x-duolabel">{L.exposureLabel}</div><div className="x-duonum" style={{ color: band }}>{report.score}</div></div>
-                        <div className="x-duocell"><div className="x-duolabel">{L.residualLabel}</div><div className="x-duonum" style={{ color: BAND_COLOR[residual.level] }}>{residual.score}</div></div>
+                        <div className="x-duocell">
+                          <div className="x-duolabel">{done.size === 0 ? L.bestCaseLabel : L.residualLabel}</div>
+                          <div className="x-duonum" style={{ color: BAND_COLOR[(done.size === 0 ? bestCase : residual).level] }}>
+                            {(done.size === 0 ? bestCase : residual).score}
+                          </div>
+                        </div>
                       </div>
                     )}
+                    {exposed && residual && done.size === 0 && <div className="x-scorenote">{L.bestCaseHint}</div>}
                     {report.kind === "email" && exposed && <div className="x-scorenote">{L.scoreNote}</div>}
                     {meta.sources.length > 0 && (
                       <div className="x-src">
@@ -344,17 +378,17 @@ export default function Page() {
                 {tab === "details" && (
                   <div className="x-panelfade">
                     <div className="x-card">
-                      <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Exposure breakdown</span></div>
-                      <div className="x-secd">What kinds of your data appear, and how often, across what was found.</div>
+                      <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Every kind of data that leaked</span></div>
+                      <div className="x-secd">Each row is one kind of your data; each column is one breach. A dot means that breach exposed it.</div>
                       {report.kind === "password"
                         ? <div className="x-bar"><span className="bl">Breach dumps</span><span className="bt"><span className="bf" style={{ width: "100%", background: band }} /></span><span className="bv">{report.count.toLocaleString()}</span></div>
-                        : <Bars counts={report.classCounts} color={band} />}
+                        : <ExposureMatrix breaches={report.breaches} />}
                     </div>
-                    {report.kind === "email" && (
+                    {report.kind !== "password" && report.breaches.length > 0 && (
                       <div className="x-card">
-                        <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">Breach timeline</span></div>
-                        <div className="x-secd">When the breaches happened. Recent breaches weigh more; older ones fade from the score.</div>
-                        <Timeline breaches={report.breaches} color={band} />
+                        <div className="x-sech"><span className="x-secn">02</span><span className="x-sect">Where your exposure comes from</span></div>
+                        <div className="x-secd">Each breach plotted by when it happened and what class of data it exposed; the bubble is sized by how much it contributes to your score. Select one to highlight it below.</div>
+                        <BreachExplorer breaches={report.breaches} />
                       </div>
                     )}
                     <div className="x-card">
@@ -382,11 +416,16 @@ export default function Page() {
 
                 {tab === "learn" && (
                   <div className="x-panelfade">
-                    <InfoCard n="01" title="How your data leaked" desc="The path your data takes from a signup form to an aggregated profile." flow={LEAK_FLOW} color={band}
-                      items={howLeaked(report.attrs, report.breaches.length)} />
-                    <InfoCard n="02" title="How attackers could use it" desc="Awareness, not instructions — understanding the risk is how you defend against it." flow={ATTACK_FLOW} color={band}
+                    <div className="x-card">
+                      <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">How your data got out</span></div>
+                      <div className="x-secd">The whole thing in four steps. None of them were yours to prevent.</div>
+                      <StoryStrip panels={LEAK_STORY} accent={band} />
+                    </div>
+                    <LessonCard n="02" title="What someone could try" accent={band}
+                      desc="Based on what actually leaked in your result. Awareness, not instructions — open a row for the precise version."
                       items={howWeaponised(report.attrs)} />
-                    <InfoCard n="03" title="Your public footprint" desc="Exposio doesn't fetch anyone's public profiles or posts. Use these self-checks to inspect your own footprint." color={band}
+                    <LessonCard n="03" title="What you can check yourself" accent={band}
+                      desc="Exposio looks up nobody's public profiles. These are checks you run on your own footprint."
                       items={footprint(report.attrs, meta.identifier, report.kind)} />
                   </div>
                 )}
@@ -405,13 +444,12 @@ export default function Page() {
             the page's job is the result, not the pitch. */}
         {stage === "form" && (
           <>
-            <HowItWorks T={T} />
-            <NeverDoes T={T} />
+            <TrustStrip T={T} />
+            <MoreAbout T={T} />
           </>
         )}
 
         {stage !== "done" && <TrustSeals T={T} />}
-        {stage === "form" && <p className="x-disclaimer">{T.disclaimer}</p>}
 
         <div className="x-foot">
           {L.footer1}<br />
@@ -430,53 +468,93 @@ export default function Page() {
 
 // ---- Overview: how the email score was reached -------------------------------
 function ScoreModel({ report, band }) {
-  const a = report.attrs;
   const n = report.breaches.length;
   const assumedAny = report.breaches.some((b) => b.ageAssumed);
-
-  let why;
-  if (a.includes("password") || a.includes("financial")) {
-    const strong = [a.includes("financial") && "payment data", a.includes("password") && "passwords"].filter(Boolean);
-    why = "Your data appears in " + n + " breach" + (n === 1 ? "" : "es") + ". Because " + strong.join(" and ") + (strong.length > 1 ? " were" : " was") +
-      " exposed, the risk of account takeover and fraud is what drives the score. Recent breaches count most.";
-  } else {
-    why = "Your data appears in " + n + " breach" + (n === 1 ? "" : "es") + ", but no passwords or payment data were exposed. That keeps account-takeover risk lower, and older breaches count for less over time.";
-  }
+  // The fast clock lists only breaches that leaked something revocable.
+  const credBreaches = report.breaches.filter((b) => b.credSeverity > 0);
+  const idAttrs = report.identityAttrs || [];
+  const maxContrib = Math.max(...credBreaches.map((b) => b.contribution), 0.0001);
 
   return (
     <div className="x-card">
       <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Score model</span></div>
-      <div className="x-secd">How this score was reached: severity × recency for each breach, added up and scaled to 100.</div>
-      <div className="x-explain" style={{ borderLeft: "3px solid " + band }}>{why}</div>
-      <div className="x-lglabel">Severity weighting — worse data types raise the score more:</div>
-      <div className="x-legend">
-        {Object.entries(TIERS).map(([key, tier]) => {
-          const on = report.breaches.some((b) => b.tier === key);
-          return (
-            <div className={"x-lgrow" + (on ? " on" : "")} key={key}>
-              <span className="ll"><span className="ldot" style={{ background: on ? band : "var(--line)" }} />{tier.label}</span>
-              <span className="lw">{tier.weight.toFixed(1)}{on ? " · in your result" : ""}</span>
+      <div className="x-secd">
+        Two clocks. What you can change loses weight as it ages; what you cannot change does not.
+      </div>
+      <div className="x-explain" style={{ borderLeft: "3px solid " + band }}>
+        Your data appears in {n} breach{n === 1 ? "" : "es"}.{" "}
+        {credBreaches.length > 0
+          ? "Passwords or payment data were exposed, so part of this score falls as those are changed."
+          : "No passwords or payment data were exposed, so nothing here falls with time."}{" "}
+        {idAttrs.length > 0
+          ? "The rest comes from details you cannot change, and that part stays."
+          : "Nothing permanent about your identity was exposed."}
+      </div>
+
+      <div className="x-lglabel">What can be changed — severity × recency, per breach:</div>
+      {credBreaches.length > 0 ? (
+        <div className="x-btable">
+          <div className="x-btrow x-bthead"><span>Company</span><span>Year</span><span>Type</span><span>Contribution</span></div>
+          {credBreaches.map((b) => (
+            <div className="x-btrow" key={b.title}>
+              <span className="c" title={b.title + " — " + b.sources.join(" + ")}>{b.title}</span>
+              <span className={b.ageAssumed ? "x-assumed" : ""}>{b.ageAssumed ? "undated*" : b.year}</span>
+              <span>{TIER_SHORT[b.tier]}</span>
+              <span className="contrib">
+                <span className="cbar" style={{ width: 8 + (b.contribution / maxContrib) * 46 + "px", background: band }} />
+                {b.contribution.toFixed(3)}
+              </span>
             </div>
-          );
-        })}
+          ))}
+        </div>
+      ) : (
+        <div className="x-secd" style={{ margin: "6px 0 0" }}>
+          No breach exposed a password or a payment detail, so this half of the score is zero.
+        </div>
+      )}
+      <div className="x-btfoot"><span>B_cred</span><span>{(report.credRaw || 0).toFixed(3)}</span></div>
+
+      <div className="x-lglabel" style={{ marginTop: 18 }}>
+        What cannot be changed — counted once, however many breaches leaked it:
       </div>
-      <div className="x-btable">
-        <div className="x-btrow x-bthead"><span>Company</span><span>Year</span><span>Type</span><span>Contribution</span></div>
-        {report.breaches.map((b) => (
-          <div className="x-btrow" key={b.title}>
-            <span className="c" title={b.title + " — " + b.sources.join(" + ")}>{b.title}</span>
-            <span className={b.ageAssumed ? "x-assumed" : ""}>{b.ageAssumed ? "undated*" : b.year}</span>
-            <span>{TIER_SHORT[b.tier]}</span>
-            <span className="contrib">
-              <span className="cbar" style={{ width: 8 + (b.contribution / Math.max(report.breaches[0].contribution, 0.0001)) * 46 + "px", background: band }} />
-              {b.contribution.toFixed(3)}
-            </span>
-          </div>
-        ))}
+      {idAttrs.length > 0 ? (
+        <div className="x-btable">
+          <div className="x-btrow x-bthead x-idrow"><span>Detail</span><span>Leaked by</span><span>Weight</span></div>
+          {idAttrs
+            .slice()
+            .sort((a, b) => (IDENTITY_WEIGHTS[b] || 0) - (IDENTITY_WEIGHTS[a] || 0))
+            .map((key) => {
+              const label = (ATTRIBUTES.find((a) => a.key === key) || {}).label || key;
+              const from = report.breaches.filter((b) => (b.identityAttrs || []).includes(key));
+              return (
+                <div className="x-btrow x-idrow" key={key}>
+                  <span className="c">{label}</span>
+                  <span className="x-idfrom" title={from.map((b) => b.title).join(", ")}>
+                    {from.length === 1 ? from[0].title : from.length + " breaches"}
+                  </span>
+                  <span>{(IDENTITY_WEIGHTS[key] || 0).toFixed(2)}</span>
+                </div>
+              );
+            })}
+        </div>
+      ) : (
+        <div className="x-secd" style={{ margin: "6px 0 0" }}>Nothing permanent was exposed.</div>
+      )}
+      <div className="x-btfoot">
+        <span>Identity term I</span><span>{(report.identity || 0).toFixed(3)}</span>
       </div>
-      <div className="x-btfoot"><span>Sum of contributions (B raw)</span><span>{report.raw.toFixed(3)}</span></div>
+      <div className="x-btfoot"><span>× W_identity (0.70)</span><span>{(report.identityRaw || 0).toFixed(3)}</span></div>
+
+      <div className="x-btfoot x-bttotal"><span>B_raw = B_cred + identity</span><span>{report.raw.toFixed(3)}</span></div>
       <div className="x-btfoot"><span>Breach Risk score</span><span style={{ color: band }}>{report.score} / 100</span></div>
+
       {assumedAny && <div className="x-secd" style={{ marginTop: 10 }}>* This source gives no breach date, so its age is assumed to be 2 years.</div>}
+      {idAttrs.length > 0 && (
+        <div className="x-secd" style={{ marginTop: 8 }}>
+          The permanent half is why &ldquo;left after your fixes&rdquo; stops at a floor: changing a password
+          revokes a password, and nothing revokes a date of birth that someone already holds.
+        </div>
+      )}
     </div>
   );
 }
@@ -495,20 +573,3 @@ function PasswordModel({ report, band }) {
   );
 }
 
-// ---- Learn tab card ------------------------------------------------------------
-function InfoCard({ n, title, desc, flow, color, items }) {
-  return (
-    <div className="x-card">
-      <div className="x-sech"><span className="x-secn">{n}</span><span className="x-sect">{title}</span></div>
-      <div className="x-secd">{desc}</div>
-      {flow && <FlowDiagram steps={flow} color={color} />}
-      {items.map((it, i) => (
-        <div className="x-info" key={i}>
-          <div className="x-infot">{it.title}</div>
-          <div className="x-infob">{it.body}</div>
-          {it.action && <a className="x-fplink" href={it.action.url} target="_blank" rel="noopener noreferrer">{it.action.label} ↗</a>}
-        </div>
-      ))}
-    </div>
-  );
-}
