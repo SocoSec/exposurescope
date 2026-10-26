@@ -99,8 +99,8 @@ export function ExposureMap({ breaches, selected, onSelect }) {
   const minYear = years.length ? Math.min(...years, thisYear - 1) : thisYear - 1;
   const span = Math.max(1, thisYear - minYear);
 
-  const maxC = Math.max(...breaches.map((b) => b.contribution), 1e-9);
-  const total = breaches.reduce((s, b) => s + b.contribution, 0) || 1e-9;
+  const maxC = Math.max(...breaches.map((b) => b.weight), 1e-9);
+  const total = breaches.reduce((s, b) => s + b.weight, 0) || 1e-9;
   // Area is proportional to contribution; a radius-linear scale would square
   // the visual weight of the large values.
   const r = (c) => 5 + 14 * Math.sqrt(Math.max(c, 0) / maxC);
@@ -108,8 +108,8 @@ export function ExposureMap({ breaches, selected, onSelect }) {
 
   // The dominant record is named on the map, because for most people the
   // answer to "which one matters" is a single breach.
-  const dominant = breaches.reduce((a, b) => (b.contribution > a.contribution ? b : a), breaches[0]);
-  const dominantShare = dominant.contribution / total;
+  const dominant = breaches.reduce((a, b) => (b.weight > a.weight ? b : a), breaches[0]);
+  const dominantShare = dominant.weight / total;
 
   const ticks = span <= 4
     ? Array.from({ length: span + 1 }, (_, i) => minYear + i)
@@ -133,13 +133,13 @@ export function ExposureMap({ breaches, selected, onSelect }) {
     return (
       <g style={{ cursor: "pointer" }} onClick={() => onSelect(sel ? null : b.title)}>
         {(sel || isDominant) && (
-          <circle cx={cx} cy={row.y} r={r(b.contribution) + 7} fill={colour} fillOpacity={sel ? 0.18 : 0.1} />
+          <circle cx={cx} cy={row.y} r={r(b.weight) + 7} fill={colour} fillOpacity={sel ? 0.18 : 0.1} />
         )}
-        <circle cx={cx} cy={row.y} r={r(b.contribution)}
+        <circle cx={cx} cy={row.y} r={r(b.weight)}
           fill={colour} fillOpacity={sel ? 0.92 : 0.55}
           stroke={sel ? "#FFFFFF" : colour} strokeWidth={sel ? 1.8 : 1.2} />
         <title>{b.title + (b.date ? " — " + formatDate(b.date) : " — date not reported") +
-          " · " + share(b.contribution / total) + " of the score"}</title>
+          " · " + share(b.weight / total) + " of the score"}</title>
       </g>
     );
   };
@@ -177,7 +177,7 @@ export function ExposureMap({ breaches, selected, onSelect }) {
         {dated.map((b, i) => <Bubble key={b.title + i} b={b} cx={xAt(parseInt(b.year, 10))} />)}
 
         {dominantShare > 0.35 && dominant.date && (
-          <text x={xAt(parseInt(dominant.year, 10))} y={rowFor(dominant.severity).y - r(dominant.contribution) - 9}
+          <text x={xAt(parseInt(dominant.year, 10))} y={rowFor(dominant.severity).y - r(dominant.weight) - 9}
             textAnchor="middle" fontSize="10.5" fontWeight="600"
             fill={TIER_COLOUR[dominant.tier] || TIER_COLOUR.email}>
             {Math.round(dominantShare * 100)}% of your score
@@ -248,21 +248,21 @@ export function ExposureMap({ breaches, selected, onSelect }) {
 // One bar, divided in proportion to each breach's share. Concentration becomes
 // obvious at a glance — usually one segment fills most of the bar.
 export function ContributionRibbon({ breaches, selected, onSelect }) {
-  const total = breaches.reduce((s, b) => s + b.contribution, 0);
+  const total = breaches.reduce((s, b) => s + b.weight, 0);
   if (total <= 0) return null;
-  const top = breaches.reduce((a, b) => (b.contribution > a.contribution ? b : a), breaches[0]);
-  const topShare = Math.round((top.contribution / total) * 100);
+  const top = breaches.reduce((a, b) => (b.weight > a.weight ? b : a), breaches[0]);
+  const topShare = Math.round((top.weight / total) * 100);
 
   return (
     <div className="x-ribbonwrap">
       <div className="x-ribbon">
         {breaches.map((b, i) => {
-          const pct = (b.contribution / total) * 100;
+          const pct = (b.weight / total) * 100;
           const sel = selected === b.title;
           return (
             <span key={b.title + i} className={"x-ribbonseg" + (sel ? " on" : "")}
               style={{ flex: pct + " 0 0", minWidth: 4, background: TIER_COLOUR[b.tier] || TIER_COLOUR.email }}
-              onClick={() => onSelect(sel ? null : b.title)} title={b.title + " — " + share(b.contribution / total)} />
+              onClick={() => onSelect(sel ? null : b.title)} title={b.title + " — " + share(b.weight / total)} />
           );
         })}
       </div>
@@ -277,14 +277,14 @@ export function ContributionRibbon({ breaches, selected, onSelect }) {
 // ── cards ────────────────────────────────────────────────────────────────────
 export function BreachList({ breaches, selected, onSelect }) {
   if (!breaches || breaches.length === 0) return null;
-  const total = breaches.reduce((s, b) => s + b.contribution, 0) || 1e-9;
+  const total = breaches.reduce((s, b) => s + b.weight, 0) || 1e-9;
 
   return (
     <div className="x-breaches">
       {breaches.map((b, i) => {
         const colour = TIER_COLOUR[b.tier] || TIER_COLOUR.email;
         const sel = selected === b.title;
-        const pct = (b.contribution / total) * 100;
+        const pct = (b.weight / total) * 100;
         return (
           <div className={"x-breach" + (sel ? " on" : "")} key={b.title + i}
             onClick={() => onSelect(sel ? null : b.title)} style={{ borderLeftColor: colour }}>

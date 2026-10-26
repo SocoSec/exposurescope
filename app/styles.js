@@ -219,6 +219,10 @@ export const STYLE = `
 .x-btrow .cbar{height:6px;border-radius:4px;flex:0 0 auto;}
 .x-btfoot{display:flex;justify-content:space-between;padding:9px 2px;font-size:12.5px;border-bottom:1px solid var(--line);font-family:ui-monospace,monospace;color:var(--mute);}
 .x-btfoot:last-child{border-bottom:none;font-weight:700;color:var(--ink);}
+.x-btrow.x-idrow{grid-template-columns:1.4fr 1.4fr .5fr;}
+.x-btrow.x-idrow span:last-child{text-align:right;font-family:ui-monospace,monospace;font-size:11px;}
+.x-idfrom{color:var(--mute);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.x-btfoot.x-bttotal{color:var(--ink);font-weight:650;border-top:1px solid var(--line);margin-top:2px;}
 .x-fpfound{border:1px dashed var(--line);border-radius:12px;padding:14px 15px;margin-bottom:14px;background:rgba(103,116,139,.05);}
 .x-fpfoundh{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:6px;}
 .x-fpfoundb{color:var(--mute);font-size:12.5px;line-height:1.55;}

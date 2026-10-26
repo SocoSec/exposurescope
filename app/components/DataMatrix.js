@@ -43,7 +43,7 @@ export default function ExposureMatrix({ breaches }) {
   if (!breaches || breaches.length === 0) return null;
 
   // Columns: most consequential first, matching the order of the cards below.
-  const cols = [...breaches].sort((a, b) => b.contribution - a.contribution);
+  const cols = [...breaches].sort((a, b) => b.weight - a.weight);
 
   // Rows: every distinct class, most widely exposed first. A class leaked by
   // several breaches is harder to undo, so it belongs at the top.

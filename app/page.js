@@ -24,7 +24,7 @@ import ExposureMatrix from "./components/DataMatrix.js";
 import { StoryStrip, LessonCard } from "./components/Explain.js";
 import ActionPlan from "./components/ActionPlan.js";
 import ExpoBot from "./components/ExpoBot.js";
-import { passwordReport, TIERS, ATTRIBUTES } from "../lib/score.js";
+import { IDENTITY_WEIGHTS, passwordReport, TIERS, ATTRIBUTES } from "../lib/score.js";
 import { residualScore } from "../lib/playbook.js";
 import { LEAK_STORY, howWeaponised, footprint } from "../lib/content.js";
 
@@ -455,53 +455,93 @@ export default function Page() {
 
 // ---- Overview: how the email score was reached -------------------------------
 function ScoreModel({ report, band }) {
-  const a = report.attrs;
   const n = report.breaches.length;
   const assumedAny = report.breaches.some((b) => b.ageAssumed);
-
-  let why;
-  if (a.includes("password") || a.includes("financial")) {
-    const strong = [a.includes("financial") && "payment data", a.includes("password") && "passwords"].filter(Boolean);
-    why = "Your data appears in " + n + " breach" + (n === 1 ? "" : "es") + ". Because " + strong.join(" and ") + (strong.length > 1 ? " were" : " was") +
-      " exposed, the risk of account takeover and fraud is what drives the score. Recent breaches count most.";
-  } else {
-    why = "Your data appears in " + n + " breach" + (n === 1 ? "" : "es") + ", but no passwords or payment data were exposed. That keeps account-takeover risk lower, and older breaches count for less over time.";
-  }
+  // The fast clock lists only breaches that leaked something revocable.
+  const credBreaches = report.breaches.filter((b) => b.credSeverity > 0);
+  const idAttrs = report.identityAttrs || [];
+  const maxContrib = Math.max(...credBreaches.map((b) => b.contribution), 0.0001);
 
   return (
     <div className="x-card">
       <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Score model</span></div>
-      <div className="x-secd">How this score was reached: severity × recency for each breach, added up and scaled to 100.</div>
-      <div className="x-explain" style={{ borderLeft: "3px solid " + band }}>{why}</div>
-      <div className="x-lglabel">Severity weighting — worse data types raise the score more:</div>
-      <div className="x-legend">
-        {Object.entries(TIERS).map(([key, tier]) => {
-          const on = report.breaches.some((b) => b.tier === key);
-          return (
-            <div className={"x-lgrow" + (on ? " on" : "")} key={key}>
-              <span className="ll"><span className="ldot" style={{ background: on ? band : "var(--line)" }} />{tier.label}</span>
-              <span className="lw">{tier.weight.toFixed(1)}{on ? " · in your result" : ""}</span>
+      <div className="x-secd">
+        Two clocks. What you can change loses weight as it ages; what you cannot change does not.
+      </div>
+      <div className="x-explain" style={{ borderLeft: "3px solid " + band }}>
+        Your data appears in {n} breach{n === 1 ? "" : "es"}.{" "}
+        {credBreaches.length > 0
+          ? "Passwords or payment data were exposed, so part of this score falls as those are changed."
+          : "No passwords or payment data were exposed, so nothing here falls with time."}{" "}
+        {idAttrs.length > 0
+          ? "The rest comes from details you cannot change, and that part stays."
+          : "Nothing permanent about your identity was exposed."}
+      </div>
+
+      <div className="x-lglabel">What can be changed — severity × recency, per breach:</div>
+      {credBreaches.length > 0 ? (
+        <div className="x-btable">
+          <div className="x-btrow x-bthead"><span>Company</span><span>Year</span><span>Type</span><span>Contribution</span></div>
+          {credBreaches.map((b) => (
+            <div className="x-btrow" key={b.title}>
+              <span className="c" title={b.title + " — " + b.sources.join(" + ")}>{b.title}</span>
+              <span className={b.ageAssumed ? "x-assumed" : ""}>{b.ageAssumed ? "undated*" : b.year}</span>
+              <span>{TIER_SHORT[b.tier]}</span>
+              <span className="contrib">
+                <span className="cbar" style={{ width: 8 + (b.contribution / maxContrib) * 46 + "px", background: band }} />
+                {b.contribution.toFixed(3)}
+              </span>
             </div>
-          );
-        })}
+          ))}
+        </div>
+      ) : (
+        <div className="x-secd" style={{ margin: "6px 0 0" }}>
+          No breach exposed a password or a payment detail, so this half of the score is zero.
+        </div>
+      )}
+      <div className="x-btfoot"><span>B_cred</span><span>{(report.credRaw || 0).toFixed(3)}</span></div>
+
+      <div className="x-lglabel" style={{ marginTop: 18 }}>
+        What cannot be changed — counted once, however many breaches leaked it:
       </div>
-      <div className="x-btable">
-        <div className="x-btrow x-bthead"><span>Company</span><span>Year</span><span>Type</span><span>Contribution</span></div>
-        {report.breaches.map((b) => (
-          <div className="x-btrow" key={b.title}>
-            <span className="c" title={b.title + " — " + b.sources.join(" + ")}>{b.title}</span>
-            <span className={b.ageAssumed ? "x-assumed" : ""}>{b.ageAssumed ? "undated*" : b.year}</span>
-            <span>{TIER_SHORT[b.tier]}</span>
-            <span className="contrib">
-              <span className="cbar" style={{ width: 8 + (b.contribution / Math.max(report.breaches[0].contribution, 0.0001)) * 46 + "px", background: band }} />
-              {b.contribution.toFixed(3)}
-            </span>
-          </div>
-        ))}
+      {idAttrs.length > 0 ? (
+        <div className="x-btable">
+          <div className="x-btrow x-bthead x-idrow"><span>Detail</span><span>Leaked by</span><span>Weight</span></div>
+          {idAttrs
+            .slice()
+            .sort((a, b) => (IDENTITY_WEIGHTS[b] || 0) - (IDENTITY_WEIGHTS[a] || 0))
+            .map((key) => {
+              const label = (ATTRIBUTES.find((a) => a.key === key) || {}).label || key;
+              const from = report.breaches.filter((b) => (b.identityAttrs || []).includes(key));
+              return (
+                <div className="x-btrow x-idrow" key={key}>
+                  <span className="c">{label}</span>
+                  <span className="x-idfrom" title={from.map((b) => b.title).join(", ")}>
+                    {from.length === 1 ? from[0].title : from.length + " breaches"}
+                  </span>
+                  <span>{(IDENTITY_WEIGHTS[key] || 0).toFixed(2)}</span>
+                </div>
+              );
+            })}
+        </div>
+      ) : (
+        <div className="x-secd" style={{ margin: "6px 0 0" }}>Nothing permanent was exposed.</div>
+      )}
+      <div className="x-btfoot">
+        <span>Identity term I</span><span>{(report.identity || 0).toFixed(3)}</span>
       </div>
-      <div className="x-btfoot"><span>Sum of contributions (B raw)</span><span>{report.raw.toFixed(3)}</span></div>
+      <div className="x-btfoot"><span>× W_identity (0.70)</span><span>{(report.identityRaw || 0).toFixed(3)}</span></div>
+
+      <div className="x-btfoot x-bttotal"><span>B_raw = B_cred + identity</span><span>{report.raw.toFixed(3)}</span></div>
       <div className="x-btfoot"><span>Breach Risk score</span><span style={{ color: band }}>{report.score} / 100</span></div>
+
       {assumedAny && <div className="x-secd" style={{ marginTop: 10 }}>* This source gives no breach date, so its age is assumed to be 2 years.</div>}
+      {idAttrs.length > 0 && (
+        <div className="x-secd" style={{ marginTop: 8 }}>
+          The permanent half is why &ldquo;left after your fixes&rdquo; stops at a floor: changing a password
+          revokes a password, and nothing revokes a date of birth that someone already holds.
+        </div>
+      )}
     </div>
   );
 }
