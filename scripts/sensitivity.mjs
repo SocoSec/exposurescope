@@ -314,7 +314,7 @@ console.log("   parameter. Separating the clocks confines it to the credential h
 console.log("   whole sweep now stays above rho = 0.951 against 0.769 before. It still matters");
 console.log("   for undated records that carry credentials, such as combination lists.");
 // ── 6. tier weights ──────────────────────────────────────────────────────────
-console.log("\n6. ROBUSTNESS OF THE SEVERITY TIER WEIGHTS (Monte Carlo)");
+console.log("\n6. ROBUSTNESS OF EVERY CHOSEN WEIGHT (Monte Carlo)");
 console.log("-".repeat(78));
 const trials = 200;
 for (const pct of [0.1, 0.2, 0.3]) {
@@ -324,16 +324,25 @@ for (const pct of [0.1, 0.2, 0.3]) {
     for (const [k, w] of Object.entries(tierWeights())) {
       tiers[k] = Math.max(0.01, Math.min(1, w * (1 + (rnd() * 2 - 1) * pct)));
     }
-    const ss = corpus.map((r) => scoreWith(r, { ...DEFAULTS, tiers }));
+    // The nine identity weights are chosen on the same basis as the severity
+    // tiers, so they are perturbed in the same trial. Testing only the tiers
+    // would answer a narrower question than the one a reader is asking: it is
+    // every chosen constant that has to be shown not to carry the conclusion.
+    const idw = {};
+    for (const [k, w] of Object.entries(IDENTITY_WEIGHTS)) {
+      idw[k] = Math.max(0.01, Math.min(0.95, w * (1 + (rnd() * 2 - 1) * pct)));
+    }
+    const ss = corpus.map((r) => scoreWith(r, { ...DEFAULTS, tiers, idw }));
     rhos.push(spearman(base, ss));
     agrees.push(bandAgreement(base, ss));
   }
-  console.log("   weights perturbed ±" + (pct * 100).toFixed(0) + "%:  mean ρ = " + mean(rhos).toFixed(3) +
+  console.log("   all weights perturbed ±" + (pct * 100).toFixed(0) + "%:  mean ρ = " + mean(rhos).toFixed(3) +
     "   min ρ = " + Math.min(...rhos).toFixed(3) + "   band agreement = " + (100 * mean(agrees)).toFixed(1) + "%");
 }
-console.log("\n   Reading: the ordering is robust to substantial error in the tier weights.");
-console.log("   This is the defensible claim to make — not that the weights are correct, but");
-console.log("   that the conclusions a user draws are insensitive to getting them somewhat wrong.");
+console.log("\n   Reading: the ordering is robust to substantial error in the chosen weights -");
+console.log("   the five severity tiers and the nine identity weights together. This is the");
+console.log("   defensible claim: not that the weights are right, but that the conclusions a");
+console.log("   user draws survive them being somewhat wrong.");
 
 // ── 6b. the weight of the slow clock ────────────────────────────────
 console.log("");
