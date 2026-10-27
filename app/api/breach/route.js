@@ -17,10 +17,11 @@ import { env, devFlags, phoneAvailable } from "../../../lib/config.js";
 import { signToken, verifyToken, identifierId } from "../../../lib/tokens.js";
 import { rateLimit, clientId } from "../../../lib/ratelimit.js";
 import { json, fail, tooMany, readJson, normalizeIdentifier } from "../../../lib/http.js";
-import { queryHIBP, queryDeHashed, mockLookup, mergeBreaches } from "../../../lib/sources.js";
+import { queryHIBP, queryDeHashed, queryLeakCheck, queryXposedOrNot, queryHudsonRock, mockLookup, mergeBreaches } from "../../../lib/sources.js";
 import { emailReport } from "../../../lib/score.js";
 import { applicableIds } from "../../../lib/playbook.js";
 import { compactReport } from "../../../lib/expobot.js";
+import { enrichFromCatalogue } from "../../../lib/enrich.js";
 
 export const runtime = "edge";
 
@@ -49,24 +50,41 @@ export async function POST(req) {
   // Which sources are on? Mock data only exists on a developer machine.
   // HIBP has no phone endpoint, so a phone lookup is DeHashed-only — an
   // asymmetry the interface reports rather than hides.
-  let hibp = null;
-  let dehashed = null;
+  // Provider results, in display order. The three keyless providers need no
+  // subscription, so they are always attempted for an email: coverage should
+  // not depend on whether a licence happens to be paid up this month.
+  let results = [];
   if (devFlags.mockBreaches) {
-    ({ hibp, dehashed } = mockLookup(id.value, kind));
+    const mock = mockLookup(id.value, kind);
+    results = [["HIBP", mock.hibp], ["DeHashed", mock.dehashed]];
   } else {
-    const hibpUsable = kind === "email" && env.hibpKey;
-    if (!hibpUsable && !env.dehashedKey) return fail("not_configured", 503);
-    // Both providers are queried in parallel; total time ≈ the slower one.
-    [hibp, dehashed] = await Promise.all([
+    const isEmail = kind === "email";
+    const hibpUsable = isEmail && env.hibpKey;
+    // Only the keyed providers can be "not configured". The keyless ones can
+    // always answer an email lookup, so an email scan is never unavailable;
+    // a phone lookup still depends entirely on DeHashed.
+    if (!isEmail && !env.dehashedKey) return fail("not_configured", 503);
+    // Queried in parallel; total time is roughly the slowest provider.
+    const [hibp, dehashed, leakcheck, xposed, hudson] = await Promise.all([
       hibpUsable ? queryHIBP(id.value, env.hibpKey) : null,
       env.dehashedKey ? queryDeHashed(id.value, env.dehashedKey, kind) : null,
+      isEmail ? queryLeakCheck(id.value) : null,
+      isEmail ? queryXposedOrNot(id.value) : null,
+      isEmail ? queryHudsonRock(id.value) : null,
     ]);
+    results = [
+      ["HIBP", hibp],
+      ["DeHashed", dehashed],
+      ["LeakCheck", leakcheck],
+      ["XposedOrNot", xposed],
+      ["Hudson Rock", hudson],
+    ];
   }
 
   const sources = [];
   const sourcesFailed = [];
   const lists = [];
-  for (const [name, result] of [["HIBP", hibp], ["DeHashed", dehashed]]) {
+  for (const [name, result] of results) {
     if (!result) continue; // not configured, or not applicable to this kind
     if (result.ok) {
       sources.push(name);
@@ -81,10 +99,16 @@ export async function POST(req) {
   // In demo mode the data didn't come from HIBP or DeHashed — say so.
   if (devFlags.mockBreaches) { sources.length = 0; sources.push("Demo data"); }
 
-  const report = emailReport(mergeBreaches(...lists), new Date(), kind);
+  // Resolve missing dates against the HIBP catalogue snapshot before scoring.
+  // DeHashed returns none at all and LeakCheck only month precision, and an
+  // undated record is scored on UNDATED_AGE_DAYS — the model's most sensitive
+  // assumption. Enrichment happens AFTER merging, so a date a provider really
+  // reported always wins over one the catalogue supplied.
+  const { breaches: merged, datesResolved, flagged } = enrichFromCatalogue(mergeBreaches(...lists));
+  const report = emailReport(merged, new Date(), kind);
   const ids = applicableIds(report);
   const reportToken = await signToken(env.secret, { typ: "report", r: compactReport(report, ids, sources) });
 
   // `demo` tells the browser to show the "example data" banner.
-  return json({ report, sources, sourcesFailed, reportToken, demo: devFlags.mockBreaches });
+  return json({ report, sources, sourcesFailed, reportToken, demo: devFlags.mockBreaches, enrichment: { datesResolved, flagged } });
 }
