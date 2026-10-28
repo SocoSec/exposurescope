@@ -64,7 +64,18 @@ await check("tampered token is rejected", async () => {
   const [v, body, sig] = token.split(".");
   const forged = Buffer.from(JSON.stringify({ typ: "scan", eid: "attacker", exp: Date.now() + 1e9 })).toString("base64url");
   assert.equal(await verifyToken(SECRET, [v, forged, sig].join("."), "scan"), null);
-  assert.equal(await verifyToken(SECRET, [v, body, sig.slice(0, -2) + "AA"].join("."), "scan"), null);
+  // The edit must change the signature's BYTES, not merely its text. base64url
+  // is not canonical: a 32-byte HMAC is 43 characters and the last one carries
+  // only 4 significant bits, so "...VhA" and "...VhB" decode identically and
+  // both verify — correctly. Editing the first character, which is fully
+  // significant, always changes a byte.
+  const altered = (sig[0] === "A" ? "B" : "A") + sig.slice(1);
+  assert.notEqual(
+    Buffer.from(altered, "base64url").toString("hex"),
+    Buffer.from(sig, "base64url").toString("hex"),
+    "the test's own edit must change the decoded signature",
+  );
+  assert.equal(await verifyToken(SECRET, [v, body, altered].join("."), "scan"), null);
 });
 await check("token signed with another secret is rejected", async () => {
   const token = await signToken("other-secret", { typ: "scan", eid: "x1" });
