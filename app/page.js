@@ -19,6 +19,7 @@ import { STYLE } from "./styles.js";
 import { BrandHeader } from "./components/Brand.js";
 import { TrustStrip, SafetyNote, MoreAbout, TrustSeals } from "./components/Trust.js";
 import { Gauge } from "./components/charts.js";
+import { TwoClockForecast } from "./components/Forecast.js";
 import BreachExplorer from "./components/BreachMap.js";
 import ExposureMatrix from "./components/DataMatrix.js";
 import { StoryStrip, LessonCard } from "./components/Explain.js";
@@ -360,6 +361,13 @@ export default function Page() {
                 )}
               </div>
             </div>
+
+            {exposed && !meta.unavailable && report.kind === "email" && (
+              <div className="x-card">
+                <div className="x-lglabel" style={{ marginBottom: 10 }}>If you change nothing</div>
+                <TwoClockForecast report={report} />
+              </div>
+            )}
 
             {exposed && !meta.unavailable && (
               <>

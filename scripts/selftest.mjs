@@ -15,10 +15,11 @@ import { rateLimit, _resetMemoryLimiter } from "../lib/ratelimit.js";
 import { normalizeEmail, normalizeLang, normalizePhone, normalizeIdentifier } from "../lib/http.js";
 import { emailReport, passwordReport, attributesOf, tierOf, UNDATED_AGE_DAYS } from "../lib/score.js";
 import { applicableIds, residualScore, estimatedReduction, PLAYBOOK } from "../lib/playbook.js";
-import { mergeBreaches, mockLookup, baseName, cleanTitle } from "../lib/sources.js";
+import { mergeBreaches, mockLookup, baseName, cleanTitle, dehashedEntryClasses, DEHASHED_FIELD_CLASSES } from "../lib/sources.js";
 import { compactReport, buildSystemPrompt, cleanMessages, finalizeReply, responseTool } from "../lib/expobot.js";
 import { runAgent, runTool, finalizeAgentReply, MAX_TOOL_ROUNDS } from "../lib/agent.js";
 import { gdprLetter } from "../lib/gdpr.js";
+import { enrichFromCatalogue, catalogueEntry, CATALOGUE_SIZE } from "../lib/enrich.js";
 
 const SECRET = "selftest-secret-0123456789abcdef0123456789abcdef";
 let passed = 0;
@@ -219,6 +220,138 @@ await check("third-party titles are stripped of markup and capped", () => {
   assert.ok(cleanTitle("x".repeat(200)).length <= 60);
   assert.equal(cleanTitle("   "), "Unknown source");
 });
+await check("every DeHashed data class is understood by the scorer", () => {
+  // A class this table emits but ATTRIBUTES cannot match would be scored as
+  // nothing at all, which is the failure the table was written to prevent.
+  for (const row of DEHASHED_FIELD_CLASSES) {
+    const found = attributesOf([row.dataClass]);
+    assert.ok(found.size > 0, row.dataClass + " maps to no attribute");
+  }
+});
+await check("DeHashed entries yield permanent identity attributes", () => {
+  const classes = dehashedEntryClasses({
+    email: "a@b.test", name: "Someone", dob: "1990-01-01",
+    social_security_number: "x", nationality: "HU", gender: "m", city: "Budapest",
+    database_name: "Example", id: 7, hash_type: "md5",
+  });
+  const attrs = attributesOf(classes);
+  for (const key of ["name", "dob", "govid", "nationality", "gender", "location"]) {
+    assert.ok(attrs.has(key), "missing " + key);
+  }
+  // identity-only: no password, no financial, so the fast clock stays at zero
+  assert.equal(tierOf(attrs), "email");
+});
+await check("empty DeHashed values never register a data class", () => {
+  assert.deepEqual(dehashedEntryClasses({ email: "", phone: [], name: null, address: "   " }), []);
+  assert.deepEqual(dehashedEntryClasses({}), []);
+  assert.deepEqual(dehashedEntryClasses(null), []);
+  assert.deepEqual(dehashedEntryClasses({ phone: ["+3612345678"] }), ["Phone numbers"]);
+});
+await check("unrecognised DeHashed fields are ignored, not guessed", () => {
+  assert.deepEqual(dehashedEntryClasses({ some_new_field_2027: "value" }), []);
+  assert.deepEqual(dehashedEntryClasses({ cryptocurrency_address: "bc1qxyz" }), []);
+  assert.deepEqual(dehashedEntryClasses({ ip_address: "1.2.3.4" }), []);
+});
+await check("DeHashed field lookup is case-insensitive", () => {
+  assert.deepEqual(dehashedEntryClasses({ Email: "a@b.test" }), ["Email addresses"]);
+});
+await check("one breach named differently by five providers stays one record", () => {
+  // The credential half of the score is a sum, so a breach that fails to
+  // collapse is counted again for every provider that knows it.
+  const naming = [
+    ["HIBP", "Ticketek"],
+    ["LeakCheck", "Ticketek.com.au"],
+    ["XposedOrNot", "Ticketek Breach 2024"],
+    ["DeHashed", "ticketek.com"],
+    ["LeakCheck", "Ticketek Database Dump"],
+  ];
+  const lists = naming.map(([source, title]) => [
+    { title, key: baseName(title), date: null, dataClasses: ["Email addresses"], sources: [source] },
+  ]);
+  const merged = mergeBreaches(...lists);
+  assert.equal(merged.length, 1, "collapsed to " + merged.length + " records: " + merged.map((b) => b.key).join(", "));
+  assert.equal(merged[0].sources.length, 4); // four distinct provider names
+});
+await check("different breaches are not merged by the looser base name", () => {
+  assert.notEqual(baseName("LinkedIn"), baseName("Ticketek"));
+  assert.notEqual(baseName("Canva"), baseName("Dubsmash"));
+  // "Collection" and "Combolist" are stripped as filler, so a title made only
+  // of filler must not become an empty key that swallows everything.
+  assert.notEqual(baseName("Naz.API"), baseName("Ticketek"));
+});
+await check("LeakCheck field union becomes one aggregate record, not one per source", () => {
+  // Attaching the union to every source would multiply one password exposure
+  // by the number of breaches the provider happens to know.
+  const aggregate = { title: "Aggregated exposed fields", key: baseName("leakcheck aggregate fields"), date: null,
+    dataClasses: ["Passwords", "Names", "Dates of birth", "National IDs"], sources: ["LeakCheck"] };
+  const perSource = ["iMesh", "Wishbone", "Peatix"].map((n) => ({
+    title: n, key: baseName(n), date: "2018-12-01", dataClasses: [], sources: ["LeakCheck"] }));
+  const report = emailReport([aggregate, ...perSource]);
+  const credRecords = report.breaches.filter((b) => b.credSeverity > 0);
+  assert.equal(credRecords.length, 1, "exactly one record may carry credential severity");
+  const attrs = attributesOf(aggregate.dataClasses);
+  assert.ok(attrs.has("dob") && attrs.has("govid") && attrs.has("name"));
+});
+await check("an infostealer infection is its own record and never merges with a breach", () => {
+  const infection = { title: "Infostealer infection", key: "infostealer20250114", date: "2025-01-14",
+    dataClasses: ["Passwords", "Usernames"], sources: ["Hudson Rock"] };
+  const second = { title: "Infostealer infection #2", key: "infostealer20260302", date: "2026-03-02",
+    dataClasses: ["Passwords", "Usernames"], sources: ["Hudson Rock"] };
+  const breach = { title: "Canva", key: baseName("Canva"), date: "2019-05-24", dataClasses: ["Email addresses"], sources: ["HIBP"] };
+  const merged = mergeBreaches([infection, second], [breach]);
+  assert.equal(merged.length, 3, "two infections and one breach are three events");
+});
+await check("no DeHashed field name is claimed by two data classes", () => {
+  const seen = new Set();
+  for (const row of DEHASHED_FIELD_CLASSES) {
+    for (const field of row.fields) {
+      assert.ok(!seen.has(field), "duplicate field " + field);
+      seen.add(field);
+    }
+  }
+});
+
+console.log("\nHIBP catalogue enrichment");
+await check("the catalogue snapshot is present and populated", () => {
+  assert.ok(CATALOGUE_SIZE > 900, "catalogue looks too small: " + CATALOGUE_SIZE);
+  assert.ok(catalogueEntry("linkedin.com"), "linkedin.com should resolve");
+  assert.equal(String(catalogueEntry("LinkedIn").d).length, 10, "dates are YYYY-MM-DD");
+});
+await check("an undated record gains a date, marked as catalogue-sourced", () => {
+  const { breaches, datesResolved } = enrichFromCatalogue([
+    { title: "linkedin.com", key: baseName("linkedin.com"), date: null, dataClasses: [], sources: ["DeHashed"] },
+  ]);
+  assert.equal(datesResolved, 1);
+  assert.ok(breaches[0].date, "should have gained a date");
+  assert.equal(breaches[0].dateSource, "catalogue");
+});
+await check("a date the provider reported is never overwritten", () => {
+  const { breaches, datesResolved } = enrichFromCatalogue([
+    { title: "LinkedIn", key: "linkedin", date: "2016-05-18", dataClasses: [], sources: ["HIBP"] },
+  ]);
+  assert.equal(datesResolved, 0);
+  assert.equal(breaches[0].date, "2016-05-18");
+  assert.ok(!breaches[0].dateSource, "an untouched record carries no marker");
+});
+await check("a name the catalogue does not know is left alone", () => {
+  const { breaches, datesResolved } = enrichFromCatalogue([
+    { title: "Totally Unknown Dump", key: baseName("Totally Unknown Dump"), date: null, dataClasses: [], sources: ["DeHashed"] },
+  ]);
+  assert.equal(datesResolved, 0);
+  assert.equal(breaches[0].date, null);
+});
+await check("quality flags are attached, and reach the scored report", () => {
+  const { breaches, flagged } = enrichFromCatalogue([
+    { title: "Pemiblanc", key: baseName("Pemiblanc"), date: null, dataClasses: ["Email addresses"], sources: ["LeakCheck"] },
+  ]);
+  assert.equal(flagged, 1);
+  assert.ok(breaches[0].flags.includes("unverified"), "Pemiblanc is unverified in HIBP");
+  // provenance must survive scoring, not just enrichment
+  const scored = emailReport(breaches);
+  assert.equal(scored.breaches[0].dateSource, "catalogue");
+  assert.ok(scored.breaches[0].flags.includes("unverified"));
+});
+
 
 console.log("\nExpoBot guard rails");
 const token = compactReport(mixed, applicableIds(mixed), ["HIBP"]);

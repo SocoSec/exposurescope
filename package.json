@@ -12,7 +12,8 @@
     "redteam": "node --no-warnings scripts/redteam.mjs",
     "redteam:live": "node --no-warnings scripts/redteam.mjs --live",
     "evaluate": "node --no-warnings scripts/evaluate.mjs",
-    "sensitivity": "node --no-warnings scripts/sensitivity.mjs"
+    "sensitivity": "node --no-warnings scripts/sensitivity.mjs",
+    "build:index": "node --no-warnings scripts/build-breach-index.mjs"
   },
   "dependencies": {
     "next": "14.2.35",
@@ -20,6 +21,6 @@
     "react-dom": "18.3.1"
   },
   "engines": {
-    "node": ">=18.17.0"
+    "node": ">=20.10.0"
   }
 }
