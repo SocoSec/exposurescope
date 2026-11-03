@@ -15,3 +15,9 @@ docs/eval*.csv
 
 # Rendered figure previews (regenerate from the .svg)
 docs/figures/*.png
+
+# working backups kept while the scoring model was being revised
+*.bak
+*.pre3clock
+docs/figures/*.old
+docs/figures/_old_arch.*

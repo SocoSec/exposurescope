@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 860" width="1000" height="860" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<rect width="1000" height="860" fill="#FCFCFB"/>
+<text x="40" y="46" font-size="30" fill="#14202E" text-anchor="start" font-weight="600">What a breach actually contains</text>
+<text x="40" y="78" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Share of 1,048 catalogued breaches containing each data class, measured  ·  npm run scale</text>
+<text x="302" y="156.64" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">Email addresses</text>
+<rect x="320.0" y="124.0" width="529.6" height="48.0" rx="4" fill="#2a78d6"/>
+<text x="863.6" y="156.64" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">99.3%</text>
+<text x="334" y="156.64" font-size="22" fill="#FFFFFF" text-anchor="start" font-weight="400">the lookup key</text>
+<text x="302" y="230.64" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">Passwords</text>
+<rect x="320.0" y="198.0" width="342.9" height="48.0" rx="4" fill="#eb6834"/>
+<text x="676.9333333333334" y="230.64" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">64.3%</text>
+<text x="334" y="230.64" font-size="22" fill="#FFFFFF" text-anchor="start" font-weight="400">credential, 0.7</text>
+<text x="302" y="304.64" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">Names</text>
+<rect x="320.0" y="272.0" width="288.0" height="48.0" rx="4" fill="#eb6834"/>
+<text x="622.0" y="304.64" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">54.0%</text>
+<text x="334" y="304.64" font-size="22" fill="#FFFFFF" text-anchor="start" font-weight="400">identity</text>
+<text x="302" y="378.64" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">Phone numbers</text>
+<rect x="320.0" y="346.0" width="194.7" height="48.0" rx="4" fill="#2a78d6"/>
+<text x="528.6666666666666" y="378.64" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">36.5%</text>
+<text x="334" y="378.64" font-size="22" fill="#FFFFFF" text-anchor="start" font-weight="400">contact, 0.4</text>
+<text x="302" y="452.64" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">Dates of birth</text>
+<rect x="320.0" y="420.0" width="146.7" height="48.0" rx="4" fill="#eb6834"/>
+<text x="480.6666666666667" y="452.64" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">27.5%</text>
+<text x="334" y="452.64" font-size="22" fill="#FFFFFF" text-anchor="start" font-weight="400">permanent</text>
+<line x1="320" y1="496" x2="880" y2="496" stroke="#D8DEE5" stroke-width="1.4"/>
+<rect x="320.0" y="524.0" width="22.0" height="16.0" rx="3" fill="#eb6834"/>
+<text x="352" y="538" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">weighted heavily by the model</text>
+<rect x="650.0" y="524.0" width="22.0" height="16.0" rx="3" fill="#2a78d6"/>
+<text x="682" y="538" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">weighted lightly</text>
+<rect x="40" y="576" width="920" height="142" rx="8" fill="#FBF3E7" stroke="#E3C892" stroke-width="1.6"/>
+<text x="60" y="608" font-size="22" fill="#8A6218" text-anchor="start" font-weight="600">Measured here, not quoted</text>
+<text x="60" y="636" font-size="22" fill="#8A6218" text-anchor="start" font-weight="400">Industry telemetry [14], [15] reports passwords in about 28% of breaches.</text>
+<text x="60" y="660" font-size="22" fill="#8A6218" text-anchor="start" font-weight="400">The catalogue this system queries puts them in 64.3%. The populations differ:</text>
+<text x="60" y="684" font-size="22" fill="#8A6218" text-anchor="start" font-weight="400">incidents disclosed by firms, against corpora collected and published. A tool</text>
+<text x="60" y="708" font-size="22" fill="#8A6218" text-anchor="start" font-weight="400">scoring an individual against corpora should use the corpus figure.</text>
+<text x="40" y="760" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Email addresses are near-universal because they are the lookup key. Passwords, which the model</text>
+<text x="40" y="784" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">weights most heavily, are present in nearly two thirds of breaches. Weights from Table 3.</text>
+</svg>

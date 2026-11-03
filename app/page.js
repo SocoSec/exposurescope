@@ -19,6 +19,10 @@ import { STYLE } from "./styles.js";
 import { BrandHeader } from "./components/Brand.js";
 import { TrustStrip, SafetyNote, MoreAbout, TrustSeals } from "./components/Trust.js";
 import { Gauge } from "./components/charts.js";
+import { Horizon } from "./components/Horizon.js";
+import { Sources } from "./components/Sources.js";
+import { Audit } from "./components/Audit.js";
+import { IdentityDossier, ByCompany, ByDataType } from "./components/Dossier.js";
 import { TwoClockForecast } from "./components/Forecast.js";
 import BreachExplorer from "./components/BreachMap.js";
 import ExposureMatrix from "./components/DataMatrix.js";
@@ -201,6 +205,12 @@ export default function Page() {
     (mode === "phone" ? /^\+[1-9][0-9\s()./-]{6,}$/.test(phone.trim()) : email.trim().length > 3);
   const canCheckPw = consent && !busy && password.length > 0;
   const exposed = report && report.score > 0;
+  // The time canvas replaces the gauge whenever there is something to place on
+  // a timeline. A password check has no dates and no permanent half, so it
+  // keeps the gauge.
+  const useHorizon =
+    exposed && report.kind !== "password" &&
+    (report.breaches || []).some((x) => typeof x.ageDays === "number");
   const band = report ? BAND_COLOR[report.level] : "var(--sig)";
   const consentText = mode === "password" ? L.consentPw : mode === "phone" ? L.consentPhone : L.consentEmail;
   const [sentBefore, sentAfter] = L.codeSent.split("{email}");
@@ -320,9 +330,11 @@ export default function Page() {
                 ) : (
                   <>
                     <div className="x-lglabel" style={{ textAlign: "center", marginBottom: 2 }}>{report.kind === "email" ? L.scoreLabel : L.modePassword}</div>
-                    <Gauge score={report.score} level={report.level} />
-                    <div className="x-band" style={{ color: band }}>{L.bands[report.level]}</div>
-                    <div className="x-hhead">{L.heads[report.level]}</div>
+                    {useHorizon
+                      ? <Horizon report={report} bands={L.bands} heads={L.heads} bandColor={BAND_COLOR} />
+                      : <Gauge score={report.score} level={report.level} />}
+                    {!useHorizon && <div className="x-band" style={{ color: band }}>{L.bands[report.level]}</div>}
+                    {!useHorizon && <div className="x-hhead">{L.heads[report.level]}</div>}
                     <div className="x-hsub">
                       {!exposed
                         ? "No match in the sources checked. Keep it that way: unique passwords per site and two-step verification everywhere."
@@ -338,7 +350,7 @@ export default function Page() {
                         {report.attrs.slice(0, 4).map((k) => <span className="x-gchip" key={k}>{k}</span>)}
                       </div>
                     )}
-                    {exposed && residual && (
+                    {exposed && residual && !useHorizon && (
                       <div className="x-duo">
                         <div className="x-duocell"><div className="x-duolabel">{L.exposureLabel}</div><div className="x-duonum" style={{ color: band }}>{report.score}</div></div>
                         <div className="x-duocell">
@@ -349,7 +361,7 @@ export default function Page() {
                         </div>
                       </div>
                     )}
-                    {exposed && residual && done.size === 0 && <div className="x-scorenote">{L.bestCaseHint}</div>}
+                    {exposed && residual && !useHorizon && done.size === 0 && <div className="x-scorenote">{L.bestCaseHint}</div>}
                     {report.kind === "email" && exposed && <div className="x-scorenote">{L.scoreNote}</div>}
                     {meta.sources.length > 0 && (
                       <div className="x-src">
@@ -372,7 +384,7 @@ export default function Page() {
             {exposed && !meta.unavailable && (
               <>
                 <div className="x-tabs">
-                  {["overview", "details", "actions", "learn"].map((id) => (
+                  {["overview", "details", "actions", "audit", "learn"].map((id) => (
                     <button key={id} className={"x-tab" + (tab === id ? " on" : "")} onClick={() => setTab(id)}>{L.tabs[id]}</button>
                   ))}
                 </div>
@@ -400,25 +412,36 @@ export default function Page() {
                       </div>
                     )}
                     <div className="x-card">
-                      <div className="x-sech"><span className="x-secn">03</span><span className="x-sect">What can be assembled about you</span></div>
-                      <div className="x-secd">The mosaic effect: separate fragments combine into one identity. Highlighted items are exposed.</div>
-                      <div className="x-mosaic">
-                        {ATTRIBUTES.map((a) => {
-                          const on = report.attrs.includes(a.key);
-                          return (
-                            <span className={"x-chip " + (on ? "on" : "off")} key={a.key}>
-                              <span className="x-dot" style={{ background: on ? "var(--coral)" : "var(--mute)" }} />{a.label}
-                            </span>
-                          );
-                        })}
-                      </div>
+                      <div className="x-sech"><span className="x-secn">03</span><span className="x-sect">The file someone can open on you</span></div>
+                      <div className="x-secd">Not which company was breached, but what can now be written down about you. Redacted fields are the ones these breaches did not expose.</div>
+                      <IdentityDossier report={report} />
                     </div>
+                    {report.kind !== "password" && report.breaches.length > 0 && (
+                      <div className="x-card">
+                        <div className="x-sech"><span className="x-secn">04</span><span className="x-sect">Who exposed you, and how much</span></div>
+                        <div className="x-secd">Each bar is one breach, split where the part you can still undo ends and the permanent part begins.</div>
+                        <ByCompany breaches={report.breaches} />
+                      </div>
+                    )}
+                    {report.kind !== "password" && report.breaches.length > 0 && (
+                      <div className="x-card">
+                        <div className="x-sech"><span className="x-secn">05</span><span className="x-sect">Which kinds of data, and how often</span></div>
+                        <div className="x-secd">How many of your breaches exposed each kind of data.</div>
+                        <ByDataType report={report} />
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {tab === "actions" && (
                   <div className="x-panelfade">
                     <ActionPlan report={report} done={done} onToggle={toggleDone} identifier={meta.identifier} L={L} />
+                  </div>
+                )}
+
+                {tab === "audit" && (
+                  <div className="x-panelfade">
+                    <Audit report={report} />
                   </div>
                 )}
 
@@ -458,6 +481,8 @@ export default function Page() {
         )}
 
         {stage !== "done" && <TrustSeals T={T} />}
+
+        <Sources T={L} active={meta && meta.sources} />
 
         <div className="x-foot">
           {L.footer1}<br />

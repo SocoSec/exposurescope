@@ -3,8 +3,23 @@
 // Kept as one string injected by <style> so the app still needs no CSS build step.
 
 export const STYLE = `
-.x-root{--bg:#080B12;--card:#0F1521;--card2:#131B29;--line:#1C2636;--ink:#DBE4F1;--mute:#67748B;
-  --sig:#38C89A;--amber:#E6B057;--coral:#E56A5A;
+/* The dark surface has to live on the document, not only on .x-root. The root
+   element is a flex child with min-height:100vh, so on a long report anything
+   outside it fell back to the browser's white, which flashed during scrolling. */
+html,body{margin:0;background:#080B12;}
+/* Palette tokens are set against measured contrast, not taste.
+   --mute was #67748B, which gave 3.66:1 on --card2 and so failed WCAG 2.2 AA
+   for body text (4.5:1) everywhere it was used, and it carries most of the
+   explanatory prose in the report. #7C899F measures 4.88:1 on the worst
+   background and 5.56:1 on the darkest, while staying recessive.
+   --coral was #E56A5A (5.38:1). #D98373 measures 6.12:1 and is less saturated;
+   the contrast gain is measured, the lower saturation is a judgement about not
+   alarming a reader who still has to act on the advice.
+   Colour is never the only channel: the two clocks also differ by position
+   (fading always above or left of permanent) and by label, because a
+   deuteranopia simulation leaves these two hues only 2.69:1 apart. */
+.x-root{--bg:#080B12;--card:#0F1521;--card2:#131B29;--line:#1C2636;--ink:#DBE4F1;--mute:#7C899F;
+  --sig:#38C89A;--amber:#E6B057;--coral:#D98373;
   /* Tokens added with the trust layer. The signal colour is used at low alpha
      for surfaces so "secure" reads as calm, not as a wall of green. */
   --sig-dim:rgba(56,200,154,.10);--sig-edge:rgba(56,200,154,.22);
@@ -367,5 +382,123 @@ export const STYLE = `
 .x-assumed{color:var(--amber);}
 /* Small screens: keep the ExpoBot bubble on the bottom edge so it doesn't cover the tabs or content mid-page. */
 @media (max-width:560px){.x-nudge{left:14px;right:14px;width:auto;bottom:90px;}.x-nudge::after{right:34px;}.x-panel{right:8px;bottom:8px;}}
-@media print{.x-actions,.x-foot,.x-consent,.x-langbar,.x-tabs,.x-launcher,.x-panel,.x-nudge{display:none!important;}.x-root{background:#fff;color:#000;}}
+/* ---- Dossier: the file a stranger can open on you ---- */
+.x-dos{margin-top:4px;}
+.x-doshead{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:16px;}
+.x-dostitle{font-size:17px;font-weight:650;color:var(--ink);letter-spacing:-.01em;}
+.x-dossub{font-size:12.5px;line-height:1.5;color:var(--mute);margin-top:5px;max-width:360px;}
+.x-dosmeter{text-align:right;flex:none;}
+.x-dosmeternum{font-family:ui-monospace,monospace;font-size:34px;font-weight:700;color:var(--coral);line-height:1;}
+.x-dosmeterlab{font-size:10.5px;line-height:1.35;color:var(--mute);margin-top:5px;}
+.x-dosgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.x-dosfield{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--bg);}
+.x-dosfield.on{border-color:rgba(229,106,90,.45);background:#19151A;}
+.x-doslabel{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);}
+.x-dosvalue{font-family:ui-monospace,monospace;font-size:14px;font-weight:700;color:var(--coral);margin-top:6px;}
+.x-dosvalue.red{color:#2A3444;font-weight:400;letter-spacing:-1px;}
+.x-dosweight{font-family:ui-monospace,monospace;font-size:10px;color:var(--mute);margin-top:3px;min-height:12px;}
+.x-dosalert{margin-top:14px;border:1px solid var(--coral);border-radius:11px;padding:13px 15px;
+  background:rgba(229,106,90,.07);font-size:12.5px;line-height:1.6;color:var(--ink);}
+.x-dosalert b{color:var(--coral);}
+.x-dosnote{margin-top:13px;font-size:12.5px;line-height:1.6;color:var(--mute);}
+
+/* bars: which company, which kind of data */
+.x-bycomp,.x-bytype{display:grid;gap:7px;margin-top:4px;}
+.x-comprow,.x-typerow{display:grid;grid-template-columns:120px 1fr 54px;gap:11px;align-items:center;}
+.x-typerow{grid-template-columns:150px 1fr 28px;}
+.x-compname,.x-typename{font-size:12px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.x-comptrack,.x-typetrack{display:flex;height:13px;background:var(--bg);border-radius:4px;overflow:hidden;}
+/* The boundary between the two halves is marked by an edge as well as a hue,
+   so the split point is perceivable without colour discrimination. Order is
+   fixed too: fading is always first, permanent always second. */
+.x-compfade{background:var(--sig);opacity:.9;}
+.x-compperm{background:var(--coral);opacity:.9;box-shadow:inset 2px 0 0 var(--bg);}
+.x-typebar{background:var(--sig);opacity:.7;border-radius:4px;}
+.x-typebar.perm{background:var(--coral);opacity:.8;}
+.x-compyear,.x-typecount{font-family:ui-monospace,monospace;font-size:11px;color:var(--mute);text-align:right;}
+.x-complegend{display:flex;gap:18px;margin-top:9px;font-size:11px;color:var(--mute);flex-wrap:wrap;}
+.x-complegend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;}
+.x-swfade{background:var(--sig);}
+.x-swperm{background:var(--coral);}
+@media (max-width:520px){.x-dosgrid{grid-template-columns:repeat(2,1fr);}
+  .x-doshead{flex-direction:column;}.x-dosmeter{text-align:left;}
+  .x-comprow{grid-template-columns:90px 1fr 40px;}.x-typerow{grid-template-columns:104px 1fr 24px;}}
+/* ---- Audit: the derivation, its spread, and its alternatives ---- */
+.x-aud .x-card:first-child{margin-top:0;}
+.x-audp{font-size:13px;line-height:1.65;color:var(--mute);margin:0 0 14px;}
+.x-audp sup{font-size:9px;}
+.x-audband{border:1px solid var(--line);border-radius:12px;background:var(--card2);padding:16px;text-align:center;margin-bottom:14px;}
+.x-audrange{display:flex;align-items:baseline;justify-content:center;gap:12px;font-family:ui-monospace,monospace;}
+.x-audlo,.x-audhi{font-size:34px;font-weight:700;color:var(--ink);}
+.x-audsep{font-size:12px;color:var(--mute);letter-spacing:.1em;text-transform:uppercase;}
+.x-audcap{font-size:12px;color:var(--mute);margin-top:7px;}
+.x-audcap b{color:var(--ink);font-family:ui-monospace,monospace;}
+.x-audscroll{overflow-x:auto;margin:0 -4px;}
+.x-audtable{width:100%;border-collapse:collapse;font-size:11.5px;font-family:ui-monospace,monospace;}
+.x-audtable th{text-align:left;font-weight:600;color:var(--mute);letter-spacing:.04em;
+  padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:10px;text-transform:uppercase;}
+.x-audtable td{padding:8px;border-bottom:1px solid var(--line);color:var(--ink);vertical-align:top;}
+.x-audname{max-width:150px;}
+.x-audattrs{color:var(--coral);}
+.x-audsum{margin-top:14px;display:grid;gap:6px;font-size:12.5px;}
+.x-audsum > div{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:baseline;
+  padding:7px 0;border-bottom:1px solid var(--line);}
+.x-audsum span{color:var(--mute);}
+.x-audsum b{font-family:ui-monospace,monospace;color:var(--ink);}
+.x-audsum i{font-family:ui-monospace,monospace;font-style:normal;color:var(--mute);min-width:62px;text-align:right;}
+.x-audtotal{border-bottom:none!important;}
+.x-audtotal i{color:var(--sig)!important;font-weight:700;font-size:15px;}
+.x-audalts{display:grid;gap:5px;}
+.x-audalt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--card2);font-size:12.5px;}
+.x-audalt.on{border-color:var(--sig-edge);background:var(--sig-dim);}
+.x-audaltname{color:var(--mute);}
+.x-audalt.on .x-audaltname{color:var(--ink);font-weight:600;}
+.x-audaltname b{font-family:ui-monospace,monospace;color:var(--ink);margin-right:6px;}
+.x-audaltscore{font-family:ui-monospace,monospace;font-size:17px;font-weight:700;color:var(--ink);}
+.x-audnote{font-size:11.5px;line-height:1.6;color:var(--mute);margin:12px 0 0;}
+.x-audlist{margin:0;padding-left:18px;display:grid;gap:9px;font-size:13px;line-height:1.6;color:var(--mute);}
+.x-audlist b{color:var(--ink);font-weight:650;}
+.x-audlist li.x-assumed b{color:var(--amber);}
+@media (max-width:520px){.x-audsum > div{grid-template-columns:1fr auto;}.x-audsum i{grid-column:2;}}
+/* ---- where the data comes from (attribution, required by CC BY 4.0) ---- */
+.x-srcbox{margin-top:26px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--card);}
+.x-srctitle{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:11px;}
+.x-srclist{list-style:none;margin:0;padding:0;display:grid;gap:7px;}
+.x-srcitem{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:12.5px;}
+.x-srcitem.off{opacity:.45;}
+.x-srclink{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);font-weight:600;}
+.x-srclink:hover{border-bottom-color:var(--sig);color:var(--sig);}
+.x-srcrole{color:var(--mute);}
+.x-srcattr{margin-top:13px;padding-top:11px;border-top:1px solid var(--line);font-size:11.5px;
+  line-height:1.6;color:var(--mute);}
+/* ---- Horizon: the report as one object on a time axis ---- */
+.x-hz{margin-top:4px;}
+.x-hzread{display:flex;align-items:flex-start;gap:20px;margin-bottom:10px;}
+.x-hznum{font-family:ui-monospace,monospace;font-size:62px;font-weight:700;line-height:.92;
+  color:var(--ink);letter-spacing:-.03em;min-width:98px;}
+.x-hzbreak{font-size:13px;line-height:1.5;color:var(--mute);padding-top:5px;}
+.x-hzrow{display:flex;align-items:center;gap:8px;}
+.x-hzrow b{color:var(--ink);font-family:ui-monospace,monospace;font-weight:700;min-width:22px;}
+.x-hzswatch{width:10px;height:10px;border-radius:3px;flex:none;}
+.x-hzfade{background:var(--sig);}
+.x-hzperm{background:var(--coral);}
+.x-hzwhen{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--mute);margin-top:7px;}
+.x-hzsvg{width:100%;height:auto;display:block;touch-action:none;cursor:ew-resize;overflow:visible;}
+.x-hzhint{font-size:11.5px;color:var(--mute);margin-top:6px;text-align:center;}
+.x-hzcalc{margin-top:16px;border-top:1px solid var(--line);padding-top:12px;}
+.x-hzcalc summary{cursor:pointer;font-size:12.5px;color:var(--mute);list-style:none;}
+.x-hzcalc summary::-webkit-details-marker{display:none;}
+.x-hzcalc summary::before{content:"+ ";font-family:ui-monospace,monospace;}
+.x-hzcalc[open] summary::before{content:"2 ";}
+.x-hzcalc summary:hover{color:var(--ink);}
+.x-hzcalcbody{font-size:13px;line-height:1.65;color:var(--mute);margin-top:10px;}
+.x-hzcalcbody p{margin:0 0 9px;}
+.x-hzcalcbody b{color:var(--ink);font-weight:600;}
+.x-hzfadetx{color:var(--sig)!important;}
+.x-hzpermtx{color:var(--coral)!important;}
+@media (max-width:520px){.x-hzread{gap:14px;}.x-hznum{font-size:46px;min-width:72px;}.x-hzbreak{font-size:12px;}}
+@media print{.x-actions,.x-foot,.x-consent,.x-langbar,.x-tabs,.x-launcher,.x-panel,.x-nudge,.x-hzhint{display:none!important;}.x-root{background:#fff;color:#000;}}
 `;

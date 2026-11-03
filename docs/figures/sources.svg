@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1074" width="1000" height="1074" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#14202E"/></marker><marker id="open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#14202E" stroke-width="1.6"/></marker><marker id="hollow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#14202E" stroke-width="1.6"/></marker></defs>
+<rect width="1000" height="1074" fill="#FFFFFF"/>
+<text x="500.0" y="46" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="32" fill="#14202E" text-anchor="middle" font-weight="600">Exposio — sources and ingestion</text>
+<text x="500.0" y="76" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="23" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">Five breach providers, one browser-side check, one bundled catalogue</text>
+<rect x="14.0" y="128" width="572" height="218" rx="8" fill="none" stroke="#B8862F" stroke-width="1.8" stroke-dasharray="9 6"/>
+<text x="24.0" y="154" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#B8862F" text-anchor="start" font-weight="600">«paid key required»</text>
+<rect x="28.0" y="170" width="544" height="88" rx="5" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.2"/>
+<text x="46.0" y="204" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Have I Been Pwned</text>
+<text x="46.0" y="234" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">email · title, exact date, data classes</text>
+<rect x="503.0" y="184" width="55" height="28" rx="14" fill="#F6F8FA" stroke="#B8862F" stroke-width="1.5"/>
+<text x="530.5" y="204" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#B8862F" text-anchor="middle" font-weight="400">key</text>
+<rect x="28.0" y="266" width="544" height="88" rx="5" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.2"/>
+<text x="46.0" y="300" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">DeHashed</text>
+<text x="46.0" y="330" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">email + phone · the only phone source</text>
+<rect x="503.0" y="280" width="55" height="28" rx="14" fill="#F6F8FA" stroke="#B8862F" stroke-width="1.5"/>
+<text x="530.5" y="300" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#B8862F" text-anchor="middle" font-weight="400">key</text>
+<rect x="14.0" y="364" width="572" height="314" rx="8" fill="none" stroke="#0D7D74" stroke-width="1.8" stroke-dasharray="9 6"/>
+<text x="24.0" y="390" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#0D7D74" text-anchor="start" font-weight="600">«no key required»</text>
+<rect x="28.0" y="406" width="544" height="88" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<text x="46.0" y="440" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">LeakCheck</text>
+<text x="46.0" y="470" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">email · month-precision dates</text>
+<rect x="492.0" y="420" width="66" height="28" rx="14" fill="#F6F8FA" stroke="#0D7D74" stroke-width="1.5"/>
+<text x="525.0" y="440" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#0D7D74" text-anchor="middle" font-weight="400">free</text>
+<rect x="28.0" y="502" width="544" height="88" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<text x="46.0" y="536" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">XposedOrNot</text>
+<text x="46.0" y="566" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">email · names only; coverage, not score</text>
+<rect x="492.0" y="516" width="66" height="28" rx="14" fill="#F6F8FA" stroke="#0D7D74" stroke-width="1.5"/>
+<text x="525.0" y="536" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#0D7D74" text-anchor="middle" font-weight="400">free</text>
+<rect x="28.0" y="598" width="544" height="88" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<text x="46.0" y="632" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Hudson Rock</text>
+<text x="46.0" y="662" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">email · infostealer infections</text>
+<rect x="492.0" y="612" width="66" height="28" rx="14" fill="#F6F8FA" stroke="#0D7D74" stroke-width="1.5"/>
+<text x="525.0" y="632" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#0D7D74" text-anchor="middle" font-weight="400">free</text>
+<rect x="14.0" y="696" width="572" height="218" rx="8" fill="none" stroke="#44566B" stroke-width="1.8" stroke-dasharray="9 6"/>
+<text x="24.0" y="722" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#44566B" text-anchor="start" font-weight="600">«never reaches the server»</text>
+<rect x="28.0" y="738" width="544" height="88" rx="5" fill="#FFFFFF" stroke="#44566B" stroke-width="2.2"/>
+<text x="46.0" y="772" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Pwned Passwords</text>
+<text x="46.0" y="802" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">password · first 5 hash characters only</text>
+<rect x="459.0" y="752" width="99" height="28" rx="14" fill="#F6F8FA" stroke="#44566B" stroke-width="1.5"/>
+<text x="508.5" y="772" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#44566B" text-anchor="middle" font-weight="400">browser</text>
+<rect x="28.0" y="834" width="544" height="88" rx="5" fill="#FFFFFF" stroke="#44566B" stroke-width="2.2"/>
+<text x="46.0" y="868" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">HIBP catalogue</text>
+<text x="46.0" y="898" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">1,048 breaches · 1,328 aliases · bundled</text>
+<rect x="481.0" y="848" width="77" height="28" rx="14" fill="#F6F8FA" stroke="#44566B" stroke-width="1.5"/>
+<text x="519.5" y="868" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#44566B" text-anchor="middle" font-weight="400">local</text>
+<text x="790" y="118" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="600">Per request, nothing retained</text>
+<rect x="604.0" y="134" width="372" height="72" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<circle cx="634.0" cy="170" r="17" fill="#0D7D74"/>
+<text x="634.0" y="178" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">1</text>
+<text x="662.0" y="164" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Ownership gate</text>
+<text x="662.0" y="190" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">code verified first</text>
+<rect x="604.0" y="232" width="372" height="72" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<circle cx="634.0" cy="268" r="17" fill="#0D7D74"/>
+<text x="634.0" y="276" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">2</text>
+<text x="662.0" y="262" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Parallel query</text>
+<text x="662.0" y="288" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">all providers at once</text>
+<rect x="604.0" y="330" width="372" height="72" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<circle cx="634.0" cy="366" r="17" fill="#0D7D74"/>
+<text x="634.0" y="374" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">3</text>
+<text x="662.0" y="360" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Normalise</text>
+<text x="662.0" y="386" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">fields to one vocabulary</text>
+<rect x="604.0" y="428" width="372" height="72" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<circle cx="634.0" cy="464" r="17" fill="#0D7D74"/>
+<text x="634.0" y="472" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">4</text>
+<text x="662.0" y="458" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Merge</text>
+<text x="662.0" y="484" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">one record per breach</text>
+<rect x="604.0" y="526" width="372" height="72" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<circle cx="634.0" cy="562" r="17" fill="#0D7D74"/>
+<text x="634.0" y="570" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">5</text>
+<text x="662.0" y="556" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Enrich</text>
+<text x="662.0" y="582" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">dates from the catalogue</text>
+<rect x="604.0" y="624" width="372" height="72" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<circle cx="634.0" cy="660" r="17" fill="#0D7D74"/>
+<text x="634.0" y="668" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">6</text>
+<text x="662.0" y="654" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Score</text>
+<text x="662.0" y="680" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">two clocks</text>
+<rect x="604.0" y="722" width="372" height="72" rx="5" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.2"/>
+<circle cx="634.0" cy="758" r="17" fill="#0D7D74"/>
+<text x="634.0" y="766" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">7</text>
+<text x="662.0" y="752" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Report</text>
+<text x="662.0" y="778" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">signed token, no writes</text>
+<path d="M790,206 L790,232" fill="none" stroke="#14202E" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M790,304 L790,330" fill="none" stroke="#14202E" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M790,402 L790,428" fill="none" stroke="#14202E" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M790,500 L790,526" fill="none" stroke="#14202E" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M790,598 L790,624" fill="none" stroke="#14202E" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M790,696 L790,722" fill="none" stroke="#14202E" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M604.0,812 L958.0,812 L976.0,830 L976.0,934 L604.0,934 Z" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6" stroke-dasharray="5 4"/>
+<path d="M958.0,812 L958.0,830 L976.0,830" fill="none" stroke="#0D7D74" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="620.0" y="840" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Stateless by stage</text>
+<text x="620.0" y="864" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Each stage reads the previous</text>
+<text x="620.0" y="885" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">one and writes nothing. The</text>
+<text x="620.0" y="906" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">response ends the only copy.</text>
+<text x="14" y="968" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Email reaches all five providers; phone reaches DeHashed only.</text>
+<text x="14" y="996" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">A password never leaves the browser.</text>
+<text x="14" y="1024" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Catalogue © Have I Been Pwned, CC BY 4.0. Exposio retains no breach data of its own.</text>
+</svg>

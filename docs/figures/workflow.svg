@@ -1,194 +1,88 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1380" viewBox="0 0 1240 1380">
-<!-- Exposio request lifecycle. Presentation attributes only (no CSS classes),
-     so it renders identically in browsers, Word, PowerPoint and LaTeX. -->
-<defs>
-  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
-  </marker>
-  <marker id="arrT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#0D7D74"/>
-  </marker>
-</defs>
-
-<rect width="1240" height="1380" fill="#FFFFFF"/>
-
-<g font-family="Segoe UI, Calibri, Arial, sans-serif">
-
-<text x="40" y="44" font-size="23" font-weight="700" fill="#0F172A">Exposio — request lifecycle</text>
-<text x="40" y="68" font-size="12.5" fill="#475569">Zero-storage self-assessment: no database. State between steps travels as HMAC-signed, expiring tokens held in browser memory.</text>
-
-<rect x="30" y="88" width="350" height="30" rx="5" fill="#F1F5F9" stroke="#CBD5E1"/>
-<rect x="408" y="88" width="430" height="30" rx="5" fill="#E6F4F1" stroke="#9CCCC5"/>
-<rect x="866" y="88" width="344" height="30" rx="5" fill="#FBF3E4" stroke="#E3C892"/>
-<text x="205" y="108" font-size="13" font-weight="700" fill="#334155" letter-spacing="1.2" text-anchor="middle">BROWSER (CLIENT)</text>
-<text x="623" y="108" font-size="13" font-weight="700" fill="#334155" letter-spacing="1.2" text-anchor="middle">EXPOSIO — VERCEL EDGE</text>
-<text x="1038" y="108" font-size="13" font-weight="700" fill="#334155" letter-spacing="1.2" text-anchor="middle">EXTERNAL SERVICES</text>
-
-<line x1="205" y1="124" x2="205" y2="1300" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="3 5"/>
-<line x1="623" y1="124" x2="623" y2="1300" stroke="#C7E3DE" stroke-width="1.5" stroke-dasharray="3 5"/>
-<line x1="1038" y1="124" x2="1038" y2="1300" stroke="#EEDFC0" stroke-width="1.5" stroke-dasharray="3 5"/>
-
-<!-- PHASE A -->
-<rect x="24" y="136" width="1192" height="330" rx="8" fill="#FAFBFC" stroke="#E2E8F0"/>
-<text x="40" y="158" font-size="12" font-weight="700" fill="#64748B" letter-spacing="1.8">A · PROVE THE ADDRESS IS YOURS</text>
-
-<rect x="48" y="172" width="314" height="52" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<circle cx="68" cy="198" r="11" fill="#475569"/>
-<text x="68" y="202" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">1</text>
-<text x="88" y="194" font-size="14.5" font-weight="600" fill="#0F172A">Enter own email + consent</text>
-<text x="88" y="212" font-size="12.5" fill="#475569">Consent box unticked by default</text>
-
-<rect x="424" y="172" width="398" height="82" rx="7" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
-<circle cx="444" cy="198" r="11" fill="#0D7D74"/>
-<text x="444" y="202" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">2</text>
-<text x="464" y="194" font-family="Consolas, Courier New, monospace" font-size="12.5" fill="#0F172A">POST /api/verify/start</text>
-<text x="464" y="214" font-size="12.5" fill="#475569">Rate limit: 5 per IP · 3 per address, per 15 min</text>
-<text x="464" y="232" font-size="12.5" fill="#475569">Generate 6-digit code (rejection sampling)</text>
-<text x="464" y="248" font-family="Consolas, Courier New, monospace" font-size="11.5" fill="#0D7D74">→ CHALLENGE token (10 min): keyed tag, not the code</text>
-<line x1="362" y1="198" x2="420" y2="198" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<rect x="882" y="172" width="314" height="66" rx="7" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.4"/>
-<circle cx="902" cy="198" r="11" fill="#C99A3B"/>
-<text x="902" y="202" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">3</text>
-<text x="922" y="194" font-size="14.5" font-weight="600" fill="#0F172A">Resend — EU region (Ireland)</text>
-<text x="922" y="212" font-size="12.5" fill="#475569">Sends code from noreply@exposio.eu</text>
-<text x="922" y="229" font-size="12.5" fill="#475569">SPF · DKIM · DMARC authenticated</text>
-<line x1="822" y1="198" x2="878" y2="198" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<rect x="48" y="272" width="314" height="44" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<circle cx="68" cy="294" r="11" fill="#475569"/>
-<text x="68" y="298" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">4</text>
-<text x="88" y="299" font-size="14.5" font-weight="600" fill="#0F172A">Code arrives in the inbox</text>
-<path d="M1038,238 L1038,294 L366,294" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<rect x="48" y="336" width="314" height="44" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<circle cx="68" cy="358" r="11" fill="#475569"/>
-<text x="68" y="362" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">5</text>
-<text x="88" y="363" font-size="14.5" font-weight="600" fill="#0F172A">Enter the 6-digit code</text>
-
-<rect x="424" y="336" width="398" height="82" rx="7" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
-<circle cx="444" cy="362" r="11" fill="#0D7D74"/>
-<text x="444" y="366" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">6</text>
-<text x="464" y="358" font-family="Consolas, Courier New, monospace" font-size="12.5" fill="#0F172A">POST /api/verify/check</text>
-<text x="464" y="378" font-size="12.5" fill="#475569">Recompute keyed tag, compare in constant time</text>
-<text x="464" y="398" font-family="Consolas, Courier New, monospace" font-size="11.5" fill="#0D7D74">→ SCAN token (15 min) bound to a keyed hash of</text>
-<text x="464" y="412" font-family="Consolas, Courier New, monospace" font-size="11.5" fill="#0D7D74">   this address — it unlocks no other address</text>
-<line x1="362" y1="358" x2="420" y2="358" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<text x="430" y="448" font-size="11.5" fill="#B45309">No code, no lookup. No code path queries an address the user has not proven they control.</text>
-
-<!-- PHASE B -->
-<rect x="24" y="482" width="1192" height="408" rx="8" fill="#FAFBFC" stroke="#E2E8F0"/>
-<text x="40" y="504" font-size="12" font-weight="700" fill="#64748B" letter-spacing="1.8">B · LOOK UP, SCORE, DISCARD</text>
-
-<rect x="424" y="518" width="398" height="82" rx="7" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
-<circle cx="444" cy="544" r="11" fill="#0D7D74"/>
-<text x="444" y="548" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">7</text>
-<text x="464" y="540" font-family="Consolas, Courier New, monospace" font-size="12.5" fill="#0F172A">POST /api/breach</text>
-<text x="464" y="560" font-size="12.5" fill="#475569">Token must verify AND match this address</text>
-<text x="464" y="578" font-size="12.5" fill="#475569">Limits: 10 per IP/h · 5 per address/h · daily cap</text>
-<text x="464" y="595" font-size="12.5" fill="#475569">Cheapest checks first; paid API calls last</text>
-<path d="M205,380 L205,544 L420,544" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<rect x="882" y="518" width="314" height="104" rx="7" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.4"/>
-<circle cx="902" cy="544" r="11" fill="#C99A3B"/>
-<text x="902" y="548" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">8</text>
-<text x="922" y="540" font-size="14.5" font-weight="600" fill="#0F172A">Queried in parallel</text>
-<text x="922" y="560" font-size="12.5" fill="#475569">· Have I Been Pwned</text>
-<text x="922" y="578" font-size="12.5" fill="#475569">· DeHashed (optional)</text>
-<text x="922" y="598" font-size="12.5" fill="#475569">Abort timeout · 429 back-off</text>
-<text x="922" y="614" font-size="12.5" fill="#475569">honouring Retry-After + jitter</text>
-<line x1="822" y1="556" x2="878" y2="556" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-<line x1="878" y1="578" x2="822" y2="578" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<rect x="424" y="630" width="398" height="130" rx="7" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
-<circle cx="444" cy="656" r="11" fill="#0D7D74"/>
-<text x="444" y="660" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">9</text>
-<text x="464" y="652" font-size="14.5" font-weight="600" fill="#0F172A">Merge and score — server-side only</text>
-<text x="464" y="672" font-size="12.5" fill="#475569">Deduplicate the same breach across providers</text>
-<text x="464" y="696" font-family="Consolas, Courier New, monospace" font-size="12.5" fill="#0F172A">B_raw = Σ sev · exp(−λ · age)</text>
-<text x="464" y="715" font-family="Consolas, Courier New, monospace" font-size="12.5" fill="#0F172A">score = min(1, B_raw / 0.8) × 100</text>
-<text x="464" y="734" font-size="12.5" fill="#475569">λ = 0.002/day (half-life 347 d) · undated = 730 d</text>
-<text x="464" y="753" font-family="Consolas, Courier New, monospace" font-size="11.5" fill="#0D7D74">→ REPORT token (60 min), signed, carries the report</text>
-
-<rect x="48" y="788" width="314" height="82" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<circle cx="68" cy="814" r="11" fill="#475569"/>
-<text x="68" y="818" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">10</text>
-<text x="88" y="810" font-size="14.5" font-weight="600" fill="#0F172A">Report renders</text>
-<text x="88" y="829" font-size="12.5" fill="#475569">Gauge · per-breach contributions</text>
-<text x="88" y="847" font-size="12.5" fill="#475569">Ranked actions with estimated points</text>
-<text x="88" y="864" font-size="12.5" fill="#475569">Residual risk as actions are ticked</text>
-<path d="M424,746 L392,746 L392,814 L366,814" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<text x="40" y="884" font-size="11.5" fill="#B45309">If no source answers, the request fails. "Not checked" is never rendered as "no breaches found".</text>
-
-<!-- PHASE C -->
-<rect x="24" y="906" width="1192" height="268" rx="8" fill="#FAFBFC" stroke="#E2E8F0"/>
-<text x="40" y="928" font-size="12" font-weight="700" fill="#64748B" letter-spacing="1.8">C · ADVICE THE MODEL CANNOT FABRICATE</text>
-
-<rect x="48" y="942" width="314" height="44" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<circle cx="68" cy="964" r="11" fill="#475569"/>
-<text x="68" y="968" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">11</text>
-<text x="88" y="969" font-size="14.5" font-weight="600" fill="#0F172A">Ask ExpoBot a question</text>
-
-<rect x="424" y="942" width="398" height="154" rx="7" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
-<circle cx="444" cy="968" r="11" fill="#0D7D74"/>
-<text x="444" y="972" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">12</text>
-<text x="464" y="964" font-family="Consolas, Courier New, monospace" font-size="12.5" fill="#0F172A">POST /api/chat</text>
-<text x="464" y="986" font-size="13.5" font-weight="600" fill="#0F172A">Bounded agent loop — at most 5 model calls</text>
-<text x="464" y="1006" font-size="12.5" fill="#475569">Tools run here, over the signed report:</text>
-<text x="464" y="1025" font-family="Consolas, Courier New, monospace" font-size="11.5" fill="#0D7D74">list_actions · simulate_fixes · breach_details</text>
-<text x="464" y="1046" font-size="12.5" fill="#475569">Every figure is computed by project code —</text>
-<text x="464" y="1063" font-size="12.5" fill="#475569">the model cannot state a number it invented</text>
-<text x="464" y="1083" font-size="12.5" fill="#475569">Breach names fenced as untrusted data</text>
-<line x1="362" y1="964" x2="420" y2="964" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<rect x="882" y="942" width="314" height="66" rx="7" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.4"/>
-<circle cx="902" cy="968" r="11" fill="#C99A3B"/>
-<text x="902" y="972" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">13</text>
-<text x="922" y="964" font-size="14.5" font-weight="600" fill="#0F172A">Anthropic — Claude</text>
-<text x="922" y="983" font-size="12.5" fill="#475569">Receives score, company names,</text>
-<text x="922" y="1000" font-size="12.5" fill="#475569">data types — never the address</text>
-<line x1="822" y1="976" x2="878" y2="976" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-<line x1="878" y1="996" x2="822" y2="996" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<rect x="48" y="1026" width="314" height="70" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<circle cx="68" cy="1052" r="11" fill="#475569"/>
-<text x="68" y="1056" font-family="Consolas, Courier New, monospace" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">14</text>
-<text x="88" y="1048" font-size="14.5" font-weight="600" fill="#0F172A">Validated answer</text>
-<text x="88" y="1067" font-size="12.5" fill="#475569">Unknown IDs dropped · URLs stripped</text>
-<text x="88" y="1085" font-size="12.5" fill="#475569">Steps rendered from the vetted playbook</text>
-<path d="M424,1068 L392,1068 L392,1060 L366,1060" fill="none" stroke="#0D7D74" stroke-width="1.6" marker-end="url(#arrT)"/>
-
-<text x="40" y="1130" font-size="11.5" fill="#B45309">Threat model assumes the language model is attacker-controlled. 18 adversarial tests, 0 escaped.</text>
-<text x="40" y="1152" font-size="11.5" fill="#475569">Breach titles come from third parties, so fence delimiters are stripped from the data placed inside the fence.</text>
-
-<!-- PASSWORD PATH -->
-<rect x="24" y="1192" width="1192" height="116" rx="8" fill="#F8FAFC" stroke="#CBD5E1" stroke-dasharray="5 4"/>
-<text x="40" y="1214" font-size="12" font-weight="700" fill="#64748B" letter-spacing="1.8">SEPARATE PATH · PASSWORD CHECK — THE PASSWORD NEVER REACHES THE SERVER</text>
-
-<rect x="48" y="1228" width="250" height="60" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<text x="64" y="1251" font-size="14.5" font-weight="600" fill="#0F172A">SHA-1 in the browser</text>
-<text x="64" y="1270" font-size="12.5" fill="#475569">Password never transmitted</text>
-
-<rect x="346" y="1228" width="250" height="60" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<text x="362" y="1251" font-size="14.5" font-weight="600" fill="#0F172A">First 5 hash characters</text>
-<text x="362" y="1270" font-size="12.5" fill="#475569">k-anonymity prefix only</text>
-
-<rect x="644" y="1228" width="270" height="60" rx="7" fill="#FFFFFF" stroke="#C99A3B" stroke-width="1.4"/>
-<text x="660" y="1251" font-size="14.5" font-weight="600" fill="#0F172A">Pwned Passwords range API</text>
-<text x="660" y="1270" font-size="12.5" fill="#475569">Returns all matching suffixes</text>
-
-<rect x="962" y="1228" width="234" height="60" rx="7" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.4"/>
-<text x="978" y="1251" font-size="14.5" font-weight="600" fill="#0F172A">Matched locally</text>
-<text x="978" y="1270" font-size="12.5" fill="#475569">Service never learns which</text>
-
-<line x1="298" y1="1258" x2="342" y2="1258" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-<line x1="596" y1="1258" x2="640" y2="1258" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-<line x1="914" y1="1258" x2="958" y2="1258" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
-
-<text x="40" y="1344" font-size="12.5" fill="#475569">Persisted server-side: nothing but rate-limit counters, keyed by HMAC hash, expiring within 24 hours. No database, no account, no history.</text>
-<text x="40" y="1366" font-size="12.5" fill="#475569">Tokens are verified before their payload is parsed, and a token of one type cannot be used as another.</text>
-
-</g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1444" width="1000" height="1444" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#14202E"/></marker><marker id="open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#14202E" stroke-width="1.6"/></marker><marker id="hollow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#14202E" stroke-width="1.6"/></marker></defs>
+<rect width="1000" height="1444" fill="#FFFFFF"/>
+<text x="500.0" y="46" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="32" fill="#14202E" text-anchor="middle" font-weight="600">Exposio — request lifecycle</text>
+<text x="500.0" y="76" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="23" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">UML activity diagram, partitioned by tier: where the flow can stop, and why</text>
+<rect x="14" y="108" width="316" height="1208" fill="#FFFFFF" stroke="#B9C4D0" stroke-width="1.6"/>
+<rect x="14" y="108" width="316" height="48" fill="#44566B"/>
+<text x="172.0" y="140" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">Client (browser)</text>
+<rect x="344" y="108" width="308" height="1208" fill="#F6F8FA" stroke="#B9C4D0" stroke-width="1.6"/>
+<rect x="344" y="108" width="308" height="48" fill="#0D7D74"/>
+<text x="498.0" y="140" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">Application (edge)</text>
+<rect x="666" y="108" width="320" height="1208" fill="#FFFFFF" stroke="#B9C4D0" stroke-width="1.6"/>
+<rect x="666" y="108" width="320" height="48" fill="#B8862F"/>
+<text x="826.0" y="140" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">External services</text>
+<circle cx="172" cy="206" r="15" fill="#14202E"/>
+<rect x="34.0" y="248.0" width="276" height="72" rx="10" fill="#FFFFFF" stroke="#44566B" stroke-width="2.3"/>
+<text x="172" y="291.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Enter identifier</text>
+<path d="M172,221 L172,248" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="360.0" y="248.0" width="276" height="72" rx="10" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.3"/>
+<text x="498" y="291.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Verify ownership</text>
+<path d="M310,284 L360,284" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M498,354.0 L598.0,410 L498,466.0 L398.0,410 Z" fill="#FFFFFF" stroke="#14202E" stroke-width="2.3"/>
+<text x="498" y="417.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Code valid?</text>
+<path d="M498,320 L498,354" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<circle cx="626" cy="410" r="17" fill="#FFFFFF" stroke="#14202E" stroke-width="2.4"/>
+<path d="M617.16,401.16 L634.84,418.84 M634.84,401.16 L617.16,418.84" stroke="#14202E" stroke-width="2.4"/>
+<path d="M598,410 L609,410" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<text x="604" y="388" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">no</text>
+<rect x="360.0" y="504.0" width="276" height="72" rx="10" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.3"/>
+<text x="498" y="547.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Issue scan token</text>
+<path d="M498,466 L498,504" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<text x="520" y="492" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">yes</text>
+<rect x="353.0" y="615" width="290" height="14" rx="3" fill="#14202E"/>
+<path d="M498,576 L498,615" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="678" y="664" width="296" height="134" rx="14" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.2" stroke-dasharray="8 5"/>
+<text x="826" y="694" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#B8862F" text-anchor="middle" font-weight="400" font-style="italic">«concurrent»</text>
+<rect x="702.0" y="721.0" width="248" height="62" rx="10" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.3"/>
+<text x="826" y="759.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Query provider</text>
+<path d="M643,622 L826,622 L826,658" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="353.0" y="839" width="290" height="14" rx="3" fill="#14202E"/>
+<path d="M826,798 L826,846 L643,846" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M498,896.0 L618.0,952 L498,1008.0 L378.0,952 Z" fill="#FFFFFF" stroke="#14202E" stroke-width="2.3"/>
+<text x="498" y="945.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Any source</text>
+<text x="498" y="973.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">answered?</text>
+<path d="M498,853 L498,896" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="34.0" y="916.0" width="276" height="72" rx="10" fill="#FFFFFF" stroke="#44566B" stroke-width="2.3"/>
+<text x="172" y="959.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Report “not checked”</text>
+<path d="M378,952 L310,952" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<text x="368" y="934" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">no</text>
+<rect x="360.0" y="1044.0" width="276" height="72" rx="10" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.3"/>
+<text x="498" y="1087.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Merge, enrich, score</text>
+<path d="M498,1008 L498,1044" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<text x="520" y="1032" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">yes</text>
+<rect x="360.0" y="1154.0" width="276" height="72" rx="10" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.3"/>
+<text x="498" y="1197.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Bounded advisory loop</text>
+<path d="M498,1116 L498,1154" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="688.0" y="1154.0" width="276" height="72" rx="10" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.3"/>
+<text x="826" y="1197.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Language model</text>
+<path d="M636,1178 L688,1178" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M688,1204 L636,1204" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<rect x="34.0" y="1154.0" width="276" height="72" rx="10" fill="#FFFFFF" stroke="#44566B" stroke-width="2.3"/>
+<text x="172" y="1197.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Read the report</text>
+<path d="M360,1190 L310,1190" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<circle cx="172" cy="1278" r="18" fill="none" stroke="#14202E" stroke-width="2.6"/>
+<circle cx="172" cy="1278" r="10" fill="#14202E"/>
+<path d="M172,1226 L172,1256" fill="none" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M678,936 L956,936 L974,954 L974,1064 L678,1064 Z" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6" stroke-dasharray="5 4"/>
+<path d="M956,936 L956,954 L974,954" fill="none" stroke="#0D7D74" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="694" y="964" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">The second decision</text>
+<text x="694" y="988" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">A failed source is named</text>
+<text x="694" y="1009" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">in the report, never as</text>
+<text x="694" y="1030" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">an absence of breaches.</text>
+<rect x="14" y="1340" width="972" height="56" rx="8" fill="#F6F8FA" stroke="#B9C4D0" stroke-width="1.4"/>
+<circle cx="36" cy="1368" r="9" fill="#14202E"/>
+<text x="62" y="1374" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">initial</text>
+<rect x="150.8" y="1357" width="34" height="22" rx="5" fill="#FFF" stroke="#14202E" stroke-width="2"/>
+<text x="193.8" y="1374" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">action</text>
+<path d="M288.20000000000005,1355 L305.20000000000005,1368 L288.20000000000005,1381 L271.20000000000005,1368 Z" fill="#FFF" stroke="#14202E" stroke-width="2"/>
+<text x="314.20000000000005" y="1374" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">decision</text>
+<rect x="412.40000000000003" y="1363" width="38" height="10" rx="2" fill="#14202E"/>
+<text x="457.40000000000003" y="1374" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">fork / join</text>
+<circle cx="608.8000000000001" cy="1368" r="11" fill="#FFF" stroke="#14202E" stroke-width="2"/>
+<path d="M602.8000000000001,1362 L614.8000000000001,1374 M614.8000000000001,1362 L602.8000000000001,1374" stroke="#14202E" stroke-width="2"/>
+<text x="634.8000000000001" y="1374" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">flow stops</text>
+<circle cx="774.8000000000001" cy="1368" r="11" fill="none" stroke="#14202E" stroke-width="2"/>
+<circle cx="774.8000000000001" cy="1368" r="5.5" fill="#14202E"/>
+<text x="800.8000000000001" y="1374" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">final</text>
 </svg>

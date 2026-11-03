@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1262" width="1000" height="1262" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#14202E"/></marker><marker id="open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#14202E" stroke-width="1.6"/></marker><marker id="hollow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#14202E" stroke-width="1.6"/></marker></defs>
+<rect width="1000" height="1262" fill="#FFFFFF"/>
+<text x="500.0" y="46" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="32" fill="#14202E" text-anchor="middle" font-weight="600">Exposio — deployment</text>
+<text x="500.0" y="76" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="23" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">UML deployment diagram: execution environments, artefacts, and the absent data store</text>
+<path d="M48.0,115.0 L63.0,100.0 L483.0,100.0 L483.0,280.0 L468.0,295.0 Z" fill="#F6F8FA" stroke="#44566B" stroke-width="2"/>
+<rect x="48.0" y="115.0" width="420" height="180" fill="#FFFFFF" stroke="#44566B" stroke-width="2.4"/>
+<text x="258" y="143.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«device»</text>
+<text x="258" y="171.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">User's browser</text>
+<path d="M60.0,185.0 L456.0,185.0" stroke="#B9C4D0" stroke-width="1.4"/>
+<rect x="70.0" y="196.0" width="376" height="30" rx="4" fill="#FFFFFF" stroke="#44566B" stroke-width="1.6"/>
+<rect x="420.0" y="201.0" width="15" height="12" fill="none" stroke="#44566B" stroke-width="1.3"/>
+<text x="247" y="217.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">exposio-spa (React 18)</text>
+<rect x="70.0" y="234.0" width="376" height="30" rx="4" fill="#FFFFFF" stroke="#44566B" stroke-width="1.6"/>
+<rect x="420.0" y="239.0" width="15" height="12" fill="none" stroke="#44566B" stroke-width="1.3"/>
+<text x="247" y="255.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">three signed tokens</text>
+<text x="258" y="291.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">session state lives here</text>
+<path d="M50.0,424.0 L65.0,409.0 L545.0,409.0 L545.0,741.0 L530.0,756.0 Z" fill="#F6F8FA" stroke="#0D7D74" stroke-width="2"/>
+<rect x="50.0" y="424.0" width="480" height="332" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.4"/>
+<text x="290" y="452.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«execution environment»</text>
+<text x="290" y="480.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">Vercel Edge Runtime</text>
+<path d="M62.0,494.0 L518.0,494.0" stroke="#B9C4D0" stroke-width="1.4"/>
+<rect x="72.0" y="505.0" width="436" height="30" rx="4" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
+<rect x="482.0" y="510.0" width="15" height="12" fill="none" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="279" y="526.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">/api/verify/start</text>
+<rect x="72.0" y="543.0" width="436" height="30" rx="4" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
+<rect x="482.0" y="548.0" width="15" height="12" fill="none" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="279" y="564.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">/api/verify/check</text>
+<rect x="72.0" y="581.0" width="436" height="30" rx="4" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
+<rect x="482.0" y="586.0" width="15" height="12" fill="none" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="279" y="602.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">/api/breach</text>
+<rect x="72.0" y="619.0" width="436" height="30" rx="4" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
+<rect x="482.0" y="624.0" width="15" height="12" fill="none" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="279" y="640.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">/api/chat</text>
+<rect x="72.0" y="657.0" width="436" height="30" rx="4" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6"/>
+<rect x="482.0" y="662.0" width="15" height="12" fill="none" stroke="#0D7D74" stroke-width="1.3"/>
+<text x="279" y="678.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">breach-index.json</text>
+<text x="290" y="714.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">stateless; no writes</text>
+<path d="M610.0,447.5 L625.0,432.5 L985.0,432.5 L985.0,617.5 L970.0,632.5 Z" fill="#F6F8FA" stroke="#B8862F" stroke-width="2"/>
+<rect x="610.0" y="447.5" width="360" height="185" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.4"/>
+<text x="790" y="475.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«execution environment»</text>
+<text x="790" y="503.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">Upstash Redis</text>
+<path d="M622.0,517.5 L958.0,517.5" stroke="#B9C4D0" stroke-width="1.4"/>
+<rect x="632.0" y="528.5" width="316" height="30" rx="4" fill="#FFFFFF" stroke="#B8862F" stroke-width="1.6"/>
+<rect x="922.0" y="533.5" width="15" height="12" fill="none" stroke="#B8862F" stroke-width="1.3"/>
+<text x="779" y="549.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">counter per keyed hash</text>
+<text x="790" y="585.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">integers, TTL-bounded</text>
+<text x="790" y="611.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">memory fallback if down</text>
+<path d="M25.0,952.5 L40.0,937.5 L360.0,937.5 L360.0,1112.5 L345.0,1127.5 Z" fill="#F6F8FA" stroke="#B8862F" stroke-width="2"/>
+<rect x="25.0" y="952.5" width="320" height="175" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.4"/>
+<text x="185" y="980.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«external»</text>
+<text x="185" y="1008.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">Delivery</text>
+<path d="M37.0,1022.5 L333.0,1022.5" stroke="#B9C4D0" stroke-width="1.4"/>
+<rect x="47.0" y="1033.5" width="276" height="30" rx="4" fill="#FFFFFF" stroke="#B8862F" stroke-width="1.6"/>
+<rect x="297.0" y="1038.5" width="15" height="12" fill="none" stroke="#B8862F" stroke-width="1.3"/>
+<text x="174" y="1054.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Resend · email code</text>
+<rect x="47.0" y="1071.5" width="276" height="30" rx="4" fill="#FFFFFF" stroke="#B8862F" stroke-width="1.6"/>
+<rect x="297.0" y="1076.5" width="15" height="12" fill="none" stroke="#B8862F" stroke-width="1.3"/>
+<text x="174" y="1092.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Twilio · SMS code</text>
+<path d="M370.0,952.5 L385.0,937.5 L685.0,937.5 L685.0,1112.5 L670.0,1127.5 Z" fill="#F6F8FA" stroke="#B8862F" stroke-width="2"/>
+<rect x="370.0" y="952.5" width="300" height="175" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.4"/>
+<text x="520" y="980.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«external»</text>
+<text x="520" y="1008.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">Breach sources</text>
+<path d="M382.0,1022.5 L658.0,1022.5" stroke="#B9C4D0" stroke-width="1.4"/>
+<rect x="392.0" y="1033.5" width="256" height="30" rx="4" fill="#FFFFFF" stroke="#B8862F" stroke-width="1.6"/>
+<rect x="622.0" y="1038.5" width="15" height="12" fill="none" stroke="#B8862F" stroke-width="1.3"/>
+<text x="509" y="1054.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">HIBP · DeHashed</text>
+<rect x="392.0" y="1071.5" width="256" height="30" rx="4" fill="#FFFFFF" stroke="#B8862F" stroke-width="1.6"/>
+<rect x="622.0" y="1076.5" width="15" height="12" fill="none" stroke="#B8862F" stroke-width="1.3"/>
+<text x="509" y="1092.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">3 keyless providers</text>
+<path d="M704.0,952.5 L719.0,937.5 L987.0,937.5 L987.0,1112.5 L972.0,1127.5 Z" fill="#F6F8FA" stroke="#B8862F" stroke-width="2"/>
+<rect x="704.0" y="952.5" width="268" height="175" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.4"/>
+<text x="838" y="980.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«external»</text>
+<text x="838" y="1008.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">Anthropic</text>
+<path d="M716.0,1022.5 L960.0,1022.5" stroke="#B9C4D0" stroke-width="1.4"/>
+<rect x="726.0" y="1033.5" width="224" height="30" rx="4" fill="#FFFFFF" stroke="#B8862F" stroke-width="1.6"/>
+<rect x="924.0" y="1038.5" width="15" height="12" fill="none" stroke="#B8862F" stroke-width="1.3"/>
+<text x="827" y="1054.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">claude-haiku-4-5</text>
+<text x="838" y="1090.5" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">fixed tool set only</text>
+<path d="M205,295 L205,412" fill="none" stroke="#14202E" stroke-width="1.9" marker-end="url(#open)"/>
+<text x="190" y="362" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">POST</text>
+<path d="M320,412 L320,295" fill="none" stroke="#14202E" stroke-width="1.9" stroke-dasharray="7 5" marker-end="url(#open)"/>
+<text x="336" y="362" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">signed token</text>
+<path d="M530,556 L605,545" fill="none" stroke="#14202E" stroke-width="1.9" marker-end="url(#open)"/>
+<text x="580" y="512" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">REST</text>
+<path d="M190,760 L185,950" fill="none" stroke="#14202E" stroke-width="1.9" marker-end="url(#open)"/>
+<text x="152" y="862" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">API</text>
+<path d="M330,760 L470,950" fill="none" stroke="#14202E" stroke-width="1.9" marker-end="url(#open)"/>
+<text x="296" y="900" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">concurrent</text>
+<path d="M470,757 L795,950" fill="none" stroke="#14202E" stroke-width="1.9" marker-end="url(#open)"/>
+<text x="640" y="838" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">tool call</text>
+<path d="M600,118 L962,118 L980,136 L980,418 L600,418 Z" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6" stroke-dasharray="5 4"/>
+<path d="M962,118 L962,136 L980,136" fill="none" stroke="#0D7D74" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="616" y="146" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">No persistence node</text>
+<text x="616" y="170" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">No database node appears</text>
+<text x="616" y="191" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">here, and that is the claim</text>
+<text x="616" y="212" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">of Chapter 8 in notation.</text>
+<text x="616" y="233" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400"></text>
+<text x="616" y="254" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Redis holds integers under</text>
+<text x="616" y="275" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">keyed hashes, never data.</text>
+<text x="616" y="296" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400"></text>
+<text x="616" y="317" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Session state lives in the</text>
+<text x="616" y="338" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">browser as signed tokens;</text>
+<text x="616" y="359" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">the server re-derives it from</text>
+<text x="616" y="380" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">the signature each request.</text>
+<rect x="14" y="1180" width="972" height="56" rx="8" fill="#F6F8FA" stroke="#B9C4D0" stroke-width="1.4"/>
+<rect x="19" y="1199" width="30" height="20" fill="#FFF" stroke="#14202E" stroke-width="2"/>
+<path d="M19,1199 L25,1192 L55,1192 L55,1211 L49,1219" fill="none" stroke="#14202E" stroke-width="2"/>
+<text x="62" y="1214" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">node</text>
+<rect x="116.6" y="1197" width="34" height="22" rx="5" fill="#FFF" stroke="#14202E" stroke-width="2"/>
+<text x="159.6" y="1214" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">artefact</text>
+<path d="M258.79999999999995,1208 L290.79999999999995,1208" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<text x="302.79999999999995" y="1214" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">path</text>
+<path d="M356.4,1208 L388.4,1208" stroke="#14202E" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#open)"/>
+<text x="400.4" y="1214" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">token</text>
+<path d="M467.4,1197 L491.4,1197 L499.4,1205 L499.4,1219 L467.4,1219 Z" fill="#FFF" stroke="#5A6B7F" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="509.4" y="1214" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">note</text>
+</svg>

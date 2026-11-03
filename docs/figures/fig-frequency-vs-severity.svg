@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<rect width="1000" height="600" fill="#FCFCFB"/>
+<text x="40" y="46" font-size="30" fill="#14202E" text-anchor="start" font-weight="600">Frequency of exposure is not severity of exposure</text>
+<text x="40" y="76" font-size="23" fill="#5A6B7F" text-anchor="start" font-weight="400">Share of breached databases containing each data class, against the weight this model assigns</text>
+<text x="302" y="158.0" font-size="25" fill="#14202E" text-anchor="end" font-weight="400">Email addresses</text>
+<rect x="320.0" y="124.0" width="531.6" height="50.0" rx="4" fill="#2a78d6"/>
+<text x="865.5714285714286" y="158.0" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">61%</text>
+<text x="334" y="158.0" font-size="22" fill="#FFFFFF" text-anchor="start" font-weight="400">lookup key</text>
+<text x="302" y="236.0" font-size="25" fill="#14202E" text-anchor="end" font-weight="400">Phone numbers</text>
+<rect x="320.0" y="202.0" width="339.9" height="50.0" rx="4" fill="#2a78d6"/>
+<text x="673.8571428571429" y="236.0" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">39%</text>
+<text x="334" y="236.0" font-size="22" fill="#FFFFFF" text-anchor="start" font-weight="400">contact 0.4</text>
+<text x="302" y="314.0" font-size="25" fill="#14202E" text-anchor="end" font-weight="400">Passwords</text>
+<rect x="320.0" y="280.0" width="244.0" height="50.0" rx="4" fill="#eb6834"/>
+<text x="578.0" y="314.0" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">28%</text>
+<text x="334" y="314.0" font-size="22" fill="#FFFFFF" text-anchor="start" font-weight="400">credential 0.7</text>
+<text x="302" y="392.0" font-size="25" fill="#14202E" text-anchor="end" font-weight="400">Government IDs</text>
+<rect x="320.0" y="358.0" width="191.7" height="50.0" rx="4" fill="#eb6834"/>
+<text x="525.7142857142858" y="392.0" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">22%</text>
+<text x="603.7142857142858" y="392.0" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">identity, permanent</text>
+<line x1="320.0" y1="440.0" x2="930.0" y2="440.0" stroke="#D8DEE5" stroke-width="1.4"/>
+<rect x="320.0" y="470.0" width="22.0" height="16.0" rx="3" fill="#eb6834"/>
+<text x="352" y="484" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">weighted heavily by the model</text>
+<rect x="650.0" y="470.0" width="22.0" height="16.0" rx="3" fill="#2a78d6"/>
+<text x="682" y="484" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">weighted lightly</text>
+<text x="40" y="536" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Passwords appear in fewer breaches than email addresses, yet carry the heavier weight:</text>
+<text x="40" y="560" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">an exposed credential authenticates, an exposed address does not.</text>
+<text x="40" y="584" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Frequencies from [15]; weights from Table 3 of this thesis.</text>
+</svg>

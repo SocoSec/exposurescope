@@ -59,19 +59,68 @@ console.log("  breaches: " + catalogue.length + "   data classes: " + vocabulary
 // Keyed by baseName() so lookups use the same normalisation as mergeBreaches:
 // "LinkedIn", "linkedin.com" and "LinkedIn Dump 2016" all collapse to "linkedin".
 //
-// Collisions are real (two breaches can share a base name). The older date
-// wins, because assuming an exposure is older under-states the fast clock, and
-// under-stating is the safer error for a score that tells people how worried
-// to be. Colliding entries are counted and reported.
+// Collisions are real: "Chess.com (2023)" and "Chess.com (2026)" both reduce
+// to "chess", because the normaliser strips years in order to match the way
+// providers append them.
+//
+// This previously kept the EARLIER date, on the reasoning that treating an
+// exposure as older under-states the score and under-stating is the safer
+// error. Under the two-clock model of section 5.8 that reasoning inverts. The
+// fast clock exists to say whether a leaked credential is still likely live, so
+// dating a 2026 credential breach to 2023 discounts a current password leak as
+// historical — which is the dangerous direction, not the safe one.
+//
+// A key that maps to breaches with DIFFERENT dates is therefore marked
+// ambiguous and carries no date at all. The record then falls through to
+// UNDATED_AGE_DAYS and is flagged as resting on that assumption, which is
+// honest, whereas a confidently wrong date is not. Refusing to guess costs a
+// date on a handful of keys; guessing wrong mis-scores silently.
+// Two maps, consulted in order, because the two failure modes pull in opposite
+// directions. The fuzzy key has to be aggressive enough to match the mangled
+// spellings providers emit ("Adobe combo list 2013"), and that same aggression
+// merges distinct breaches ("LinkedIn" with "LinkedIn Scraped Data (2021)").
+//
+//   exact   lowercase, alphanumerics only. No year or filler stripping, so
+//           "LinkedIn" and "LinkedIn Scraped Data (2021)" stay separate and a
+//           provider quoting a canonical name gets the right breach.
+//   fuzzy   baseName(), for provider strings that no exact key will match.
+//           Keys that merge breaches with different dates are marked ambiguous
+//           and carry no date.
+//
+// A bare "LinkedIn" therefore resolves exactly and keeps its 2012 date, while
+// only genuinely unidentifiable strings fall through to the ambiguous path.
+const exact = {};
 const index = {};
 let collisions = 0;
+let ambiguous = 0;
+
+const strictName = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+
+// Each map gets its OWN copy of the entry. They share a source object, and the
+// ambiguity marking below mutates it: without the copy, a fuzzy-key collision
+// would strip the date from the exact entry as well, which is how "LinkedIn"
+// and "Chess.com (2023)" silently lost their dates the first time.
+function addExact(key, entry) {
+  if (!key) return;
+  const existing = exact[key];
+  if (!existing) { exact[key] = { ...entry }; return; }
+  if (existing.d === entry.d) return;
+  if (!existing.a) { existing.a = 1; }
+  delete existing.d;
+}
 
 function add(key, entry) {
   if (!key) return;
   const existing = index[key];
-  if (!existing) { index[key] = entry; return; }
+  if (!existing) { index[key] = { ...entry }; return; }
   collisions++;
-  if (entry.d && existing.d && entry.d < existing.d) index[key] = entry;
+
+  // Same breach reached by two aliases (Name, Title and Domain all normalise
+  // alike) — not a conflict, nothing to decide.
+  if (existing.d === entry.d) return;
+
+  if (!existing.a) { ambiguous++; existing.a = 1; }
+  delete existing.d;
 }
 
 for (const b of catalogue) {
@@ -84,11 +133,17 @@ for (const b of catalogue) {
     (b.IsStealerLog ? "l" : "");     // infostealer log
   const entry = { d: b.BreachDate || null, t: b.Title || b.Name };
   if (flags) entry.x = flags;
-  for (const alias of [b.Name, b.Title, b.Domain]) add(baseName(alias || ""), entry);
+  for (const alias of [b.Name, b.Title, b.Domain]) {
+    addExact(strictName(alias || ""), entry);
+    add(baseName(alias || ""), entry);
+  }
 }
 
 const dated = Object.values(index).filter((e) => e.d).length;
-console.log("  index keys: " + Object.keys(index).length + " (" + dated + " dated, " + collisions + " alias collisions)");
+const datedExact = Object.values(exact).filter((e) => e.d).length;
+console.log("  exact keys: " + Object.keys(exact).length + " (" + datedExact + " dated)");
+console.log("  fuzzy keys: " + Object.keys(index).length + " (" + dated + " dated, "
+  + collisions + " alias collisions, " + ambiguous + " keys left undated as ambiguous)");
 
 writeFileSync(
   join(ROOT, "lib", "breach-index.json"),
@@ -96,6 +151,7 @@ writeFileSync(
     source: "Have I Been Pwned, https://haveibeenpwned.com (CC BY 4.0)",
     built: new Date().toISOString().slice(0, 10),
     breaches: catalogue.length,
+    exact,
     index,
   }) + "\n",
 );

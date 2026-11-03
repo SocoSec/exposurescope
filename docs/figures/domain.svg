@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1360" width="1000" height="1360" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#14202E"/></marker><marker id="open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#14202E" stroke-width="1.6"/></marker><marker id="hollow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#14202E" stroke-width="1.6"/></marker></defs>
+<rect width="1000" height="1360" fill="#FFFFFF"/>
+<text x="500.0" y="46" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="32" fill="#14202E" text-anchor="middle" font-weight="600">Exposio — transient domain model</text>
+<text x="500.0" y="76" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="23" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">UML class diagram: the objects a request creates, and discards with its response</text>
+<rect x="120.0" y="186.0" width="360" height="228" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.4"/>
+<text x="300" y="216.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«transient»</text>
+<text x="300" y="246.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">RawBreach</text>
+<path d="M120.0,262.0 L480.0,262.0" stroke="#0D7D74" stroke-width="2"/>
+<text x="136.0" y="288.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">title : string</text>
+<text x="136.0" y="316.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">date : "YYYY-MM-DD" | null</text>
+<text x="136.0" y="344.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">dataClasses : string[]</text>
+<text x="136.0" y="372.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">source : string</text>
+<text x="300" y="402.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">one per provider reply</text>
+<rect x="120.0" y="506.0" width="360" height="228" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.4"/>
+<text x="300" y="536.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«transient»</text>
+<text x="300" y="566.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">MergedBreach</text>
+<path d="M120.0,582.0 L480.0,582.0" stroke="#0D7D74" stroke-width="2"/>
+<text x="136.0" y="608.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">title, key : string</text>
+<text x="136.0" y="636.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">date : date | null</text>
+<text x="136.0" y="664.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">dataClasses : string[]</text>
+<text x="136.0" y="692.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">sources : string[]</text>
+<text x="300" y="722.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">one per distinct breach</text>
+<rect x="120.0" y="819.0" width="360" height="202" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.4"/>
+<text x="300" y="849.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«transient»</text>
+<text x="300" y="879.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">ScoredBreach</text>
+<path d="M120.0,895.0 L480.0,895.0" stroke="#0D7D74" stroke-width="2"/>
+<text x="136.0" y="921.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">severity : 0–1</text>
+<text x="136.0" y="949.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">ageDays : int</text>
+<text x="136.0" y="977.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">contribution : float</text>
+<text x="136.0" y="1005.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">identityAttrs : string[]</text>
+<rect x="120.0" y="1073.0" width="360" height="174" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.4"/>
+<text x="300" y="1103.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«transient»</text>
+<text x="300" y="1133.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">Report</text>
+<path d="M120.0,1149.0 L480.0,1149.0" stroke="#0D7D74" stroke-width="2"/>
+<text x="136.0" y="1175.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">score : 0–100</text>
+<text x="136.0" y="1203.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">level : band</text>
+<text x="136.0" y="1231.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">credRaw, identityRaw</text>
+<rect x="600.0" y="199.0" width="340" height="202" fill="#FFFFFF" stroke="#44566B" stroke-width="2.4"/>
+<text x="770" y="229.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«registry»</text>
+<text x="770" y="259.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">ProviderRow</text>
+<path d="M600.0,275.0 L940.0,275.0" stroke="#44566B" stroke-width="2"/>
+<text x="616.0" y="301.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">name : string</text>
+<text x="616.0" y="329.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">kinds : ["email" | "phone"]</text>
+<text x="616.0" y="357.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">keyed : envVar | null</text>
+<text x="616.0" y="385.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">run(id, kind, env)</text>
+<rect x="600.0" y="506.0" width="340" height="228" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.4"/>
+<text x="770" y="536.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">«bundled»</text>
+<text x="770" y="566.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">CatalogueEntry</text>
+<path d="M600.0,582.0 L940.0,582.0" stroke="#B8862F" stroke-width="2"/>
+<text x="616.0" y="608.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">name : string</text>
+<text x="616.0" y="636.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">date : date</text>
+<text x="616.0" y="664.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">flags : unverified,</text>
+<text x="616.0" y="692.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">        spam, fabricated</text>
+<text x="770" y="722.0" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">1,048 records, read-only</text>
+<path d="M598,300 L482,300" fill="none" stroke="#14202E" stroke-width="2.1" marker-end="url(#hollow)"/>
+<text x="540" y="272" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">returns  0..*</text>
+<path d="M598,620 L482,620" fill="none" stroke="#14202E" stroke-width="2.1" marker-end="url(#hollow)"/>
+<text x="540" y="578" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">supplies a date</text>
+<text x="540" y="600" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">0..1</text>
+<path d="M300,416 L300,504" fill="none" stroke="#14202E" stroke-width="2.1" marker-end="url(#hollow)"/>
+<text x="320" y="452" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">mergeBreaches()</text>
+<text x="320" y="480" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">merge by key</text>
+<path d="M300,736 L300,817" fill="none" stroke="#14202E" stroke-width="2.1" marker-end="url(#hollow)"/>
+<text x="320" y="770" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">emailReport()</text>
+<text x="320" y="798" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">scores each</text>
+<path d="M300,1023 L300,1071" fill="none" stroke="#14202E" stroke-width="2.1" marker-end="url(#hollow)"/>
+<text x="320" y="1052" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">aggregates  0..*</text>
+<path d="M596,1016 L958,1016 L976,1034 L976,1248 L596,1248 Z" fill="#FFFFFF" stroke="#0D7D74" stroke-width="1.6" stroke-dasharray="5 4"/>
+<path d="M958,1016 L958,1034 L976,1034" fill="none" stroke="#0D7D74" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="612" y="1044" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Why there is no schema</text>
+<text x="612" y="1068" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">No class here is persisted, and</text>
+<text x="612" y="1089" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">none has an identifier that</text>
+<text x="612" y="1110" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">outlives the request.</text>
+<text x="612" y="1131" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400"></text>
+<text x="612" y="1152" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Where a thesis would normally</text>
+<text x="612" y="1173" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">print a database schema, this</text>
+<text x="612" y="1194" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">system has only these objects,</text>
+<text x="612" y="1215" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">created when the request begins</text>
+<text x="612" y="1236" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">and gone when it ends.</text>
+<rect x="14" y="1288" width="972" height="56" rx="8" fill="#F6F8FA" stroke="#B9C4D0" stroke-width="1.4"/>
+<rect x="19" y="1305" width="34" height="22" rx="5" fill="#FFF" stroke="#14202E" stroke-width="2"/>
+<text x="62" y="1322" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">class</text>
+<path d="M127.0,1316 L159.0,1316" stroke="#14202E" stroke-width="2.2" marker-end="url(#arrow)"/>
+<text x="171.0" y="1322" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">association</text>
+<path d="M306.4,1305 L330.4,1305 L338.4,1313 L338.4,1327 L306.4,1327 Z" fill="#FFF" stroke="#5A6B7F" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="348.4" y="1322" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">note</text>
+</svg>

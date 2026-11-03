@@ -1,0 +1,50 @@
+==============================================================================
+MULTI-SOURCE LOOKUP LATENCY
+==============================================================================
+identifier kind   email
+repetitions       10  (4000 ms apart, to stay inside free-tier rate limits)
+providers run     LeakCheck, XposedOrNot, Hudson Rock
+not configured    HIBP (needs hibpKey), DeHashed (needs dehashedKey)
+
+  run  1  aggregate   321 ms   slowest: LeakCheck (311 ms)   answered 3/3
+  run  2  aggregate   146 ms   slowest: XposedOrNot (145 ms)   answered 3/3
+  run  3  aggregate   544 ms   slowest: XposedOrNot (541 ms)   answered 3/3
+  run  4  aggregate   177 ms   slowest: XposedOrNot (175 ms)   answered 3/3
+  run  5  aggregate   103 ms   slowest: XposedOrNot (101 ms)   answered 3/3
+  run  6  aggregate   101 ms   slowest: Hudson Rock (98 ms)   answered 2/3
+  run  7  aggregate    92 ms   slowest: Hudson Rock (89 ms)   answered 2/3
+  run  8  aggregate    81 ms   slowest: LeakCheck (81 ms)   answered 2/3
+  run  9  aggregate    88 ms   slowest: LeakCheck (88 ms)   answered 2/3
+  run 10  aggregate    75 ms   slowest: LeakCheck (75 ms)   answered 2/3
+
+1. PER-PROVIDER LATENCY
+------------------------------------------------------------------------------
+   provider        answered    p50      p95      min      max   records
+   LeakCheck         10/10      88      311       75      311        0
+   XposedOrNot        5/10     101      541       57      541        0
+                  failed: rate_limited ×5
+   Hudson Rock       10/10      93      157       60      157        0
+
+2. CONCURRENCY: TAIL, NOT SUM
+------------------------------------------------------------------------------
+   aggregate p50                       103 ms
+   aggregate p95                       544 ms
+   slowest provider's own p50          101 ms
+   sum of all providers' p50           282 ms   <- the sequential cost
+
+   The aggregate tracks the SLOWEST source (101 ms), not the sum
+   (282 ms). Concurrent dispatch therefore saves roughly
+   179 ms, and adding a sixth source costs nothing unless it is
+   slower than the current tail. This is the claim section 6.2 makes.
+
+3. DEGRADATION
+------------------------------------------------------------------------------
+   XposedOrNot: 5/10 refused — rate_limited ×5
+
+   A refusing source did not prevent a report: every repetition above still
+   returned answers from the providers that replied, and the failure is
+   named in the report rather than silently read as "no breaches found".
+
+==============================================================================
+Reproduce: npm run latency    (network-bound — figures vary by location and time)
+==============================================================================

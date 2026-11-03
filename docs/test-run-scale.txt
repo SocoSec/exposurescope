@@ -1,0 +1,66 @@
+==============================================================================
+THE SCALE OF BREACH EXPOSURE, MEASURED
+==============================================================================
+source      Have I Been Pwned public catalogue (CC BY 4.0), no API key
+retrieved   2026-10-30
+
+  breaches catalogued                 1,048
+  accounts across them                17,846,896,404   (17.85 billion)
+  median breach                       985,586 accounts
+  mean breach                         17,029,481 accounts
+  breaches above 1 million accounts   518
+  breaches above 100 million          37
+
+  The mean is 17x the median, so the distribution is dominated by a
+  small number of very large corpora. Reporting an average breach size
+  would therefore describe almost none of them.
+
+SHARE OF BREACHES CONTAINING EACH DATA CLASS
+------------------------------------------------------------------------------
+   99.3%  Email addresses        ##############################################
+   64.3%  Passwords              ##############################
+   54.0%  Names                  #########################
+   46.3%  Usernames              #####################
+   36.9%  IP addresses           #################
+   36.5%  Phone numbers          #################
+   29.5%  Physical addresses     ##############
+   27.5%  Dates of birth         #############
+   18.9%  Genders                #########
+   14.5%  Geographic locations   #######
+    8.3%  Purchases              ####
+    7.3%  Website activity       ###
+
+THE CLASSES THIS MODEL WEIGHTS
+------------------------------------------------------------------------------
+  credential-bearing (Passwords)       64.3%
+  permanent identity (Dates of birth)  27.5%
+  contact (Phone numbers)              36.5%
+  lookup key (Email addresses)         99.3%
+
+  Passwords appear in 64.3% of catalogued breaches. Industry telemetry
+  reports roughly 28%. The two populations differ: incidents reported by
+  firms, against corpora collected and published. A tool scoring an
+  individual against corpora should use the corpus figure.
+
+BREACHES BY YEAR OF OCCURRENCE
+------------------------------------------------------------------------------
+  2015    76  ############################################################################
+  2016   104  ########################################################################################################
+  2017    54  ######################################################
+  2018    78  ##############################################################################
+  2019    83  ###################################################################################
+  2020    98  ##################################################################################################
+  2021    78  ##############################################################################
+  2022    61  #############################################################
+  2023    47  ###############################################
+  2024    87  #######################################################################################
+  2025    62  ##############################################################
+  2026    91  ###########################################################################################
+
+  Recent years under-count, because a breach enters the catalogue only
+  once it is discovered, verified and published. The last two columns
+  should be read as incomplete, not as a decline.
+
+==============================================================================
+Reproduce: npm run scale   (figures move as the catalogue grows)
+==============================================================================

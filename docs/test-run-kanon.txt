@@ -1,0 +1,33 @@
+==============================================================================
+CREDENTIAL PATH: CORRECTNESS AND MEASURED k-ANONYMITY
+==============================================================================
+source   api.pwnedpasswords.com/range (no key required, Add-Padding: true)
+
+   password          prefix     k      occurrences    score  band     ms
+   -----------------------------------------------------------------------
+   123456           7C4A8    2038    210,461,208      70  high     468
+   password         5BAA6    2147     52,372,427      70  high     102
+   qwerty123        5CEC1    2190     13,871,714      70  high     107
+   Tr0ub4dor&3      87457    2078          3,196      53  medium   138
+   <unique>         A6F51    2161              0       0  safe      82
+
+1. CORRECTNESS
+------------------------------------------------------------------------------
+   4 of 5 test strings were found in the corpus, and each received a
+   non-zero score. The generated unique string was not found and scored 0.
+   Tr0ub4dor&3 is the case worth noting: it satisfies every common composition
+   rule and still appears 3,196 times, scoring 53 (medium). Composition
+   rules do not measure exposure; appearing in a breach corpus does.
+
+2. MEASURED ANONYMITY SET
+------------------------------------------------------------------------------
+   k ranged from 2038 to 2190, mean 2123.
+
+   What the server observes is one of 2123 hash suffixes on average, with no
+   indication which. The password itself never leaves the browser, and neither
+   does its full hash. This is the privacy property section 5.1 claims, and the
+   figure above is the degree to which the deployment actually provides it.
+
+==============================================================================
+Reproduce: npm run kanon   (k varies slightly with corpus updates and padding)
+==============================================================================

@@ -45,11 +45,11 @@ Corpus: 2000 synthetic identities, seed 20261009, reference date 2026-01-01
 3. SENSITIVITY TO λ (decay rate)
 ------------------------------------------------------------------------------
    λ         half-life   mean    median   safe/low/med/high             ρ vs default
-   0.0005    1386d      57.4       54   0.0%  33.9%  22.7%  43.4%     0.915  
-   0.001      693d      49.4       42   0.0%  41.0%  26.3%  32.8%     0.972  
-   0.002      347d      41.7       38   0.0%  47.0%  31.9%  21.1%     1.000 *
-   0.004      173d      35.4       33   0.0%  53.1%  36.8%  10.1%     0.958  
-   0.008       87d      32.8       32   0.0%  55.9%  36.8%  7.3%      0.907  
+   0.0005    1386d      62.4       65   0.0%  29.1%  21.0%  50.0%     0.911  
+   0.001      693d      54.9       50   0.0%  34.0%  27.3%  38.8%     0.970  
+   0.002      347d      47.3       44   0.0%  38.6%  33.8%  27.6%     1.000 *
+   0.004      173d      40.9       40   0.0%  42.8%  41.5%  15.7%     0.962  
+   0.008       87d      38.3       38   0.0%  45.8%  42.7%  11.6%     0.914  
 
    Reading: ρ stays high across a 16-fold change in λ, so λ controls the
    LEVEL of the score far more than the ORDER of people within it. The band
@@ -59,11 +59,11 @@ Corpus: 2000 synthetic identities, seed 20261009, reference date 2026-01-01
 4. SENSITIVITY TO B_MAX (normaliser)
 ------------------------------------------------------------------------------
    B_MAX     mean    at ceiling   safe/low/med/high             ρ vs default
-   0.4        67.4       33.2%   0.0%  17.8%  25.3%  57.0%     0.981  
-   0.6        52.5       13.6%   0.0%  35.2%  31.1%  33.6%     0.999  
-   0.8        41.7        5.2%   0.0%  47.0%  31.9%  21.1%     1.000 *
-   1          34.2        2.4%   0.0%  60.1%  28.3%  11.6%     1.000  
-   1.5        23.1        0.3%   0.0%  79.7%  17.8%  2.5%      1.000  
+   0.4        73.0       42.4%   0.0%  15.3%  20.4%  64.4%     0.961  
+   0.6        58.7       19.9%   0.0%  29.1%  27.5%  43.5%     0.996  
+   0.8        47.3        8.1%   0.0%  38.6%  33.8%  27.6%     1.000 *
+   1          39.0        3.5%   0.0%  50.2%  34.6%  15.2%     1.000  
+   1.5        26.5        0.5%   0.0%  73.2%  23.3%  3.5%      1.000  
 
    Reading: B_MAX is a monotone rescaling, so it cannot change the ordering
    at all — ρ = 1.000 throughout. It changes only where the bands fall and how
@@ -73,11 +73,11 @@ Corpus: 2000 synthetic identities, seed 20261009, reference date 2026-01-01
 5. SENSITIVITY TO THE UNDATED-RECORD ASSUMPTION
 ------------------------------------------------------------------------------
    assumed age   implied rec   mean    safe/low/med/high             ρ vs default
-   180d             0.6977    47.2   0.0%  45.3%  24.6%  30.1%     0.963  
-   365d             0.4819    45.2   0.0%  45.3%  27.5%  27.3%     0.982  
-   730d             0.2322    41.7   0.0%  47.0%  31.9%  21.1%     1.000 *
-   1460d            0.0539    38.4   0.0%  50.3%  34.5%  15.3%     0.973  
-   2920d            0.0029    37.4   0.0%  51.5%  34.3%  14.3%     0.951  
+   180d             0.6977    52.2   0.0%  37.5%  27.6%  34.8%     0.960  
+   365d             0.4819    50.6   0.0%  37.5%  29.6%  32.9%     0.982  
+   730d             0.2322    47.3   0.0%  38.6%  33.8%  27.6%     1.000 *
+   1460d            0.0539    43.9   0.0%  41.3%  37.2%  21.5%     0.974  
+   2920d            0.0029    42.8   0.0%  42.6%  37.7%  19.7%     0.953  
    Reading: under the single-clock model this was the most consequential free
    parameter. Separating the clocks confines it to the credential half, and the
    whole sweep now stays above rho = 0.951 against 0.769 before. It still matters
@@ -85,24 +85,24 @@ Corpus: 2000 synthetic identities, seed 20261009, reference date 2026-01-01
 
 6. ROBUSTNESS OF EVERY CHOSEN WEIGHT (Monte Carlo)
 ------------------------------------------------------------------------------
-   all weights perturbed ±10%:  mean ρ = 0.999   min ρ = 0.998   band agreement = 97.8%
-   all weights perturbed ±20%:  mean ρ = 0.998   min ρ = 0.994   band agreement = 95.0%
-   all weights perturbed ±30%:  mean ρ = 0.995   min ρ = 0.985   band agreement = 91.8%
+   all weights perturbed ±10%:  mean ρ = 0.999   min ρ = 0.999   band agreement = 97.9%
+   all weights perturbed ±20%:  mean ρ = 0.998   min ρ = 0.995   band agreement = 95.6%
+   all weights perturbed ±30%:  mean ρ = 0.995   min ρ = 0.987   band agreement = 93.1%
 
    Reading: the ordering is robust to substantial error in the chosen weights -
-   the five severity tiers and the nine identity weights together. This is the
+   all 22 of them: five severity tiers and seventeen identity weights. This is the
    defensible claim: not that the weights are right, but that the conclusions a
    user draws survive them being somewhat wrong.
 
 6b. SENSITIVITY TO W_IDENTITY (how much the permanent half counts)
 ------------------------------------------------------------------------------
    W_IDENTITY   mean    safe/low/med/high             ρ vs default
-   0            12.3   0.0%  88.3%  8.1%  3.6%       0.712  
-   0.3          24.9   0.0%  76.1%  16.9%  7.0%      0.975  
-   0.5          33.4   0.0%  64.4%  23.1%  12.4%     0.995  
-   0.7          41.7   0.0%  47.0%  31.9%  21.1%     1.000 *
-   0.9          49.6   0.0%  37.0%  33.3%  29.8%     0.997  
-   1.2          59.6   0.0%  28.6%  26.6%  44.9%     0.984  
+   0            13.2   0.0%  87.5%  8.0%  4.5%       0.725  
+   0.3          28.0   0.0%  72.0%  19.2%  8.8%      0.976  
+   0.5          37.9   0.0%  54.9%  29.4%  15.7%     0.995  
+   0.7          47.3   0.0%  38.6%  33.8%  27.6%     1.000 *
+   0.9          55.9   0.0%  30.3%  30.8%  38.9%     0.996  
+   1.2          66.1   0.0%  22.4%  22.4%  55.2%     0.977  
 
    Reading: W_IDENTITY = 0 collapses to a credentials-only score, which is
    the model's behaviour before this change. The correlation at that setting
@@ -112,13 +112,13 @@ Corpus: 2000 synthetic identities, seed 20261009, reference date 2026-01-01
 7. COMPARISON WITH ALTERNATIVE WEIGHTING SCHEMES
 ------------------------------------------------------------------------------
    model                      mean    ρ vs proposed   τ-b     band agreement
-   M0 single clock (old)      21.1         0.723       0.564    58.7%
-   M1 count only              37.8         0.716       0.548    63.3%
-   M2 severity, no decay      48.9         0.746       0.560    63.4%
-   M3 worst breach only       13.9         0.679       0.535    49.8%
-   M4 linear decay (10y)      29.5         0.761       0.578    53.0%
-   M5 binary credential       70.6         0.470       0.362    46.9%
-   M6 log-count × severity    38.8         0.733       0.545    64.5%
+   M0 single clock (old)      22.6         0.750       0.616    50.4%
+   M1 count only              38.9         0.742       0.569    62.5%
+   M2 severity, no decay      51.7         0.774       0.583    63.4%
+   M3 worst breach only       14.8         0.696       0.569    42.0%
+   M4 linear decay (10y)      31.8         0.786       0.622    49.4%
+   M5 binary credential       69.2         0.504       0.383    50.5%
+   M6 log-count × severity    40.9         0.760       0.574    62.3%
 
    Reading: under the single-clock model M3 (worst breach only) correlated
    at rho = 0.966, tau-b = 0.880 - the sum added almost nothing over the
@@ -130,16 +130,46 @@ Corpus: 2000 synthetic identities, seed 20261009, reference date 2026-01-01
 
 8. WHERE THE SCORE COMES FROM: THE TWO CLOCKS, AND CONCENTRATION
 ------------------------------------------------------------------------------
-   permanent (slow clock) share of B_raw:   median 99.5%   mean 81.4%
-   identities whose score is >50% permanent: 85.0%
+   permanent (slow clock) share of B_raw:   median 99.0%   mean 82.6%
+   identities whose score is >50% permanent: 87.7%
 
    Within the credential half alone, concentration persists:
-   top breach's share of B_cred:  median 100.0%   mean 91.4%
+   top breach's share of B_cred:  median 100.0%   mean 90.3%
 
    Reading: the fast clock is still dominated by one recent breach, which is
    why the action plan ranks by it. The slow clock behaves differently - it
    is the part no action removes, and for most identities it is now the
    majority of the score. That is the claim the two-clock model makes.
+
+9. WHAT ADDING SOURCES ACTUALLY BUYS
+------------------------------------------------------------------------------
+   More providers do not make the weights better; nothing here calibrates
+   them. What they do is replace ASSUMED values with observed ones. The
+   undated-age assumption is the clearest case: a record with no date is
+   scored at 730 days because nobody knows better, and section 5
+   shows how much that choice moves the result.
+
+   Below, a fraction of the undated records have their real date recovered,
+   as the bundled catalogue does for a breach another provider named. For
+   each fraction the undated assumption is swept from 180 to 2920 days and
+   the SPREAD in rank correlation is reported. A narrower spread means the
+   answer depends less on a number nobody can justify.
+
+   dates recovered   still undated   rho spread across the sweep
+              0%           18.6%        0.047   <- no catalogue
+             25%           14.0%        0.036
+             50%            9.2%        0.027
+             75%            4.5%        0.013
+            100%            0.0%        0.000   <- nothing left to assume
+
+   Reading: at full recovery the spread goes to zero, because there is no
+   undated record left for the assumption to apply to. That is the honest
+   account of what extra sources contribute: not a better model, but fewer
+   places where the model has to guess. The same argument applies to data
+   classes, where the vocabulary audit raised recognised classes from 30 to
+   67 of the 166 published, and to corroboration, measured in
+   scripts/confidence-effect.mjs rather than here.
+
 
 ==============================================================================
 Reproduce: npm run sensitivity   (deterministic — seed 20261009)

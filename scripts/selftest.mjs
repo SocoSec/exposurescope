@@ -13,13 +13,21 @@ import { randomDigits, keyedHashHex, safeEqual } from "../lib/crypto.js";
 import { signToken, verifyToken, emailId, identifierId, codeTag, codeMatches, TTL } from "../lib/tokens.js";
 import { rateLimit, _resetMemoryLimiter } from "../lib/ratelimit.js";
 import { normalizeEmail, normalizeLang, normalizePhone, normalizeIdentifier } from "../lib/http.js";
-import { emailReport, passwordReport, attributesOf, tierOf, UNDATED_AGE_DAYS } from "../lib/score.js";
+import { emailReport, passwordReport, attributesOf, tierOf, UNDATED_AGE_DAYS, identityTerm, identityTermWeighted, IDENTITY_WEIGHTS } from "../lib/score.js";
+import { recordConfidence, attributeConfidence, FLAG_CONFIDENCE, UNCORROBORATED } from "../lib/confidence.js";
+import { PROVIDERS, applicableProviders, noProviderFor, queryAll } from "../lib/providers.js";
 import { applicableIds, residualScore, estimatedReduction, PLAYBOOK } from "../lib/playbook.js";
 import { mergeBreaches, mockLookup, baseName, cleanTitle, dehashedEntryClasses, DEHASHED_FIELD_CLASSES } from "../lib/sources.js";
 import { compactReport, buildSystemPrompt, cleanMessages, finalizeReply, responseTool } from "../lib/expobot.js";
 import { runAgent, runTool, finalizeAgentReply, MAX_TOOL_ROUNDS } from "../lib/agent.js";
 import { gdprLetter } from "../lib/gdpr.js";
 import { enrichFromCatalogue, catalogueEntry, CATALOGUE_SIZE } from "../lib/enrich.js";
+import { scoreFromScored } from "../lib/score.js";
+import { scoreInterval } from "../lib/interval.js";
+import { cipherFromRecord, credentialRecovered, queryBreachDirectory } from "../lib/sources.js";
+import { independentSources, NON_INDEPENDENT } from "../lib/confidence.js";
+import { cipherWeight, CIPHER_WEIGHTS, W_STEALER, DECAY_VOLATILE, isStealerRecord } from "../lib/score.js";
+import { explain } from "../lib/explain.js";
 
 const SECRET = "selftest-secret-0123456789abcdef0123456789abcdef";
 let passed = 0;
@@ -364,6 +372,126 @@ await check("quality flags are attached, and reach the scored report", () => {
 });
 
 
+console.log("\ndata-class vocabulary");
+// Auditing the full published vocabulary found 136 of 166 classes mapping to
+// nothing, so a leaked fingerprint or auth token scored zero. These assert the
+// ones whose absence was indefensible, so the gap cannot quietly return.
+await check("credential-equivalent secrets score like a password", () => {
+  for (const c of ["Auth tokens", "Security questions and answers", "PINs", "Mnemonic phrases", "Encrypted keys"]) {
+    assert.ok(attributesOf([c]).has("secret"), c + " is not treated as a secret");
+  }
+  assert.equal(tierOf(attributesOf(["Auth tokens"])), "credentials");
+  assert.equal(tierOf(attributesOf(["Auth tokens", "Credit cards"])), "financial");
+});
+await check("permanent identity attributes are recognised", () => {
+  const expect = {
+    "Biometric data": "biometric",
+    "Places of birth": "birthplace",
+    "Mothers maiden names": "maidenname",
+    "Latitude and longitude pairs": "geoprecise",
+    "Ethnicities": "ethnicity",
+    "IMEI numbers": "deviceid",
+  };
+  for (const [cls, key] of Object.entries(expect)) {
+    assert.ok(attributesOf([cls]).has(key), cls + " should map to " + key);
+    assert.ok(IDENTITY_WEIGHTS[key] > 0, key + " carries no weight");
+  }
+});
+await check("GDPR Art. 9 special categories are scored, not ignored", () => {
+  for (const c of ["HIV statuses", "Personal health data", "Sexual orientations", "Religions", "Political views"]) {
+    assert.ok(attributesOf([c]).has("sensitive"), c + " is not recognised as special-category data");
+  }
+});
+await check("financial exposure covers more than card numbers", () => {
+  for (const c of ["Credit scores", "Income levels", "Taxation records", "Net worths", "Loan information"]) {
+    assert.ok(attributesOf([c]).has("financial"), c + " is not treated as financial");
+  }
+});
+await check("biometric data outweighs every other permanent attribute", () => {
+  const others = Object.entries(IDENTITY_WEIGHTS).filter(([k]) => k !== "biometric").map(([, v]) => v);
+  assert.ok(IDENTITY_WEIGHTS.biometric > Math.max(...others), "a face cannot be reissued; it should rank highest");
+});
+
+console.log("\nprovider registry");
+await check("every provider declares a name, the kinds it answers and how to run", () => {
+  const seen = new Set();
+  for (const p of PROVIDERS) {
+    assert.ok(p.name && typeof p.name === "string", "provider needs a name");
+    assert.ok(!seen.has(p.name), "duplicate provider name " + p.name);
+    seen.add(p.name);
+    assert.ok(Array.isArray(p.kinds) && p.kinds.length, p.name + " declares no kinds");
+    for (const k of p.kinds) assert.ok(["email", "phone"].includes(k), p.name + " declares unknown kind " + k);
+    assert.equal(typeof p.run, "function", p.name + " has no run()");
+    assert.ok(p.keyed === null || typeof p.keyed === "string", p.name + " has a malformed keyed field");
+  }
+});
+await check("a keyed provider is skipped without its key; keyless ones always run", () => {
+  const none = applicableProviders("email", {});
+  assert.ok(none.every((p) => p.keyed === null), "a keyed provider ran without a key");
+  assert.ok(none.length >= 3, "the keyless providers should still cover email");
+  const withKeys = applicableProviders("email", { hibpKey: "k", dehashedKey: "k" });
+  assert.ok(withKeys.length > none.length, "configured keys should add providers");
+});
+await check("email is always answerable; phone depends entirely on DeHashed", () => {
+  assert.equal(noProviderFor("email", {}), false);
+  assert.equal(noProviderFor("phone", {}), true);
+  assert.equal(noProviderFor("phone", { dehashedKey: "k" }), false);
+});
+await check("one failing provider never takes down the others", async () => {
+  const saved = PROVIDERS.map((p) => p.run);
+  PROVIDERS[0].run = () => { throw new Error("boom"); };
+  PROVIDERS[1].run = async () => ({ ok: true, breaches: [{ title: "X", key: "x", date: null, dataClasses: [], sources: ["DeHashed"] }] });
+  for (let i = 2; i < PROVIDERS.length; i++) PROVIDERS[i].run = async () => ({ ok: false, reason: "rate_limited" });
+  const out = await queryAll("a@b.test", "email", { hibpKey: "k", dehashedKey: "k" });
+  PROVIDERS.forEach((p, i) => { p.run = saved[i]; });
+  assert.deepEqual(out.sources, ["DeHashed"], "the healthy provider should still report");
+  assert.ok(out.sourcesFailed.some((f) => f.reason === "error"), "the thrown error should be reported, not swallowed");
+  assert.equal(out.lists.length, 1);
+});
+
+console.log("\nsource confidence");
+const CONF_RECS = [
+  { title: "Verified", date: "2023-01-01", dataClasses: ["Email addresses", "Passwords", "Names"], sources: ["HIBP", "LeakCheck"], flags: [] },
+  { title: "Fabricated", date: "2022-01-01", dataClasses: ["Email addresses", "Passwords", "Dates of birth"], sources: ["XposedOrNot"], flags: ["fabricated"] },
+  { title: "Stealer", date: "2024-06-01", dataClasses: ["Passwords", "Usernames"], sources: ["Hudson Rock"], flags: ["stealer-log"] },
+];
+await check("the weighting is off unless asked for, so published figures cannot move", () => {
+  const a = emailReport(CONF_RECS, new Date("2026-10-28"));
+  const b = emailReport(CONF_RECS, new Date("2026-10-28"), "email", {});
+  assert.equal(a.score, b.score);
+  for (const r of a.breaches) assert.equal(r.confidence, 1);
+});
+await check("a fabricated record is believed least; a corroborated record fully", () => {
+  assert.equal(recordConfidence({ flags: ["fabricated"], sources: ["HIBP"] }), FLAG_CONFIDENCE.fabricated);
+  assert.equal(recordConfidence({ flags: [], sources: ["HIBP", "LeakCheck"] }), 1);
+});
+await check("a lone uncurated source is discounted, a lone curated one is not", () => {
+  assert.equal(recordConfidence({ flags: [], sources: ["LeakCheck"] }), UNCORROBORATED);
+  assert.equal(recordConfidence({ flags: [], sources: ["HIBP"] }), 1);
+});
+await check("malware and stealer-log mark severity, not doubt, so carry no penalty", () => {
+  assert.equal(recordConfidence({ flags: ["stealer-log"], sources: ["HIBP"] }), 1);
+  assert.equal(recordConfidence({ flags: ["malware"], sources: ["HIBP"] }), 1);
+});
+await check("an attribute is believed on its best carrier, not its worst", () => {
+  const bs = [
+    { identityAttrs: ["dob"], flags: ["fabricated"], sources: ["XposedOrNot"] },
+    { identityAttrs: ["dob"], flags: [], sources: ["HIBP"] },
+  ];
+  assert.equal(attributeConfidence(bs, "dob"), 1);
+  assert.equal(attributeConfidence(bs, "name"), 1);
+});
+await check("the weighted union reduces to the plain union when nothing is doubted", () => {
+  const attrs = new Set(["dob", "name", "address"]);
+  assert.equal(identityTermWeighted(attrs, () => 1).toFixed(10), identityTerm(attrs).toFixed(10));
+});
+await check("enabling the weighting lowers a doubtful profile and never raises it", () => {
+  const off = emailReport(CONF_RECS, new Date("2026-10-28"));
+  const on = emailReport(CONF_RECS, new Date("2026-10-28"), "email", { useConfidence: true });
+  assert.ok(on.score < off.score);
+  assert.ok(on.credRaw <= off.credRaw && on.identityRaw <= off.identityRaw);
+});
+
 console.log("\nExpoBot guard rails");
 const token = compactReport(mixed, applicableIds(mixed), ["HIBP"]);
 await check("system prompt fences breach names as untrusted data", () => {
@@ -518,6 +646,161 @@ await check("access and erasure letters cite the right articles", () => {
   assert.ok(erasure.includes("Article 17") && erasure.includes("17(3)") && erasure.includes("Article 19"));
 });
 
+
+// ---------------------------------------------------------------------------
+// One scorer, one explanation. The interval and the plain-language account are
+// trustworthy only if they come from the same arithmetic as the number they
+// describe, so that property is asserted rather than claimed in a comment.
+// ---------------------------------------------------------------------------
+const IV_NOW = new Date("2026-10-31T00:00:00Z");
+const IV_PROFILES = {
+  "mixed": [
+    { title: "A", date: "2024-10-31", dataClasses: ["Email addresses", "Passwords"], sources: ["x"] },
+    { title: "B", date: null, dataClasses: ["Email addresses", "Phone numbers", "Physical addresses", "Dates of birth"], sources: ["x"] }],
+  "credential and payment": [
+    { title: "C", date: "2026-06-01", dataClasses: ["Email addresses", "Passwords", "Credit cards"], sources: ["x"] }],
+  "identity only": [
+    { title: "D", date: "2016-01-01", dataClasses: ["Email addresses", "Names", "Dates of birth", "Government issued IDs"], sources: ["x"] }],
+  "contact only, undated": [
+    { title: "E", date: null, dataClasses: ["Email addresses", "Phone numbers"], sources: ["x"] }],
+  "nothing": [],
+};
+
+console.log("\nscore interval and explanation");
+await check("scoreFromScored reproduces emailReport at default weights", () => {
+  for (const [name, bs] of Object.entries(IV_PROFILES)) {
+    const r = emailReport(bs, IV_NOW, "email");
+    assert.equal(scoreFromScored(r.breaches), r.score, name + ": the two scorers drifted");
+  }
+});
+
+await check("the reported interval brackets the score and is deterministic", () => {
+  for (const [name, bs] of Object.entries(IV_PROFILES)) {
+    const r = emailReport(bs, IV_NOW, "email");
+    const a = scoreInterval(r), b = scoreInterval(r);
+    assert.deepEqual(a, b, name + ": the interval changed between identical runs");
+    assert.ok(a.lo <= r.score && r.score <= a.hi, name + ": the score fell outside its own interval");
+  }
+});
+
+await check("the explanation quotes the same figures as the report", () => {
+  for (const [name, bs] of Object.entries(IV_PROFILES)) {
+    const r = emailReport(bs, IV_NOW, "email");
+    const e = explain(r);
+    if (r.score === 0) { assert.ok(/No exposure was found/.test(e.headline)); continue; }
+    assert.ok(e.headline.includes(String(r.score)), name + ": the headline omits the score");
+    const text = e.sentences.join(" ");
+    assert.ok(text.includes(String(e.interval.lo)) && text.includes(String(e.interval.hi)),
+      name + ": the interval is not stated in the prose");
+    assert.ok(!/undefined|NaN/.test(e.headline + text), name + ": an unrendered value reached the prose");
+    for (const t of [e.headline, ...e.sentences]) {
+      assert.ok(/^[A-Z]/.test(t), name + ": sentence lacks a capital -- " + t.slice(0, 44));
+      assert.ok(/[.!?]$/.test(t.trim()), name + ": sentence does not end in a full stop");
+    }
+  }
+});
+
+await check("a permanent exposure is never described as fully removable", () => {
+  const e = explain(emailReport(IV_PROFILES["identity only"], IV_NOW, "email"));
+  assert.ok(e.floor && e.floor.floor > 0, "an identity-only profile must carry a floor above zero");
+  assert.ok(/floor/.test(e.sentences.join(" ")), "the floor must be stated to the reader");
+});
+
+
+console.log("\nvolatile clock and cryptographic weight");
+await check("a profile with no infostealer record is scored exactly as before", () => {
+  const recs = [
+    { title: "A", date: "2024-11-03", dataClasses: ["Email addresses", "Passwords"], sources: ["x"] },
+    { title: "B", date: "2019-01-01", dataClasses: ["Email addresses", "Dates of birth"], sources: ["x"] }];
+  const r = emailReport(recs, IV_NOW, "email");
+  assert.equal(r.volatileRaw, 0, "the volatile term must be zero without a stealer record");
+  assert.equal(r.raw, r.credRaw + r.identityRaw, "raw must reduce to the published two-clock sum");
+});
+
+await check("the volatile clock decays about eleven times faster than the fast clock", () => {
+  const mk = (d) => emailReport([{ title: "Infostealer infection", date: d,
+    dataClasses: ["Email addresses", "Passwords"], sources: ["Hudson Rock"] }], IV_NOW, "email");
+  const a = mk("2026-10-24"), b = mk("2026-09-01"), c = mk("2024-10-31");
+  assert.ok(a.volatileRaw > b.volatileRaw && b.volatileRaw > c.volatileRaw, "must decay with age");
+  assert.ok(c.volatileRaw < 0.01, "a two-year-old infection must contribute almost nothing");
+  assert.ok(a.score >= b.score && b.score >= c.score, "score must fall with the infection age");
+});
+
+await check("an infostealer record is recognised by flag, provider or title", () => {
+  assert.ok(isStealerRecord({ flags: ["stealer-log"] }));
+  assert.ok(isStealerRecord({ flags: ["malware"] }));
+  assert.ok(isStealerRecord({ sources: ["Hudson Rock"] }));
+  assert.ok(isStealerRecord({ title: "Infostealer infection #2" }));
+  assert.ok(!isStealerRecord({ title: "Adobe", sources: ["HIBP"], flags: [] }));
+});
+
+await check("an unknown cipher leaves the score exactly where it was", () => {
+  const base = [{ title: "A", date: "2025-11-03", dataClasses: ["Email addresses", "Passwords"], sources: ["x"] }];
+  const unknown = emailReport(base, IV_NOW, "email");
+  const unnamed = emailReport(base.map((b) => ({ ...b, cipher: "whirlpool" })), IV_NOW, "email");
+  assert.equal(cipherWeight(null), 1.0, "no cipher must mean no discount");
+  assert.equal(unknown.score, unnamed.score, "an unrecognised algorithm is not evidence of safety");
+  const bcrypt = emailReport(base.map((b) => ({ ...b, cipher: "bcrypt" })), IV_NOW, "email");
+  assert.ok(bcrypt.score < unknown.score, "a memory-hard hash must reduce the credential term");
+});
+
+await check("the cryptographic weight never touches the identity term", () => {
+  const idOnly = [{ title: "D", date: "2020-01-01",
+    dataClasses: ["Email addresses", "Dates of birth", "Physical addresses"], sources: ["x"] }];
+  const plain = emailReport(idOnly, IV_NOW, "email");
+  const hashed = emailReport(idOnly.map((b) => ({ ...b, cipher: "bcrypt" })), IV_NOW, "email");
+  assert.equal(plain.score, hashed.score, "a breach with no password must be unaffected by a cipher");
+  assert.ok(plain.score > 0, "and must still score on the slow clock");
+});
+
+await check("BreachDirectory is a source but never corroborates one it republishes", () => {
+  // it is in the registry, for the coverage its Vigilante feed adds
+  const row = PROVIDERS.find((p) => p.name === "BreachDirectory");
+  assert.ok(row, "BreachDirectory must be registered");
+  assert.equal(row.independent, false, "and must be marked non-independent");
+  assert.equal(row.keyed, "breachDirectoryKey", "and must stay keyed");
+  assert.ok(NON_INDEPENDENT.has("BreachDirectory"));
+
+  // agreement with a source it republishes is one observation, not two
+  assert.equal(recordConfidence({ sources: ["LeakCheck", "BreachDirectory"], flags: [] }), UNCORROBORATED,
+    "BreachDirectory must not lift the uncorroborated penalty on LeakCheck");
+  assert.equal(recordConfidence({ sources: ["LeakCheck", "XposedOrNot"], flags: [] }), 1,
+    "two genuinely independent sources still corroborate");
+  assert.deepEqual(independentSources(["HIBP", "BreachDirectory"]), ["HIBP"]);
+});
+
+await check("their SHA-1 is not read as a storage cipher", () => {
+  // the sha1 they publish is their own hash of the plaintext they hold, so it
+  // says nothing about how the breached service stored the password
+  assert.equal(cipherFromRecord({ password: "20061****", sha1: "6daf15ef", sources: "Adobe" }), null);
+  assert.equal(cipherFromRecord({ hash_type: "bcrypt" }), "bcrypt");
+  assert.equal(credentialRecovered({ password: "20061****" }), true);
+  assert.equal(credentialRecovered({ sources: "X" }), false);
+});
+
+await check("a recovered credential overrides whatever it was stored under", () => {
+  const mk = (extra) => emailReport([{ title: "X", date: "2025-11-03",
+    dataClasses: ["Email addresses", "Passwords"], sources: ["HIBP"], ...extra }], IV_NOW, "email");
+  assert.ok(mk({ cipher: "bcrypt" }).score < mk({}).score, "a reported bcrypt must discount");
+  assert.equal(mk({ cipher: "bcrypt", credentialRecovered: true }).score, mk({}).score,
+    "but a cracked bcrypt is not protected by having once been bcrypt");
+  assert.equal(mk({ credentialRecovered: true }).breaches[0].kappa, 1.0);
+});
+
+await check("no credential material survives the BreachDirectory parser", async () => {
+  // without a key it must fail closed rather than throw
+  const out = await queryBreachDirectory("x@example.com", "");
+  assert.equal(out.ok, false);
+  assert.equal(out.reason, "no_key");
+
+  // and the record shape the parser emits carries no credential material
+  const record = { title: "Adobe", key: "adobe", date: null, dataClasses: ["Passwords"],
+                   sources: ["BreachDirectory"], cipher: null, credentialRecovered: true };
+  for (const f of ["password", "passwords", "sha1", "hash", "hashes", "plain", "line"]) {
+    assert.ok(!(f in record), "a record must not carry the field " + f);
+  }
+  assert.ok(!JSON.stringify(record).includes("20061"), "no censored password may reach a record");
+});
 console.log("\n" + passed + " passed, " + failures.length + " failed");
 if (failures.length) {
   console.log("Failed: " + failures.join("; "));

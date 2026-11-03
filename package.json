@@ -13,7 +13,15 @@
     "redteam:live": "node --no-warnings scripts/redteam.mjs --live",
     "evaluate": "node --no-warnings scripts/evaluate.mjs",
     "sensitivity": "node --no-warnings scripts/sensitivity.mjs",
-    "build:index": "node --no-warnings scripts/build-breach-index.mjs"
+    "build:index": "node --no-warnings scripts/build-breach-index.mjs",
+    "confidence": "node --no-warnings scripts/confidence-effect.mjs",
+    "undated": "node --no-warnings scripts/undated-scenarios.mjs",
+    "latency": "node --no-warnings scripts/latency.mjs",
+    "kanon": "node --no-warnings scripts/kanon.mjs",
+    "validate": "node --no-warnings scripts/validate.mjs",
+    "scale": "node --no-warnings scripts/scale.mjs",
+    "trace": "node --no-warnings scripts/trace.mjs",
+    "verify:cipher": "node --no-warnings scripts/verify-cipher.mjs"
   },
   "dependencies": {
     "next": "14.2.35",

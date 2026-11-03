@@ -1,6 +1,6 @@
 # Exposio — Implementation Status
 
-**Date:** 2026-10-08 · **Commit:** `docs-test-spec` · **Live:** https://exposurescope.vercel.app
+**Date:** 2026-10-29 · **Commit:** `two-clock + provider registry` · **Live:** https://exposurescope.vercel.app
 
 This document exists to answer one question precisely, and to answer it the same way whether
 the reader is a supervisor, a reviewer, or someone who opens the repository:
@@ -13,7 +13,7 @@ Every row below is marked **Implemented**, **Partial**, or **Not implemented**, 
 that contains it and the test that demonstrates it. Nothing is listed as implemented unless a
 reader can run it.
 
-**Verification:** `npm run selftest` (41 cases) · `npm run redteam` (18 attacks) · `npm run build`
+**Verification:** `npm run selftest` (77 cases) · `npm run redteam` (18 attacks) · `npm run kanon` (live credential path) · `npm run latency` (live, 5 sources) · `npm run sensitivity` (2,000 profiles) · `npm run build`
 
 ---
 
@@ -21,7 +21,7 @@ reader can run it.
 
 | | Count |
 |---|---|
-| Implemented and tested | 12 |
+| Implemented and tested | 16 |
 | Partially implemented | 3 |
 | Specified but not implemented | 7 |
 
@@ -36,13 +36,14 @@ Each of these runs in production today.
 
 | Component | What it does | File | Evidence |
 |---|---|---|---|
-| **Breach Risk score (component *B*)** | `B_raw = Σ severity × exp(−0.002 × age_days)`, normalised to 0–100 | `lib/score.js` | TC-3.1 – TC-3.7; TC-3.3 reproduces the thesis worked example |
-| **Severity tier model** | 4 tiers: payment+password 1.0, password 0.7, phone/address 0.4, email only 0.2 | `lib/score.js` | TC-3.1, TC-3.2, TC-3.7 |
-| **Recency decay** | λ = 0.002/day (half-life ≈ 347 days); undated records scored at 730 days and marked | `lib/score.js` | TC-3.4 |
+| **Breach Risk score (component *B*)** | Two clocks: `B_raw = Σ sev_cred × exp(−0.002 × age_days) + 0.70 × [1 − Π(1 − w_k)]`, normalised to 0–100 | `lib/score.js` | TC-3.1 – TC-3.7; TC-3.3 reproduces the thesis worked example |
+| **Severity tier model** | Credential tiers plus a `secret` class (tokens, PINs, security answers); `financial-only` added in code | `lib/score.js` | TC-3.1, TC-3.2, TC-3.7 |
+| **Recency decay (fast clock only)** | λ = 0.002/day (half-life ≈ 347 days); undated records scored at 730 days and marked. Permanent attributes carry no decay | `lib/score.js` | TC-3.4 |
 | **Zero-storage architecture** | No database. State travels as HMAC-signed expiring tokens; only rate-limit counters persist, keyed by hash, ≤ 24 h | `lib/tokens.js`, `lib/crypto.js` | TC-1.4 – TC-1.10 |
 | **Email ownership verification** | 6-digit code → signed challenge → scan token bound to a keyed hash of the address | `app/api/verify/*` | TC-1.8, TC-1.10; production returns `unverified` for a forged token |
 | **HIBP integration** | `breachedaccount` with timeout, 429 back-off honouring `Retry-After`, jitter | `lib/sources.js` | Live: 271 breaches returned for a verified address |
 | **DeHashed integration** | v2 `/search` with the correct header auth | `lib/sources.js` | Implemented; **provider account inactive** — see §3 |
+| **Provider registry (5 sources)** | HIBP, DeHashed, LeakCheck, XposedOrNot, Hudson Rock declared in one table; applicable rows run in parallel, failures reported per source | `lib/providers.js` |
 | **Cross-source merge** | Deduplicates one breach appearing under different provider names; HIBP metadata wins | `lib/sources.js` | TC-5.1 – TC-5.3 |
 | **Password check (k-anonymity)** | SHA-1 in the browser, first 5 hash characters sent, comparison completed locally | `app/page.js` | TC-3.7 |
 | **Vetted action library** | 10 human-authored, version-controlled actions with mitigation factors | `lib/playbook.js` | TC-4.1, TC-4.2 |
@@ -81,7 +82,7 @@ plus an adversarial evaluation that the thesis did not propose.
 
 | Component | What exists | What is missing |
 |---|---|---|
-| **Multi-source aggregation** | Two providers implemented, merged, with honest per-source failure reporting | DeHashed has returned HTTP 403 (`Issue with API Key`) throughout the evaluation period — an inactive Search subscription on the provider side, reproduced identically with a deliberately invalid key, so the client is confirmed correct. Cross-source merging is therefore evidenced against fixtures (TC-5.2), not live dual-source data |
+| **Multi-source aggregation** | Five providers declared in `lib/providers.js`, merged, with honest per-source failure reporting. Measured 29 Oct 2026: LeakCheck 10/10, Hudson Rock 10/10, XposedOrNot 5/10 (rate-limited), DeHashed 0/10 (HTTP 403), HIBP not keyed on the dev machine | DeHashed has returned HTTP 403 (`Issue with API Key`) throughout the evaluation period — an inactive Search subscription on the provider side, reproduced identically with a deliberately invalid key, so the client is confirmed correct. Cross-source merging is therefore evidenced against fixtures (TC-5.2), not live dual-source data |
 | **Exposure Score** | Component *B* (breach exposure) implemented and tested | Four further components specified in the thesis are not implemented. The interface deliberately shows **"Breach Risk score"**, not "Exposure Score", to avoid overstating what is measured |
 | **Behavioural nudging** | Ranked actions with computed point reductions, residual-risk tracking, a prompt offering the top three fixes | No measurement of whether nudges change behaviour. That requires the user study (§5) |
 

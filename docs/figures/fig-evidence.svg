@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 790" width="1000" height="790" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<rect width="1000" height="790" fill="#FCFCFB"/>
+<text x="40" y="46" font-size="30" fill="#14202E" text-anchor="start" font-weight="600">The empirical case, from peer-reviewed measurement</text>
+<text x="40" y="78" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Every value below is quoted from the source paper's own abstract</text>
+<text x="40" y="142" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">A · One known password compromises other accounts</text>
+<text x="40" y="170" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">simulated attack against accounts whose owner reused or varied a password  ·  Pal et al. [36]</text>
+<rect x="300.0" y="196.0" width="560.0" height="44.0" rx="4" fill="#E8EDF3"/>
+<rect x="300.0" y="196.0" width="89.6" height="44.0" rx="4" fill="#eb6834"/>
+<text x="282" y="226" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">accounts broken</text>
+<text x="405.6" y="226" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">16%</text>
+<text x="876" y="226" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">of accounts</text>
+<text x="300" y="268" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">within 1,000 guesses, despite state-of-the-art countermeasures</text>
+<text x="40" y="342" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">B · How the warning is framed changes what people do</text>
+<text x="40" y="370" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">share of users who went on to create a unique password  ·  Jenkins et al. [68]</text>
+<text x="282" y="432" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">shown a just-in-time appeal</text>
+<rect x="300.0" y="402.0" width="560.0" height="42.0" rx="4" fill="#E8EDF3"/>
+<rect x="300.0" y="402.0" width="495.1" height="42.0" rx="4" fill="#eb6834"/>
+<text x="811.096" y="432" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">88.41%</text>
+<text x="282" y="490" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">no appeal shown</text>
+<rect x="300.0" y="460.0" width="560.0" height="42.0" rx="4" fill="#E8EDF3"/>
+<rect x="300.0" y="460.0" width="24.9" height="42.0" rx="4" fill="#2a78d6"/>
+<text x="340.92" y="490" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">4.45%</text>
+<text x="300" y="540" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">a twenty-fold difference from the framing of the message alone</text>
+<text x="40" y="608" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">C · Checking credentials properly removes most of the risk</text>
+<text x="40" y="636" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">reduction in the efficacy of 1,000-guess credential-tweaking attacks  ·  Pal et al. [34]</text>
+<rect x="300.0" y="662.0" width="560.0" height="42.0" rx="4" fill="#E8EDF3"/>
+<rect x="300.0" y="662.0" width="526.4" height="42.0" rx="4" fill="#2a78d6"/>
+<text x="282" y="692" font-size="23" fill="#14202E" text-anchor="end" font-weight="400">attack efficacy removed</text>
+<text x="842.4" y="692" font-size="23" fill="#14202E" text-anchor="start" font-weight="600">94%</text>
+<text x="40" y="744" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Reuse is exploitable; the framing of the response matters more than its mere existence;</text>
+<text x="40" y="768" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">and a proper credential check removes most of the residual risk.</text>
+</svg>

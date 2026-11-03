@@ -1,0 +1,106 @@
+==============================================================================
+VALIDATION OF THE MEASUREMENT LAYER
+==============================================================================
+catalogue   Have I Been Pwned public breach list, 1048 breaches, built 2026-10-29
+date        2026-10-29
+
+A. SPECIFICITY: FALSE POSITIVES ON IDENTIFIERS THAT CANNOT EXIST
+------------------------------------------------------------------------------
+   24 generated identifiers, 3 providers queried, 3500 ms apart
+   not configured: HIBP, DeHashed
+
+   …5/24
+   …10/24
+   …15/24
+   …20/24
+
+   provider        answered   hits   false-positive rate
+   LeakCheck          24/24      0   0.0 %
+   XposedOrNot         5/24      0   0.0 %
+   Hudson Rock        24/24      0   0.0 %
+
+   Overall: 0 false positives in 53 answered lookups = 0.00 %
+
+   No source reported a breach for an identifier that cannot exist. With
+   53 answered lookups and zero hits, the one-sided 95 % upper bound on the
+   false-positive rate is 5.5 %. Specificity is therefore not merely
+   asserted: it is bounded by measurement, and the bound tightens as n grows.
+
+B. DATE-RECOVERY ACCURACY AGAINST THE CATALOGUE
+------------------------------------------------------------------------------
+   reference: 1048 breaches fetched live from HIBP (keyless)
+
+   B1  canonical titles resolving to the right date    1045/1048  (99.7 %)
+       resolving to a date belonging to another breach 0  ✓
+
+       mangling                 resolved        rate
+       lowercased                 1045/1048     99.7 %
+       spaces stripped            1045/1048     99.7 %
+       underscored                1045/1048     99.7 %
+       domain suffix added        1010/1048     96.4 %
+       year appended              1010/1048     96.4 %
+       'combo list' suffix        1010/1048     96.4 %
+       'database' suffix          1010/1048     96.4 %
+       '(leaked)' suffix          1010/1048     96.4 %
+
+   Every transformation observed in provider output resolves at 96.4 % or
+   better; the weakest is "domain suffix added". This matters because a name that fails
+   to resolve leaves the record undated, and an undated record is scored on the
+   model's most consequential assumption rather than on an observation.
+
+   B3  fuzzy keys onto which >1 breach date maps      15
+       fuzzy keys marked ambiguous, carrying no date  24
+       "abandonia"  <-  Abandonia (2015) (2015-11-01) | Abandonia (2022) (2022-11-15)
+       "adultfriendfinder"  <-  Adult FriendFinder (2015) (2015-05-21) | Adult FriendFinder (2016) (2016-10-16)
+       "bell"  <-  Bell (2014 breach) (2014-02-01) | Bell (2017 breach) (2017-05-15)
+       "breachforums"  <-  BreachForums (2022-11-29) | BreachForums (2025) (2025-08-11)
+
+   A bare name that maps onto two breaches with different dates is resolved by
+   the exact-name map where the provider quoted a canonical title, and refused
+   outright where it did not. 24 of 1328 fuzzy keys (1.8 %) fall to the
+   refusal, and are scored on the undated assumption with the reason recorded.
+   A wrong date mis-scores silently; a missing one is declared, which is why
+   refusing is the conservative choice even though it loses information.
+
+C. QUALITY COMPOSITION OF THE REFERENCE CORPUS
+------------------------------------------------------------------------------
+       mark            breaches     share
+       unverified           42      4.0 %
+       fabricated            3      0.3 %
+       spam-list            16      1.5 %
+       retired               2      0.2 %
+       malware               9      0.9 %
+       stealer-log           6      0.6 %
+       (no mark)           973     92.8 %
+
+   5.8 % of catalogued breaches carry a mark that qualifies their reliability.
+   This is a property of breach intelligence as a field, not of this tool, and
+   it is the quantitative basis for the source criticism in chapter 2: a score
+   computed over such a corpus inherits its uncertainty, which is why the marks
+   are surfaced in the report rather than silently folded into the number.
+
+D. WHAT REMAINS UNMEASURED, AND WHAT IT WOULD TAKE
+------------------------------------------------------------------------------
+   SENSITIVITY (false negatives). Measuring how often a source misses a record
+   that is genuinely present requires an identifier set whose true membership is
+   known. No provider publishes corpus contents, and reconstructing them would
+   mean obtaining breach data directly, which is both unlawful and the opposite
+   of what this architecture is for. Relative coverage between providers is
+   measurable and is the closest available substitute; it bounds disagreement,
+   not error, because when two sources differ neither is known to be right.
+
+   CONSTRUCT VALIDITY of the score. Nothing here shows that a score of 70 denotes
+   more real-world harm than a score of 40. That requires outcome data linking
+   exposure to realised compromise, which does not exist publicly, and is the
+   subject of the calibration discussion rather than of this script.
+
+   USER COMPREHENSION AND BEHAVIOUR. Requires the controlled study specified in
+   docs/STUDY-PROTOCOL.md, with ethics approval and recruited participants.
+
+   The distinction this script draws is the one the thesis should draw: the
+   measurement layer is testable and has been tested; the interpretation layer
+   is not yet validated and is reported as such.
+
+==============================================================================
+Reproduce: npm run validate   (A is network-bound; B and C are deterministic)
+==============================================================================

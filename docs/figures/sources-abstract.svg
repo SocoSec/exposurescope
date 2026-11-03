@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="760" viewBox="0 0 2000 760"
+     font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<title>Exposio data sources, abstract view</title>
+<desc>Six breach-intelligence sources feed one verification, merge and scoring step, producing a report. Nothing is stored.</desc>
+
+<defs>
+  <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0 0 L10 5 L0 10 z" fill="#5A6B7D"/>
+  </marker>
+</defs>
+
+<rect width="2000" height="760" fill="#FFFFFF"/>
+
+<text x="110" y="104" font-size="52" font-weight="700" fill="#15223A">Where Exposio gets its data</text>
+
+<!-- sources -->
+<rect x="110" y="178" width="520" height="420" rx="20" fill="#F7FAFC" stroke="#2F86C4" stroke-width="3.5"/>
+<text x="370" y="242" font-size="34" font-weight="700" fill="#2F86C4" text-anchor="middle">Six sources</text>
+<text x="370" y="306" font-size="31" fill="#15223A" text-anchor="middle">Have I Been Pwned</text>
+<text x="370" y="356" font-size="31" fill="#15223A" text-anchor="middle">DeHashed</text>
+<text x="370" y="406" font-size="31" fill="#15223A" text-anchor="middle">LeakCheck</text>
+<text x="370" y="456" font-size="31" fill="#15223A" text-anchor="middle">XposedOrNot</text>
+<text x="370" y="506" font-size="31" fill="#15223A" text-anchor="middle">Hudson Rock</text>
+<text x="370" y="556" font-size="31" fill="#15223A" text-anchor="middle">Pwned Passwords</text>
+
+<!-- exposio -->
+<rect x="740" y="178" width="520" height="420" rx="20" fill="#EFF8F3" stroke="#15785A" stroke-width="3.5"/>
+<text x="1000" y="242" font-size="34" font-weight="700" fill="#15785A" text-anchor="middle">Exposio</text>
+<text x="1000" y="330" font-size="36" font-weight="600" fill="#15223A" text-anchor="middle">Verify</text>
+<text x="1000" y="400" font-size="36" font-weight="600" fill="#15223A" text-anchor="middle">Merge</text>
+<text x="1000" y="470" font-size="36" font-weight="600" fill="#15223A" text-anchor="middle">Score</text>
+<text x="1000" y="545" font-size="25" fill="#2F5D4C" text-anchor="middle">nothing is stored</text>
+
+<!-- report -->
+<rect x="1370" y="178" width="520" height="420" rx="20" fill="#FFFFFF" stroke="#C9D4DF" stroke-width="3.5"/>
+<text x="1630" y="242" font-size="34" font-weight="700" fill="#15223A" text-anchor="middle">Your report</text>
+<text x="1630" y="340" font-size="31" fill="#5A6B7D" text-anchor="middle">one score</text>
+<text x="1630" y="400" font-size="31" fill="#5A6B7D" text-anchor="middle">the breaches behind it</text>
+<text x="1630" y="460" font-size="31" fill="#5A6B7D" text-anchor="middle">what to fix first</text>
+
+<path d="M630 388 L736 388" stroke="#5A6B7D" stroke-width="4" marker-end="url(#b)"/>
+<path d="M1260 388 L1366 388" stroke="#5A6B7D" stroke-width="4" marker-end="url(#b)"/>
+
+<text x="110" y="700" font-size="26" fill="#5A6B7D">Queried live on every check. The password check never leaves the browser.</text>
+</svg>

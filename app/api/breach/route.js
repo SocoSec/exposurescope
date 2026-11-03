@@ -17,7 +17,8 @@ import { env, devFlags, phoneAvailable } from "../../../lib/config.js";
 import { signToken, verifyToken, identifierId } from "../../../lib/tokens.js";
 import { rateLimit, clientId } from "../../../lib/ratelimit.js";
 import { json, fail, tooMany, readJson, normalizeIdentifier } from "../../../lib/http.js";
-import { queryHIBP, queryDeHashed, queryLeakCheck, queryXposedOrNot, queryHudsonRock, mockLookup, mergeBreaches } from "../../../lib/sources.js";
+import { mockLookup, mergeBreaches } from "../../../lib/sources.js";
+import { queryAll, noProviderFor } from "../../../lib/providers.js";
 import { emailReport } from "../../../lib/score.js";
 import { applicableIds } from "../../../lib/playbook.js";
 import { compactReport } from "../../../lib/expobot.js";
@@ -47,52 +48,23 @@ export async function POST(req) {
   const daily = await rateLimit("breach-global", "all", env.dailyScanCap, 86400);
   if (!daily.ok) return fail("daily_cap", 503);
 
-  // Which sources are on? Mock data only exists on a developer machine.
-  // HIBP has no phone endpoint, so a phone lookup is DeHashed-only — an
-  // asymmetry the interface reports rather than hides.
-  // Provider results, in display order. The three keyless providers need no
-  // subscription, so they are always attempted for an email: coverage should
-  // not depend on whether a licence happens to be paid up this month.
-  let results = [];
+  // Every source goes through one registry (lib/providers.js): applicable rows
+  // selected, run in parallel, answers sorted. Adding a source is one entry
+  // there and nothing here.
+  let sources, sourcesFailed, lists;
   if (devFlags.mockBreaches) {
     const mock = mockLookup(id.value, kind);
-    results = [["HIBP", mock.hibp], ["DeHashed", mock.dehashed]];
+    sources = ["HIBP", "DeHashed"];
+    sourcesFailed = [];
+    lists = [mock.hibp.breaches, mock.dehashed.breaches];
   } else {
-    const isEmail = kind === "email";
-    const hibpUsable = isEmail && env.hibpKey;
-    // Only the keyed providers can be "not configured". The keyless ones can
-    // always answer an email lookup, so an email scan is never unavailable;
-    // a phone lookup still depends entirely on DeHashed.
-    if (!isEmail && !env.dehashedKey) return fail("not_configured", 503);
-    // Queried in parallel; total time is roughly the slowest provider.
-    const [hibp, dehashed, leakcheck, xposed, hudson] = await Promise.all([
-      hibpUsable ? queryHIBP(id.value, env.hibpKey) : null,
-      env.dehashedKey ? queryDeHashed(id.value, env.dehashedKey, kind) : null,
-      isEmail ? queryLeakCheck(id.value) : null,
-      isEmail ? queryXposedOrNot(id.value) : null,
-      isEmail ? queryHudsonRock(id.value) : null,
-    ]);
-    results = [
-      ["HIBP", hibp],
-      ["DeHashed", dehashed],
-      ["LeakCheck", leakcheck],
-      ["XposedOrNot", xposed],
-      ["Hudson Rock", hudson],
-    ];
+    // The only outright refusal: nothing configured can answer this kind at
+    // all. In practice that is a phone lookup without DeHashed, since the
+    // keyless providers always cover email.
+    if (noProviderFor(kind, env)) return fail(kind === "phone" ? "phone_unavailable" : "not_configured", 503);
+    ({ sources, sourcesFailed, lists } = await queryAll(id.value, kind, env));
   }
 
-  const sources = [];
-  const sourcesFailed = [];
-  const lists = [];
-  for (const [name, result] of results) {
-    if (!result) continue; // not configured, or not applicable to this kind
-    if (result.ok) {
-      sources.push(name);
-      lists.push(result.breaches);
-    } else {
-      sourcesFailed.push({ source: name, reason: result.reason });
-    }
-  }
   // If nothing answered, say so — never show "no breaches" for a check that didn't run.
   if (sources.length === 0) return fail("sources_down", 503, { sourcesFailed });
 
@@ -105,6 +77,13 @@ export async function POST(req) {
   // assumption. Enrichment happens AFTER merging, so a date a provider really
   // reported always wins over one the catalogue supplied.
   const { breaches: merged, datesResolved, flagged } = enrichFromCatalogue(mergeBreaches(...lists));
+
+  // Annotate with how each leaked password was stored, where a service will
+  // say. BreachDirectory is NOT in the provider registry and contributes no
+  // records: it re-publishes HIBP and LeakCheck, both already queried here, so
+  // admitting it as a source would manufacture corroboration that does not
+  // exist. It only annotates. Absent a key it is skipped and every cipher
+  // stays unknown, which the model treats as no discount at all.
   const report = emailReport(merged, new Date(), kind);
   const ids = applicableIds(report);
   const reportToken = await signToken(env.secret, { typ: "report", r: compactReport(report, ids, sources) });

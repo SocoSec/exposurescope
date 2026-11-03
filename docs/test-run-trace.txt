@@ -1,0 +1,67 @@
+==============================================================================
+PIPELINE TRACE: FROM PROVIDER REPLIES TO A SCORE
+==============================================================================
+
+STAGE 1 — what the providers returned
+------------------------------------------------------------------------------
+  HIBP          Adobe                      2013-10-04  4 classes
+  HIBP          LinkedIn                   2012-05-05  2 classes
+  LeakCheck     adobe.com                  2013-10-01  2 classes
+  LeakCheck     Collection #1 combo list   no date     2 classes
+  XposedOrNot   LinkedIn Dump 2016         no date     2 classes
+  Hudson Rock   Stealer Log                no date     4 classes
+
+  6 records from 4 providers. Three of them describe breaches already
+  named by another provider, under a different spelling.
+
+STAGE 2 — normalise the name, then merge
+------------------------------------------------------------------------------
+  Adobe                        ->  adobe
+  LinkedIn                     ->  linkedin
+  adobe.com                    ->  adobe
+  Collection #1 combo list     ->  1
+  LinkedIn Dump 2016           ->  linkedin
+  Stealer Log                  ->  stealerlog
+
+  6 records collapse to 4. Where two providers disagreed about a
+  date, the dated record wins, so a month-precision date never overwrites a
+  precise one.
+    Adobe                          2013-10-04  [HIBP, LeakCheck]
+    LinkedIn                       2012-05-05  [HIBP, XposedOrNot]
+    Collection #1 combo list       no date     [LeakCheck]
+    Stealer Log                    no date     [Hudson Rock]
+
+STAGE 3 — resolve missing dates against the catalogue
+------------------------------------------------------------------------------
+    Adobe                          2013-10-04 
+    LinkedIn                       2012-05-05 
+    Collection #1 combo list       2019-01-07   <- from catalogue
+      flags: unverified
+    Stealer Log                    no date    
+
+  dates resolved 1  ·  records flagged 1  ·  names refused 0
+
+STAGE 4 — map data-class strings to the attributes the model weights
+------------------------------------------------------------------------------
+    Adobe                          email, secret, password, username
+    LinkedIn                       email, password
+    Collection #1 combo list       email, password
+    Stealer Log                    email, phone, address, dob
+
+STAGE 5 — the two clocks, and the score
+------------------------------------------------------------------------------
+    credential term (fast clock, decays)     0.0024
+    identity term   (slow clock, no decay)   0.5278
+      over the union of: username, phone, address, dob
+    combined raw                             0.3719
+    score                                    46  (medium)
+
+  Per-record contribution to the fast clock:
+    Stealer Log                    0.0000
+    Adobe                          0.0000
+    Collection #1 combo list       0.0023
+    LinkedIn                       0.0000
+
+==============================================================================
+Reproduce: npm run trace   (deterministic, no network, no credentials)
+==============================================================================

@@ -40,7 +40,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import assert from "node:assert/strict";
-import { emailReport, DECAY_PER_DAY, B_MAX, UNDATED_AGE_DAYS, TIERS,
+import { emailReport, attributesOf, tierOf, DECAY_PER_DAY, B_MAX, UNDATED_AGE_DAYS, TIERS,
          IDENTITY_WEIGHTS, W_IDENTITY } from "../lib/score.js";
 
 // ── corpus assumptions, stated so a reader can disagree with them ────────────
@@ -92,11 +92,29 @@ function makeCorpus(n) {
       if (pick(0.09)) classes.push("Geographic locations");
       if (pick(0.06)) classes.push("Nationalities");
       if (pick(0.02)) classes.push("National IDs");
+      // Classes the vocabulary audit added. Rates are deliberately low: these
+      // are the rare-but-serious end of the distribution, and inventing common
+      // biometric leaks would flatter the model rather than test it.
+      if (pick(0.03)) classes.push("Auth tokens");
+      if (pick(0.02)) classes.push("Security questions and answers");
+      if (pick(0.008)) classes.push("Biometric data");
+      if (pick(0.02)) classes.push("Places of birth");
+      if (pick(0.015)) classes.push("Mothers maiden names");
+      if (pick(0.02)) classes.push("Latitude and longitude pairs");
+      if (pick(0.03)) classes.push("Personal health data");
+      if (pick(0.02)) classes.push("Ethnicities");
+      if (pick(0.02)) classes.push("IMEI numbers");
+      if (pick(0.03)) classes.push("Credit scores");
       const undated = pick(0.18);
       const ageDays = Math.floor(rnd() * 6940); // 2007-01-01 .. 2026-01-01
+      const realDate = new Date(NOW.getTime() - ageDays * 86400000).toISOString().slice(0, 10);
       records.push({
         title: "B" + i + "_" + j,
-        date: undated ? null : new Date(NOW.getTime() - ageDays * 86400000).toISOString().slice(0, 10),
+        date: undated ? null : realDate,
+        // The date the breach actually has. Undated records carry it so that
+        // recovering a date from a catalogue can be simulated below; nothing
+        // in the scoring path ever reads it.
+        trueDate: realDate,
         dataClasses: classes,
       });
     }
@@ -115,38 +133,23 @@ function tierWeights() {
     credentials: TIERS.credentials.weight, contact: TIERS.contact.weight, email: TIERS.email.weight };
 }
 
-function attrsOf(classes) {
-  const a = new Set();
-  for (const c of classes) {
-    if (/^addresses$|(physical|postal|home|street) address/i.test(c)) a.add("address");
-    else if (/email/i.test(c)) a.add("email");
-    if (/password/i.test(c) && !/hint/i.test(c)) a.add("password");
-    if (/phone/i.test(c)) a.add("phone");
-    if (/credit card|bank|payment/i.test(c)) a.add("financial");
-    if (/username/i.test(c)) a.add("username");
-    if (/date(s)? of birth/i.test(c)) a.add("dob");
-    if (/^names$/i.test(c)) a.add("name");
-    if (/national id|passport|social security/i.test(c)) a.add("govid");
-    if (/nationalit/i.test(c)) a.add("nationality");
-    if (/^genders$/i.test(c)) a.add("gender");
-    if (/geographic location/i.test(c)) a.add("location");
-  }
-  return a;
-}
+// The class -> attribute mapping and the tiering are imported from lib/score.js
+// rather than reimplemented. They carry no tunable weights, so there is nothing
+// to parameterise, and a second copy only creates a way for the two to drift:
+// when the vocabulary grew from 30 to 67 recognised classes, a local copy would
+// have gone on scoring the new ones as nothing while section 1 still reported a
+// perfect match.
+const attrsOf = (classes) => attributesOf(classes);
 
-function tierOf(a) {
-  if (a.has("financial") && a.has("password")) return "financial";
-  if (a.has("financial")) return "financial-only";
-  if (a.has("password")) return "credentials";
-  if (a.has("phone") || a.has("address")) return "contact";
-  return "email";
-}
 
 // The proposed model, with every constant exposed as a parameter.
 function credSev(a, p) {
-  if (a.has("password") && a.has("financial")) return 1.0;
+  // Mirrors credentialSeverity in lib/score.js: an auth token or a security
+  // answer opens the account like a password does, and both can be revoked.
+  const credential = a.has("password") || a.has("secret");
+  if (credential && a.has("financial")) return 1.0;
   if (a.has("financial")) return p.tiers["financial-only"];
-  if (a.has("password")) return p.tiers.credentials;
+  if (credential) return p.tiers.credentials;
   return 0;
 }
 
@@ -340,7 +343,7 @@ for (const pct of [0.1, 0.2, 0.3]) {
     "   min ρ = " + Math.min(...rhos).toFixed(3) + "   band agreement = " + (100 * mean(agrees)).toFixed(1) + "%");
 }
 console.log("\n   Reading: the ordering is robust to substantial error in the chosen weights -");
-console.log("   the five severity tiers and the nine identity weights together. This is the");
+console.log("   all 22 of them: five severity tiers and seventeen identity weights. This is the");
 console.log("   defensible claim: not that the weights are right, but that the conclusions a");
 console.log("   user draws survive them being somewhat wrong.");
 
@@ -457,6 +460,47 @@ console.log("   why the action plan ranks by it. The slow clock behaves differen
 console.log("   is the part no action removes, and for most identities it is now the");
 console.log("   majority of the score. That is the claim the two-clock model makes.");
 
+console.log("");
+console.log("9. WHAT ADDING SOURCES ACTUALLY BUYS");
+console.log("-".repeat(78));
+console.log("   More providers do not make the weights better; nothing here calibrates");
+console.log("   them. What they do is replace ASSUMED values with observed ones. The");
+console.log("   undated-age assumption is the clearest case: a record with no date is");
+console.log("   scored at " + UNDATED_AGE_DAYS + " days because nobody knows better, and section 5");
+console.log("   shows how much that choice moves the result.");
+console.log("");
+console.log("   Below, a fraction of the undated records have their real date recovered,");
+console.log("   as the bundled catalogue does for a breach another provider named. For");
+console.log("   each fraction the undated assumption is swept from 180 to 2920 days and");
+console.log("   the SPREAD in rank correlation is reported. A narrower spread means the");
+console.log("   answer depends less on a number nobody can justify.");
+console.log("");
+console.log("   dates recovered   still undated   rho spread across the sweep");
+
+const UND_SWEEP = [180, 365, 730, 1460, 2920];
+for (const share of [0, 0.25, 0.5, 0.75, 1]) {
+  _s = SEED;
+  const variant = corpus.map((recs) =>
+    recs.map((r) => (r.date === null && rnd() < share ? { ...r, date: r.trueDate } : r)));
+  const stillUndated = variant.flat().filter((r) => r.date === null).length;
+  const total = variant.flat().length;
+  const ref = variant.map((r) => scoreWith(r));
+  const rhos = UND_SWEEP.map((u) => spearman(ref, variant.map((r) => scoreWith(r, { ...DEFAULTS, undated: u }))));
+  const spread = Math.max(...rhos) - Math.min(...rhos);
+  console.log("   " + (Math.round(share * 100) + "%").padStart(13) +
+    "   " + ((100 * stillUndated / total).toFixed(1) + "%").padStart(13) +
+    "   " + spread.toFixed(3).padStart(10) +
+    (share === 0 ? "   <- no catalogue" : share === 1 ? "   <- nothing left to assume" : ""));
+}
+console.log("");
+console.log("   Reading: at full recovery the spread goes to zero, because there is no");
+console.log("   undated record left for the assumption to apply to. That is the honest");
+console.log("   account of what extra sources contribute: not a better model, but fewer");
+console.log("   places where the model has to guess. The same argument applies to data");
+console.log("   classes, where the vocabulary audit raised recognised classes from 30 to");
+console.log("   67 of the 166 published, and to corroboration, measured in");
+console.log("   scripts/confidence-effect.mjs rather than here.");
+console.log("");
 console.log("\n" + "=".repeat(78));
 console.log("Reproduce: npm run sensitivity   (deterministic — seed " + SEED + ")");
 console.log("=".repeat(78) + "\n");
