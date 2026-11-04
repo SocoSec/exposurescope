@@ -125,12 +125,12 @@ f5 = s.save(os.path.join(HERE, "fig-frequency-vs-severity.svg"))
 # FIGURE 6 — three measured robustness results (own data)
 # ════════════════════════════════════════════════════════════════════════════
 s = Svg(W, 1110)
-s.text(40, 46, "Measured behaviour of the scoring model", FS_TITLE, INK, weight="600")
-s.text(40, 76, "All three panels are produced by scripts in the project repository and are reproducible",
+s.text(40, 46, "Three objections to the model, answered by measurement", FS_TITLE, INK, weight="600")
+s.text(40, 76, "Each panel answers one objection a composite index of chosen weights invites",
        FS_AXIS, MUTED)
 
 # ── panel A: weight perturbation ────────────────────────────────────────────
-s.text(40, 132, "A · The ranking survives badly mis-specified weights", FS_LABEL, INK, weight="600")
+s.text(40, 132, "A · “The weights are arbitrary” — so perturb every one of them", FS_LABEL, INK, weight="600")
 s.text(40, 158, "2,000 synthetic profiles, 200 trials per level  ·  npm run sensitivity", FS_NOTE, MUTED)
 
 PERT = [("±10%", 0.999, 98.4), ("±20%", 0.998, 96.6), ("±30%", 0.996, 95.0)]
@@ -159,7 +159,7 @@ for pi, (title, lo, hi, fmt, pick) in enumerate([
     s.text(px, py + ph + 54, "scale starts at " + fmt.format(lo) + ", not zero", FS_NOTE, MUTED)
 
 # ── panel B: date recovery ──────────────────────────────────────────────────
-s.text(40, 436, "B · Recovering dates removes the model's most sensitive assumption", FS_LABEL, INK, weight="600")
+s.text(40, 436, "B · “Undated records rest on a guess” — so recover the dates", FS_LABEL, INK, weight="600")
 s.text(40, 462, "spread in rank correlation as the undated-age assumption is swept 180–2,920 days  ·  npm run sensitivity",
        FS_NOTE, MUTED)
 
@@ -181,7 +181,7 @@ s.text(pts[-1][0] - 16, pts[-1][1] - 18, "0.000", FS_NOTE, INK, anchor="end", we
 s.text(gx + gw / 2, gy + gh + 56, "share of undated records whose date is recovered", FS_NOTE, MUTED, anchor="middle")
 
 # ── panel C: corpus quality ─────────────────────────────────────────────────
-s.text(40, 760, "C · 5.8% of the reference corpus carries a reliability mark", FS_LABEL, INK, weight="600")
+s.text(40, 760, "C · “The corpus may be unreliable” — so measure it", FS_LABEL, INK, weight="600")
 s.text(40, 786, "1,048 catalogued breaches  ·  npm run validate", FS_NOTE, MUTED)
 
 FLAGS = [("unverified", 4.0), ("spam list", 1.5), ("malware", 0.9),

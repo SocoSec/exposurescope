@@ -107,6 +107,15 @@ if (!res.ok) {
 const data = await res.json();
 console.log("\ntop-level keys:", Object.keys(data).join(", "));
 console.log("success:", data.success, " found:", data.found);
+// an error message is diagnostic, not credential material, so print it whole
+for (const k of ["error", "message", "reason", "detail"]) {
+  if (data[k] !== undefined) console.log(`${k}:`, JSON.stringify(data[k]));
+}
+// and show the shape of anything array-like, whatever it is called
+for (const [k, v] of Object.entries(data)) {
+  if (Array.isArray(v)) console.log(`array field "${k}": ${v.length} items`
+    + (v.length ? `, first item keys: ${typeof v[0] === "object" ? Object.keys(v[0]).join(", ") : typeof v[0]}` : ""));
+}
 
 const rows = Array.isArray(data.result) ? data.result : [];
 console.log(`\nresult rows: ${rows.length}`);

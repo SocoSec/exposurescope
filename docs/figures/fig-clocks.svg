@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<rect width="1000" height="700" fill="#FCFCFB"/>
+<text x="40" y="48" font-size="30" fill="#14202E" text-anchor="start" font-weight="600">What the second clock sees that the first does not</text>
+<text x="40" y="80" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">LinkedIn 2012, MyFitnessPal 2018 and Exactis 2018, scored once a year by each model</text>
+<path d="M112,364.5 L742,364.5" stroke="#D8DEE5" stroke-width="1.6" stroke-dasharray="6 5"/>
+<path d="M112,265.5 L742,265.5" stroke="#D8DEE5" stroke-width="1.6" stroke-dasharray="6 5"/>
+<text x="758" y="217.39999999999998" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">High</text>
+<text x="758" y="323.0" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Medium</text>
+<text x="758" y="431.9" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Low</text>
+<path d="M112,150 L112,480 L742,480" fill="none" stroke="#5A6B7F" stroke-width="2"/>
+<text x="98" y="488.0" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">0</text>
+<text x="98" y="405.5" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">25</text>
+<text x="98" y="323.0" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">50</text>
+<text x="98" y="240.5" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">75</text>
+<text x="98" y="158.0" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">100</text>
+<text x="112.0" y="514" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">2019</text>
+<text x="238.0" y="514" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">2021</text>
+<text x="364.0" y="514" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">2023</text>
+<text x="490.0" y="514" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">2025</text>
+<text x="616.0" y="514" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">2027</text>
+<text x="742.0" y="514" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">2029</text>
+<text x="66" y="132" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">score</text>
+<polygon points="112.0,186.3 175.0,229.2 238.0,249.0 301.0,258.9 364.0,265.5 427.0,265.5 490.0,268.8 553.0,268.8 616.0,268.8 679.0,268.8 742.0,268.8 742.0,476.7 679.0,476.7 616.0,476.7 553.0,476.7 490.0,476.7 427.0,476.7 364.0,473.4 301.0,463.5 238.0,447.0 175.0,414.0 112.0,338.1" fill="#2a78d6" fill-opacity="0.10"/>
+<path d="M112.0,338.1 L175.0,414.0 L238.0,447.0 L301.0,463.5 L364.0,473.4 L427.0,476.7 L490.0,476.7 L553.0,476.7 L616.0,476.7 L679.0,476.7 L742.0,476.7" fill="none" stroke="#eb6834" stroke-width="3.4" stroke-dasharray="9 6"/>
+<circle cx="112.0" cy="338.1" r="5" fill="#eb6834"/>
+<circle cx="175.0" cy="414.0" r="5" fill="#eb6834"/>
+<circle cx="238.0" cy="447.0" r="5" fill="#eb6834"/>
+<circle cx="301.0" cy="463.5" r="5" fill="#eb6834"/>
+<circle cx="364.0" cy="473.4" r="5" fill="#eb6834"/>
+<circle cx="427.0" cy="476.7" r="5" fill="#eb6834"/>
+<circle cx="490.0" cy="476.7" r="5" fill="#eb6834"/>
+<circle cx="553.0" cy="476.7" r="5" fill="#eb6834"/>
+<circle cx="616.0" cy="476.7" r="5" fill="#eb6834"/>
+<circle cx="679.0" cy="476.7" r="5" fill="#eb6834"/>
+<circle cx="742.0" cy="476.7" r="5" fill="#eb6834"/>
+<path d="M112.0,186.3 L175.0,229.2 L238.0,249.0 L301.0,258.9 L364.0,265.5 L427.0,265.5 L490.0,268.8 L553.0,268.8 L616.0,268.8 L679.0,268.8 L742.0,268.8" fill="none" stroke="#2a78d6" stroke-width="3.4"/>
+<circle cx="112.0" cy="186.3" r="5" fill="#2a78d6"/>
+<circle cx="175.0" cy="229.2" r="5" fill="#2a78d6"/>
+<circle cx="238.0" cy="249.0" r="5" fill="#2a78d6"/>
+<circle cx="301.0" cy="258.9" r="5" fill="#2a78d6"/>
+<circle cx="364.0" cy="265.5" r="5" fill="#2a78d6"/>
+<circle cx="427.0" cy="265.5" r="5" fill="#2a78d6"/>
+<circle cx="490.0" cy="268.8" r="5" fill="#2a78d6"/>
+<circle cx="553.0" cy="268.8" r="5" fill="#2a78d6"/>
+<circle cx="616.0" cy="268.8" r="5" fill="#2a78d6"/>
+<circle cx="679.0" cy="268.8" r="5" fill="#2a78d6"/>
+<circle cx="742.0" cy="268.8" r="5" fill="#2a78d6"/>
+<text x="679.0" y="248.8" font-size="25" fill="#2a78d6" text-anchor="middle" font-weight="600">64</text>
+<text x="679.0" y="460.7" font-size="25" fill="#eb6834" text-anchor="middle" font-weight="600">1</text>
+<defs><marker id="a" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#14202E"/></marker></defs>
+<path d="M490.0,276.8 L490.0,468.7" stroke="#14202E" stroke-width="1.8" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="504.0" y="361.2" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">the exposure the single</text>
+<text x="504.0" y="387.2" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">clock discounts away</text>
+<path d="M44,558 L96,558" stroke="#2a78d6" stroke-width="3.4"/>
+<text x="108" y="566" font-size="22" fill="#2a78d6" text-anchor="start" font-weight="600">deployed model, three clocks</text>
+<path d="M448,558 L500,558" stroke="#eb6834" stroke-width="3.4" stroke-dasharray="9 6"/>
+<text x="512" y="566" font-size="22" fill="#eb6834" text-anchor="start" font-weight="600">single clock of Section 5.2, superseded</text>
+<text x="44" y="608" font-size="22" fill="#14202E" text-anchor="start" font-weight="400">By 2026 the two models differ by 63 points: the first reports Low, the second Medium.</text>
+<text x="44" y="638" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">The three records are identical throughout. Only the treatment of what cannot be changed differs.</text>
+<text x="44" y="668" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Permanent attributes rise from 72% of the raw score in 2019 to 100% by 2025.</text>
+</svg>

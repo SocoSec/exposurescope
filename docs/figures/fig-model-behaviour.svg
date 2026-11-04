@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1110" width="1000" height="1110" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
 <rect width="1000" height="1110" fill="#FCFCFB"/>
-<text x="40" y="46" font-size="30" fill="#14202E" text-anchor="start" font-weight="600">Measured behaviour of the scoring model</text>
-<text x="40" y="76" font-size="23" fill="#5A6B7F" text-anchor="start" font-weight="400">All three panels are produced by scripts in the project repository and are reproducible</text>
-<text x="40" y="132" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">A · The ranking survives badly mis-specified weights</text>
+<text x="40" y="46" font-size="30" fill="#14202E" text-anchor="start" font-weight="600">Three objections to the model, answered by measurement</text>
+<text x="40" y="76" font-size="23" fill="#5A6B7F" text-anchor="start" font-weight="400">Each panel answers one objection a composite index of chosen weights invites</text>
+<text x="40" y="132" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">A · “The weights are arbitrary” — so perturb every one of them</text>
 <text x="40" y="158" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">2,000 synthetic profiles, 200 trials per level  ·  npm run sensitivity</text>
 <text x="112" y="190" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Spearman ρ of the ranking</text>
 <line x1="112.0" y1="346.0" x2="444.0" y2="346.0" stroke="#D8DEE5" stroke-width="1.4"/>
@@ -40,7 +40,7 @@
 <circle cx="764.0" cy="312.0" r="9" fill="#2a78d6" stroke="#FCFCFB" stroke-width="2"/>
 <text x="782.0" y="319" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">95.0%</text>
 <text x="598" y="400" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">scale starts at 90.0%, not zero</text>
-<text x="40" y="436" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">B · Recovering dates removes the model's most sensitive assumption</text>
+<text x="40" y="436" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">B · “Undated records rest on a guess” — so recover the dates</text>
 <text x="40" y="462" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">spread in rank correlation as the undated-age assumption is swept 180–2,920 days  ·  npm run sensitivity</text>
 <line x1="150.0" y1="660.0" x2="850.0" y2="660.0" stroke="#D8DEE5" stroke-width="1.4"/>
 <line x1="150.0" y1="500.0" x2="150.0" y2="660.0" stroke="#D8DEE5" stroke-width="1.4"/>
@@ -64,7 +64,7 @@
 <text x="166.0" y="495.6" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">0.047  nothing recovered</text>
 <text x="834.0" y="642.0" font-size="22" fill="#14202E" text-anchor="end" font-weight="600">0.000</text>
 <text x="500.0" y="716" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">share of undated records whose date is recovered</text>
-<text x="40" y="760" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">C · 5.8% of the reference corpus carries a reliability mark</text>
+<text x="40" y="760" font-size="25" fill="#14202E" text-anchor="start" font-weight="600">C · “The corpus may be unreliable” — so measure it</text>
 <text x="40" y="786" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">1,048 catalogued breaches  ·  npm run validate</text>
 <text x="232" y="835" font-size="22" fill="#14202E" text-anchor="end" font-weight="400">unverified</text>
 <rect x="250.0" y="820.0" width="533.3" height="19.0" rx="4" fill="#2a78d6"/>
