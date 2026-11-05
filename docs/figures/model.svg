@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1258" width="1000" height="1258" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#14202E"/></marker><marker id="open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#14202E" stroke-width="1.6"/></marker><marker id="hollow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#14202E" stroke-width="1.6"/></marker></defs>
+<rect width="1000" height="1258" fill="#FFFFFF"/>
+<text x="500.0" y="46" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="32" fill="#14202E" text-anchor="middle" font-weight="600">How the Breach Risk score is computed</text>
+<text x="500.0" y="76" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="23" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">Three terms, summed raw and normalised once · lib/score.js</text>
+<rect x="190.0" y="103.0" width="620" height="58" rx="10" fill="#F6F8FA" stroke="#44566B" stroke-width="2.2"/>
+<text x="500" y="140.16" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="400">Every breach the identifier appears in, from six sources</text>
+<path d="M500,161 L178,196 L178,222" fill="none" stroke="#B8862F" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M500,161 L500,196 L500,222" fill="none" stroke="#C2543B" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M500,161 L822,196 L822,222" fill="none" stroke="#0D7D74" stroke-width="2.0" marker-end="url(#arrow)"/>
+<rect x="25.0" y="222" width="306" height="262" rx="10" fill="#FFFFFF" stroke="#B8862F" stroke-width="2.4"/>
+<path d="M25.0,232 a10,10 0 0 1 10,-10 L321.0,222 a10,10 0 0 1 10,10 L331.0,264 L25.0,264 Z" fill="#B8862F"/>
+<text x="178" y="252" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">What can be revoked</text>
+<text x="178" y="291.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">Passwords, tokens,</text>
+<text x="178" y="319.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">payment cards</text>
+<path d="M47.0,326 L309.0,326" stroke="#B9C4D0" stroke-width="1.4"/>
+<text x="178" y="354" font-family="Consolas, Courier New, monospace" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">B_cred =</text>
+<text x="178" y="380" font-family="Consolas, Courier New, monospace" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Σ sev · κ · e^(−λ·age)</text>
+<path d="M47.0,402 L309.0,402" stroke="#B9C4D0" stroke-width="1.4"/>
+<text x="178" y="423.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">Changing it makes the</text>
+<text x="178" y="451.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">leaked copy worthless.</text>
+<text x="178" y="479.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">Half-life 347 days.</text>
+<rect x="347.0" y="222" width="306" height="262" rx="10" fill="#FFFFFF" stroke="#C2543B" stroke-width="2.4"/>
+<path d="M347.0,232 a10,10 0 0 1 10,-10 L643.0,222 a10,10 0 0 1 10,10 L653.0,264 L347.0,264 Z" fill="#C2543B"/>
+<text x="500" y="252" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">What expires by itself</text>
+<text x="500" y="291.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">Live sessions taken by</text>
+<text x="500" y="319.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">infostealer malware</text>
+<path d="M369.0,326 L631.0,326" stroke="#B9C4D0" stroke-width="1.4"/>
+<text x="500" y="354" font-family="Consolas, Courier New, monospace" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">V =</text>
+<text x="500" y="380" font-family="Consolas, Courier New, monospace" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">Σ e^(−λᵥ · age)</text>
+<path d="M369.0,402 L631.0,402" stroke="#B9C4D0" stroke-width="1.4"/>
+<text x="500" y="423.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">A password change does</text>
+<text x="500" y="451.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">not revoke it; it lapses.</text>
+<text x="500" y="479.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">Half-life 30 days.</text>
+<rect x="669.0" y="222" width="306" height="262" rx="10" fill="#FFFFFF" stroke="#0D7D74" stroke-width="2.4"/>
+<path d="M669.0,232 a10,10 0 0 1 10,-10 L965.0,222 a10,10 0 0 1 10,10 L975.0,264 L669.0,264 Z" fill="#0D7D74"/>
+<text x="822" y="252" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="600">What cannot be changed</text>
+<text x="822" y="291.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">Date of birth, name,</text>
+<text x="822" y="319.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">address, phone, ID</text>
+<path d="M691.0,326 L953.0,326" stroke="#B9C4D0" stroke-width="1.4"/>
+<text x="822" y="354" font-family="Consolas, Courier New, monospace" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">I =</text>
+<text x="822" y="380" font-family="Consolas, Courier New, monospace" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">1 − Π (1 − w)</text>
+<path d="M691.0,402 L953.0,402" stroke="#B9C4D0" stroke-width="1.4"/>
+<text x="822" y="423.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">As true today as the day</text>
+<text x="822" y="451.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">it leaked. Counted once,</text>
+<text x="822" y="479.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">however many breaches.</text>
+<text x="500" y="524" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="600">How each term behaves over ten years</text>
+<rect x="47.0" y="548" width="262" height="146" fill="#F6F8FA" stroke="#B9C4D0" stroke-width="1.2"/>
+<path d="M47.0,566.0 L51.4,580.5 L55.7,593.3 L60.1,604.7 L64.5,614.8 L68.8,623.8 L73.2,631.7 L77.6,638.7 L81.9,645.0 L86.3,650.5 L90.7,655.4 L95.0,659.8 L99.4,663.7 L103.8,667.1 L108.1,670.1 L112.5,672.8 L116.9,675.2 L121.2,677.4 L125.6,679.2 L130.0,680.9 L134.3,682.4 L138.7,683.7 L143.1,684.9 L147.4,685.9 L151.8,686.8 L156.2,687.6 L160.5,688.3 L164.9,689.0 L169.3,689.6 L173.6,690.1 L178.0,690.5 L182.4,690.9 L186.7,691.2 L191.1,691.6 L195.5,691.8 L199.8,692.1 L204.2,692.3 L208.6,692.5 L212.9,692.7 L217.3,692.8 L221.7,692.9 L226.0,693.1 L230.4,693.2 L234.8,693.3 L239.1,693.3 L243.5,693.4 L247.9,693.5 L252.2,693.5 L256.6,693.6 L261.0,693.6 L265.3,693.7 L269.7,693.7 L274.1,693.8 L278.4,693.8 L282.8,693.8 L287.2,693.8 L291.5,693.8 L295.9,693.9 L300.3,693.9 L304.6,693.9 L309.0,693.9" fill="none" stroke="#B8862F" stroke-width="3"/>
+<text x="53.0" y="718" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">now</text>
+<text x="303.0" y="718" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">10 years</text>
+<rect x="369.0" y="548" width="262" height="146" fill="#F6F8FA" stroke="#B9C4D0" stroke-width="1.2"/>
+<path d="M369.0,566.0 L373.4,662.0 L377.7,686.0 L382.1,692.0 L386.5,693.5 L390.8,693.9 L395.2,694.0 L399.6,694.0 L403.9,694.0 L408.3,694.0 L412.7,694.0 L417.0,694.0 L421.4,694.0 L425.8,694.0 L430.1,694.0 L434.5,694.0 L438.9,694.0 L443.2,694.0 L447.6,694.0 L452.0,694.0 L456.3,694.0 L460.7,694.0 L465.1,694.0 L469.4,694.0 L473.8,694.0 L478.2,694.0 L482.5,694.0 L486.9,694.0 L491.3,694.0 L495.6,694.0 L500.0,694.0 L504.4,694.0 L508.7,694.0 L513.1,694.0 L517.5,694.0 L521.8,694.0 L526.2,694.0 L530.6,694.0 L534.9,694.0 L539.3,694.0 L543.7,694.0 L548.0,694.0 L552.4,694.0 L556.8,694.0 L561.1,694.0 L565.5,694.0 L569.9,694.0 L574.2,694.0 L578.6,694.0 L583.0,694.0 L587.3,694.0 L591.7,694.0 L596.1,694.0 L600.4,694.0 L604.8,694.0 L609.2,694.0 L613.5,694.0 L617.9,694.0 L622.3,694.0 L626.6,694.0 L631.0,694.0" fill="none" stroke="#C2543B" stroke-width="3"/>
+<text x="375.0" y="718" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">now</text>
+<text x="625.0" y="718" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">10 years</text>
+<rect x="691.0" y="548" width="262" height="146" fill="#F6F8FA" stroke="#B9C4D0" stroke-width="1.2"/>
+<path d="M691.0,566.0 L695.4,566.0 L699.7,566.0 L704.1,566.0 L708.5,566.0 L712.8,566.0 L717.2,566.0 L721.6,566.0 L725.9,566.0 L730.3,566.0 L734.7,566.0 L739.0,566.0 L743.4,566.0 L747.8,566.0 L752.1,566.0 L756.5,566.0 L760.9,566.0 L765.2,566.0 L769.6,566.0 L774.0,566.0 L778.3,566.0 L782.7,566.0 L787.1,566.0 L791.4,566.0 L795.8,566.0 L800.2,566.0 L804.5,566.0 L808.9,566.0 L813.3,566.0 L817.6,566.0 L822.0,566.0 L826.4,566.0 L830.7,566.0 L835.1,566.0 L839.5,566.0 L843.8,566.0 L848.2,566.0 L852.6,566.0 L856.9,566.0 L861.3,566.0 L865.7,566.0 L870.0,566.0 L874.4,566.0 L878.8,566.0 L883.1,566.0 L887.5,566.0 L891.9,566.0 L896.2,566.0 L900.6,566.0 L905.0,566.0 L909.3,566.0 L913.7,566.0 L918.1,566.0 L922.4,566.0 L926.8,566.0 L931.2,566.0 L935.5,566.0 L939.9,566.0 L944.3,566.0 L948.6,566.0 L953.0,566.0" fill="none" stroke="#0D7D74" stroke-width="3"/>
+<text x="697.0" y="718" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">now</text>
+<text x="947.0" y="718" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="end" font-weight="400">10 years</text>
+<path d="M178,740 L178,776 L500,776 L500,800" fill="none" stroke="#B8862F" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M500,740 L500,776 L500,776 L500,800" fill="none" stroke="#C2543B" stroke-width="2.0" marker-end="url(#arrow)"/>
+<path d="M822,740 L822,776 L500,776 L500,800" fill="none" stroke="#0D7D74" stroke-width="2.0" marker-end="url(#arrow)"/>
+<rect x="140.0" y="803.0" width="720" height="62" rx="10" fill="#F6F8FA" stroke="#14202E" stroke-width="2.2"/>
+<text x="500" y="842.16" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="24" fill="#14202E" text-anchor="middle" font-weight="600">B_raw  =  B_cred  +  0.70 · I  +  0.60 · V</text>
+<text x="500" y="886" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">summed raw, not averaged: a term that finds nothing contributes exactly zero</text>
+<path d="M500,900 L500,926" fill="none" stroke="#14202E" stroke-width="2.0" marker-end="url(#arrow)"/>
+<rect x="140.0" y="926.0" width="720" height="76" rx="10" fill="#FFFFFF" stroke="#14202E" stroke-width="2.2"/>
+<text x="500" y="957.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">B  =  min(1,  B_raw / 0.8)</text>
+<text x="500" y="985.48" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="400">score  =  round(100 · B),  at least 1 where anything was found</text>
+<path d="M500,1002 L500,1026" fill="none" stroke="#14202E" stroke-width="2.0" marker-end="url(#arrow)"/>
+<rect x="115.0" y="1030" width="182" height="58" rx="8" fill="#FFFFFF" stroke="#8A94A6" stroke-width="2.4"/>
+<text x="206.0" y="1056" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#8A94A6" text-anchor="middle" font-weight="600">Safe</text>
+<text x="206.0" y="1078" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">no exposure</text>
+<rect x="311.0" y="1030" width="182" height="58" rx="8" fill="#FFFFFF" stroke="#2E9E6B" stroke-width="2.4"/>
+<text x="402.0" y="1056" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#2E9E6B" text-anchor="middle" font-weight="600">Low</text>
+<text x="402.0" y="1078" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">1–35</text>
+<rect x="507.0" y="1030" width="182" height="58" rx="8" fill="#FFFFFF" stroke="#C98A1B" stroke-width="2.4"/>
+<text x="598.0" y="1056" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#C98A1B" text-anchor="middle" font-weight="600">Medium</text>
+<text x="598.0" y="1078" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">36–65</text>
+<rect x="703.0" y="1030" width="182" height="58" rx="8" fill="#FFFFFF" stroke="#C2543B" stroke-width="2.4"/>
+<text x="794.0" y="1056" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#C2543B" text-anchor="middle" font-weight="600">High</text>
+<text x="794.0" y="1078" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">66–100</text>
+<path d="M70,1110 L912,1110 L930,1128 L930,1224 L70,1224 Z" fill="#FFFFFF" stroke="#5A6B7F" stroke-width="1.6" stroke-dasharray="5 4"/>
+<path d="M912,1110 L912,1128 L930,1128" fill="none" stroke="#5A6B7F" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="86" y="1138" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Why three terms and not one</text>
+<text x="86" y="1162" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">The first two terms fall as the exposure ages; the third does not, and for</text>
+<text x="86" y="1183" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">most subjects it is the larger of the three. That separation is the subject</text>
+<text x="86" y="1204" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">of Section 5.8, and Figure 6 measures what it is worth.</text>
+</svg>
