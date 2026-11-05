@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 712" width="1000" height="712" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#14202E"/></marker><marker id="open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#14202E" stroke-width="1.6"/></marker><marker id="hollow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#14202E" stroke-width="1.6"/></marker></defs>
+<rect width="1000" height="712" fill="#FFFFFF"/>
+<text x="500.0" y="46" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="32" fill="#14202E" text-anchor="middle" font-weight="600">How long before the people in a breach are told</text>
+<text x="500.0" y="76" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="23" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">2,123 breach reports filed in California, 2012–2020 · Xu and Nguyen (2025)</text>
+<rect x="150" y="115" width="26" height="22" rx="4" fill="#B8862F" fill-opacity="0.18" stroke="#B8862F" stroke-width="2"/>
+<text x="186" y="133" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">breach occurs → company notices</text>
+<rect x="546" y="115" width="26" height="22" rx="4" fill="#0D7D74" fill-opacity="0.18" stroke="#0D7D74" stroke-width="2"/>
+<text x="582" y="133" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">company notices → people told</text>
+<text x="132" y="238" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="end" font-weight="600">median</text>
+<rect x="150" y="212" width="64.48893572181242" height="36" rx="5" fill="#B8862F" fill-opacity="0.18" stroke="#B8862F" stroke-width="2"/>
+<text x="182.2444678609062" y="202" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="600">20</text>
+<rect x="214.48893572181242" y="212" width="141.87565858798735" height="36" rx="5" fill="#0D7D74" fill-opacity="0.18" stroke="#0D7D74" stroke-width="2"/>
+<text x="285.4267650158061" y="202" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="600">44</text>
+<text x="784" y="238" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">102 days in all</text>
+<text x="132" y="338" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="end" font-weight="600">mean</text>
+<rect x="150" y="312" width="328.24868282402525" height="36" rx="5" fill="#B8862F" fill-opacity="0.18" stroke="#B8862F" stroke-width="2"/>
+<text x="314.12434141201265" y="302" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="600">101.8</text>
+<rect x="478.24868282402525" y="312" width="199.9479452054794" height="36" rx="5" fill="#0D7D74" fill-opacity="0.18" stroke="#0D7D74" stroke-width="2"/>
+<text x="578.222655426765" y="302" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="middle" font-weight="600">62.01</text>
+<text x="784" y="338" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">189.8 days in all</text>
+<path d="M150,392 L762,392" stroke="#5A6B7F" stroke-width="2"/>
+<path d="M150.0,392 L150.0,400" stroke="#5A6B7F" stroke-width="1.6"/>
+<text x="150.0" y="424" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">0</text>
+<path d="M246.73340358271864,392 L246.73340358271864,400" stroke="#5A6B7F" stroke-width="1.6"/>
+<text x="246.73340358271864" y="424" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">30</text>
+<path d="M343.4668071654373,392 L343.4668071654373,400" stroke="#5A6B7F" stroke-width="1.6"/>
+<text x="343.4668071654373" y="424" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">60</text>
+<path d="M440.20021074815594,392 L440.20021074815594,400" stroke="#5A6B7F" stroke-width="1.6"/>
+<text x="440.20021074815594" y="424" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">90</text>
+<path d="M536.9336143308745,392 L536.9336143308745,400" stroke="#5A6B7F" stroke-width="1.6"/>
+<text x="536.9336143308745" y="424" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">120</text>
+<path d="M633.6670179135932,392 L633.6670179135932,400" stroke="#5A6B7F" stroke-width="1.6"/>
+<text x="633.6670179135932" y="424" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">150</text>
+<path d="M730.4004214963119,392 L730.4004214963119,400" stroke="#5A6B7F" stroke-width="1.6"/>
+<text x="730.4004214963119" y="424" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400">180</text>
+<text x="456.0" y="452" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="middle" font-weight="400" font-style="italic">days after the breach occurred</text>
+<path d="M92,478 L890,478 L908,496 L908,656 L92,656 Z" fill="#FFFFFF" stroke="#5A6B7F" stroke-width="1.6" stroke-dasharray="5 4"/>
+<path d="M890,478 L890,496 L908,496" fill="none" stroke="#5A6B7F" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="108" y="506" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#14202E" text-anchor="start" font-weight="600">Why an individual cannot wait to be told</text>
+<text x="108" y="530" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">Half of all breaches took more than 20 days merely to be noticed, and the mean is</text>
+<text x="108" y="551" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">101.8, because the distribution has a long tail: the slowest single case in the sample</text>
+<text x="108" y="572" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">took 3,140 days to identify. Someone waiting to be notified is therefore exposed for</text>
+<text x="108" y="593" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">months in the median case and years in the tail, which is the condition this thesis</text>
+<text x="108" y="614" font-family="Segoe UI, Calibri, Helvetica, Arial, sans-serif" font-size="22" fill="#5A6B7F" text-anchor="start" font-weight="400">designs for.</text>
+</svg>
