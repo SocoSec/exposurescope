@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { explain } from "../../lib/explain.js";
 import { DECAY_PER_DAY, B_MAX, IDENTITY_WEIGHTS, TIERS, UNDATED_AGE_DAYS,
          scoreFromScored } from "../../lib/score.js";
 
@@ -103,8 +104,27 @@ export function Audit({ report }) {
   const flagged = breaches.filter((b) => (b.flags || []).length).length;
   const pt = (v) => ((v / B_MAX) * 100).toFixed(1);
 
+  // The result in full sentences. The card under the score says the short
+  // version; this is the same account with every figure in it, which belongs
+  // here because this panel is where the derivation lives.
+  const account = useMemo(() => {
+    try {
+      return explain(report);
+    } catch {
+      return null;
+    }
+  }, [report]);
+
   return (
     <div className="x-aud">
+      {account && (
+        <div className="x-card">
+          <div className="x-lglabel">What the number says</div>
+          <p className="x-audp"><b>{account.headline}</b></p>
+          {account.sentences.map((t, i) => <p className="x-audp" key={i}>{t}</p>)}
+        </div>
+      )}
+
       {/* 1 ── how much the answer depends on weights nobody can verify */}
       <div className="x-card">
         <div className="x-lglabel">How much does this depend on the weights?</div>
@@ -188,7 +208,7 @@ export function Audit({ report }) {
         </p>
         <div className="x-audalts">
           <div className="x-audalt on">
-            <span className="x-audaltname">Proposed model (two clocks)</span>
+            <span className="x-audaltname">Proposed model (three clocks)</span>
             <span className="x-audaltscore">{report.score}</span>
           </div>
           {alternatives.map((m) => (
