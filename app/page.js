@@ -22,6 +22,7 @@ import { Gauge } from "./components/charts.js";
 import { Horizon } from "./components/Horizon.js";
 import { Sources } from "./components/Sources.js";
 import { Audit } from "./components/Audit.js";
+import { ScoreNote } from "./components/ScoreNote.js";
 import { IdentityDossier, ByCompany, ByDataType } from "./components/Dossier.js";
 import { TwoClockForecast } from "./components/Forecast.js";
 import BreachExplorer from "./components/BreachMap.js";
@@ -335,13 +336,15 @@ export default function Page() {
                       : <Gauge score={report.score} level={report.level} />}
                     {!useHorizon && <div className="x-band" style={{ color: band }}>{L.bands[report.level]}</div>}
                     {!useHorizon && <div className="x-hhead">{L.heads[report.level]}</div>}
-                    <div className="x-hsub">
-                      {!exposed
-                        ? "No match in the sources checked. Keep it that way: unique passwords per site and two-step verification everywhere."
-                        : report.kind === "password"
-                          ? "This password is in public breach dumps. Treat it as known to attackers."
-                          : "Your score reflects the breach data found. The tabs below explain the risk and what to do."}
-                    </div>
+                    {!exposed || report.kind === "password" ? (
+                      <div className="x-hsub">
+                        {!exposed
+                          ? "No match in the sources checked. Keep it that way: unique passwords per site and two-step verification everywhere."
+                          : "This password is in public breach dumps. Treat it as known to attackers."}
+                      </div>
+                    ) : (
+                      <ScoreNote report={report} />
+                    )}
                     {exposed && (
                       <div className="x-glance">
                         {report.kind === "email"

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { DECAY_PER_DAY, B_MAX, W_IDENTITY, IDENTITY_WEIGHTS, TIERS, UNDATED_AGE_DAYS } from "../../lib/score.js";
+import { DECAY_PER_DAY, B_MAX, IDENTITY_WEIGHTS, TIERS, UNDATED_AGE_DAYS,
+         scoreFromScored } from "../../lib/score.js";
 
 // app/components/Audit.js
 // ─────────────────────────────────────────────────────────────────────────────
@@ -21,9 +22,14 @@ import { DECAY_PER_DAY, B_MAX, W_IDENTITY, IDENTITY_WEIGHTS, TIERS, UNDATED_AGE_
 //   3. What would a simpler model have said instead?
 //   4. Which parts of this are measurements, and which are assumptions?
 //
-// Everything is recomputed in the browser from the SAME constants the server
-// scored with (lib/score.js), so the panel cannot drift away from the result it
-// claims to explain. The alternative models reproduce the definitions in
+// The perturbation is run through scoreFromScored() in lib/score.js — the same
+// function the server scores with — rather than through a copy of the formula
+// kept here. It used to be a copy, and the copy drifted: it never learned the
+// cryptographic weight or the volatile clock, so a profile with a reported
+// bcrypt hash scored 1 on the server while this panel centred its interval on
+// 23, and an infostealer infection scored 100 against the panel's 85. A panel
+// whose job is to show that the number is trustworthy must not be computing a
+// different number. The alternative models reproduce the definitions in
 // scripts/sensitivity.mjs exactly, so what a reader sees here and what the
 // thesis reports are the same quantities.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -45,25 +51,6 @@ function rng(seed) {
   };
 }
 
-function credSeverity(attrs, tiers) {
-  const has = (k) => attrs.includes(k);
-  if (has("password") && has("financial")) return 1.0;
-  if (has("financial")) return tiers["financial-only"];
-  if (has("password")) return tiers.credentials;
-  return 0;
-}
-
-function scoreWith(breaches, tiers, idw) {
-  let cred = 0;
-  const union = new Set();
-  for (const b of breaches) {
-    cred += credSeverity(b.attrs || [], tiers) * (b.recency || 0);
-    for (const k of b.identityAttrs || []) union.add(k);
-  }
-  let keep = 1;
-  for (const k of union) keep *= 1 - (idw[k] || 0);
-  return toScore(cred + W_IDENTITY * (1 - keep));
-}
 
 export function Audit({ report }) {
   const breaches = report.breaches || [];
@@ -77,7 +64,7 @@ export function Audit({ report }) {
     for (let i = 0; i < SAMPLES; i++) {
       const tiers = Object.fromEntries(Object.entries(baseTiers).map(([k, v]) => [k, jitter(v)]));
       const idw = Object.fromEntries(Object.entries(IDENTITY_WEIGHTS).map(([k, v]) => [k, jitter(v)]));
-      const s = scoreWith(breaches, tiers, idw);
+      const s = scoreFromScored(breaches, { tiers, identityWeights: idw });
       scores.push(s);
       if (bandOf(s) === bandOf(report.score)) sameBand++;
     }

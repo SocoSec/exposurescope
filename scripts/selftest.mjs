@@ -27,7 +27,7 @@ import { scoreInterval } from "../lib/interval.js";
 import { cipherFromRecord, credentialRecovered, queryBreachDirectory } from "../lib/sources.js";
 import { independentSources, NON_INDEPENDENT } from "../lib/confidence.js";
 import { cipherWeight, CIPHER_WEIGHTS, W_STEALER, DECAY_VOLATILE, isStealerRecord } from "../lib/score.js";
-import { explain } from "../lib/explain.js";
+import { explain, brief } from "../lib/explain.js";
 
 const SECRET = "selftest-secret-0123456789abcdef0123456789abcdef";
 let passed = 0;
@@ -800,6 +800,58 @@ await check("no credential material survives the BreachDirectory parser", async 
     assert.ok(!(f in record), "a record must not carry the field " + f);
   }
   assert.ok(!JSON.stringify(record).includes("20061"), "no censored password may reach a record");
+});
+
+// ── the short explanation ────────────────────────────────────────────────────
+// The long explanation is correct and nobody reads it. The card version has to
+// stay short, stay plain, and stay true to the same report — a summary that
+// drifts from the number it summarises is worse than no summary.
+
+await check("the card states the same score and band as the report", () => {
+  const r = emailReport([
+    { title: "A", date: "2018-06-01", sources: ["HIBP"],
+      dataClasses: ["Email addresses", "Dates of birth", "Names", "Physical addresses"] },
+    { title: "B", date: "2012-05-05", sources: ["HIBP"],
+      dataClasses: ["Email addresses", "Passwords"] },
+  ], IV_NOW, "email");
+  const b = brief(r);
+  assert.equal(b.score, r.score);
+  assert.equal(b.band.toLowerCase(), r.level);
+  assert.ok(b.found.includes("two breaches"), b.found);
+  assert.ok(b.found.includes("one exposed your password"), b.found);
+});
+
+await check("the card stays short and free of the model's vocabulary", () => {
+  const r = emailReport([{ title: "A", date: "2020-01-01", sources: ["HIBP"],
+    dataClasses: ["Email addresses", "Passwords", "Dates of birth"] }], IV_NOW, "email");
+  const b = brief(r);
+  const words = (b.how + " " + b.found).split(/[ \n]+/).length;
+  assert.ok(words <= 120, "the card ran to " + words + " words");
+  for (const jargon of ["clock", "noisy-OR", "half-life", "percentile",
+                        "normalis", "kappa", "B_raw", "decay", "recency"]) {
+    assert.ok(!new RegExp(jargon, "i").test(b.how),
+      "the card must not say " + JSON.stringify(jargon) + ": " + b.how);
+  }
+});
+
+await check("the card mentions only what actually happened to this subject", () => {
+  const plain = brief(emailReport([{ title: "A", date: "2020-01-01", sources: ["HIBP"],
+    dataClasses: ["Email addresses", "Passwords"] }], IV_NOW, "email"));
+  assert.ok(!/malware|session/i.test(plain.how), "no stealer record, so no stealer sentence");
+
+  const stealer = brief(emailReport([{ title: "Log", date: "2026-10-01", sources: ["Hudson Rock"],
+    dataClasses: ["Email addresses", "Passwords"], flags: ["stealer-log"] }], IV_NOW, "email"));
+  assert.ok(/malware/i.test(stealer.how), "a stealer record must be named");
+});
+
+await check("a phone report says phone, and an empty one promises nothing", () => {
+  const ph = brief(emailReport([{ title: "A", date: "2020-01-01", sources: ["DeHashed"],
+    dataClasses: ["Phone numbers", "Names"] }], IV_NOW, "phone"));
+  assert.ok(ph.found.startsWith("Your phone number"), ph.found);
+
+  const none = brief(emailReport([], IV_NOW, "email"));
+  assert.equal(none.score, 0);
+  assert.ok(/not proof/i.test(none.how), "an empty result must not read as a clean bill");
 });
 console.log("\n" + passed + " passed, " + failures.length + " failed");
 if (failures.length) {

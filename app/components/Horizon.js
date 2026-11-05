@@ -192,32 +192,11 @@ export function Horizon({ report, bands, heads, bandColor }) {
 
       <div className="x-hzhint">Drag along the line to move through time.</div>
 
-      <details className="x-hzcalc">
-        <summary>How is this calculated?</summary>
-        <div className="x-hzcalcbody">
-          <p>
-            Each breach is weighted by what it exposed. The weight is then split in two, because
-            the two halves behave differently over time.
-          </p>
-          <p>
-            <b className="x-hzfadetx">The fading half</b> covers things you can replace: passwords and payment
-            cards. Once replaced, the stolen copy is worthless, so its weight halves roughly every
-            347 days. That is the green band, and it is why the curve falls.
-          </p>
-          <p>
-            <b className="x-hzpermtx">The permanent half</b> covers things you cannot replace: your date of birth,
-            your name, your nationality, your address. These are exactly as true today as the day
-            they leaked, so they are not discounted at all. If two breaches exposed the same fact,
-            it is counted once, not twice. That is the dashed floor.
-          </p>
-          <p>
-            The two are added, divided by a fixed scale, and shown out of 100. The constants are
-            chosen rather than fitted — there is no public dataset of who was later defrauded to
-            calibrate against — so the claim made here is about the <b>ordering and the band</b>,
-            which survive a 30% error in every weight, not about the exact number.
-          </p>
-        </div>
-      </details>
+      {/* The explanation that used to live here was written by hand, and it drifted:
+          it described two halves of the score after the model had grown a third, and
+          it never mentioned the cryptographic weight. It now comes from brief() in
+          lib/explain.js, rendered once by ScoreNote beneath the figure, so the words
+          are generated from the same report object as the number. */}
     </div>
   );
 }

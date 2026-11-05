@@ -27,6 +27,11 @@ const SOURCES = [
   { name: "XposedOrNot", href: "https://xposedornot.com", role: "breach names" },
   { name: "Hudson Rock", href: "https://www.hudsonrock.com", role: "infostealer infections" },
   { name: "DeHashed", href: "https://dehashed.com", role: "email and phone records" },
+  // Admitted last, and the only source that reports how a service stored a
+  // password, which is what the cryptographic weight consumes. Listing it
+  // matters for the same reason the others are listed: a reader is entitled
+  // to know every party an identifier was sent to.
+  { name: "BreachDirectory", href: "https://breachdirectory.org", role: "password storage algorithm" },
 ];
 
 export function Sources({ T, active }) {

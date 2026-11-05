@@ -492,11 +492,12 @@ html,body{margin:0;background:#080B12;}
 .x-hzcalc summary{cursor:pointer;font-size:12.5px;color:var(--mute);list-style:none;}
 .x-hzcalc summary::-webkit-details-marker{display:none;}
 .x-hzcalc summary::before{content:"+ ";font-family:ui-monospace,monospace;}
-.x-hzcalc[open] summary::before{content:"2 ";}
+.x-hzcalc[open] summary::before{content:"− ";}
 .x-hzcalc summary:hover{color:var(--ink);}
 .x-hzcalcbody{font-size:13px;line-height:1.65;color:var(--mute);margin-top:10px;}
 .x-hzcalcbody p{margin:0 0 9px;}
 .x-hzcalcbody b{color:var(--ink);font-weight:600;}
+.x-scorenote{max-width:46ch;margin-left:auto;margin-right:auto;text-align:left;}
 .x-hzfadetx{color:var(--sig)!important;}
 .x-hzpermtx{color:var(--coral)!important;}
 @media (max-width:520px){.x-hzread{gap:14px;}.x-hznum{font-size:46px;min-width:72px;}.x-hzbreak{font-size:12px;}}
