@@ -8,6 +8,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { execFileSync } from "node:child_process";
 import { randomDigits, keyedHashHex, safeEqual } from "../lib/crypto.js";
 import { signToken, verifyToken, emailId, identifierId, codeTag, codeMatches, TTL } from "../lib/tokens.js";
@@ -922,6 +923,27 @@ await check("the registry holds seven providers, four of them keyed", () => {
   assert.deepEqual(PROVIDERS.filter((p) => !p.keyed).map((p) => p.name),
     ["LeakCheck", "XposedOrNot", "Hudson Rock"]);
   assert.equal(PROVIDERS.filter((p) => p.keyed).length, 4);
+});
+
+
+await check("every provider the registry queries is disclosed in the sources panel", () => {
+  // A live run showed HIBP and IntelX greyed out although both had answered:
+  // the panel matched on the display name while queryAll reports the registry
+  // name. Two sources that the identifier was genuinely sent to were shown as
+  // though they had not been, which understates disclosure rather than
+  // overstating coverage, but is wrong either way.
+  const src = fs.readFileSync(new URL("../app/components/Sources.js", import.meta.url), "utf8");
+  const ids = [...src.matchAll(/\{ id: "([^"]+)"/g)].map((m) => m[1]);
+  for (const p of PROVIDERS) {
+    assert.ok(ids.includes(p.name),
+      "the sources panel has no row whose id is " + p.name);
+  }
+  // and nothing in the panel claims to be a provider that does not exist
+  for (const id of ids) {
+    if (id === "Pwned Passwords") continue;      // the browser-side check
+    assert.ok(PROVIDERS.some((p) => p.name === id),
+      "the panel lists " + id + ", which is not in the registry");
+  }
 });
 
 console.log("\n" + passed + " passed, " + failures.length + " failed");

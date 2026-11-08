@@ -21,21 +21,21 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const SOURCES = [
-  { name: "Have I Been Pwned", href: "https://haveibeenpwned.com", role: "breach records, dates and data classes" },
-  { name: "Pwned Passwords", href: "https://haveibeenpwned.com/Passwords", role: "password checks, k-anonymity" },
-  { name: "LeakCheck", href: "https://leakcheck.io", role: "breach sources and dates" },
-  { name: "XposedOrNot", href: "https://xposedornot.com", role: "breach names" },
-  { name: "Hudson Rock", href: "https://www.hudsonrock.com", role: "infostealer infections" },
-  { name: "DeHashed", href: "https://dehashed.com", role: "email and phone records" },
+  { id: "HIBP", name: "Have I Been Pwned", href: "https://haveibeenpwned.com", role: "breach records, dates and data classes" },
+  { id: "Pwned Passwords", name: "Pwned Passwords", href: "https://haveibeenpwned.com/Passwords", role: "password checks, k-anonymity" },
+  { id: "LeakCheck", name: "LeakCheck", href: "https://leakcheck.io", role: "breach sources and dates" },
+  { id: "XposedOrNot", name: "XposedOrNot", href: "https://xposedornot.com", role: "breach names" },
+  { id: "Hudson Rock", name: "Hudson Rock", href: "https://www.hudsonrock.com", role: "infostealer infections" },
+  { id: "DeHashed", name: "DeHashed", href: "https://dehashed.com", role: "email and phone records" },
   // Admitted last, and the only source that reports how a service stored a
   // password, which is what the cryptographic weight consumes. Listing it
   // matters for the same reason the others are listed: a reader is entitled
   // to know every party an identifier was sent to.
-  { name: "BreachDirectory", href: "https://breachdirectory.org", role: "password storage algorithm" },
+  { id: "BreachDirectory", name: "BreachDirectory", href: "https://breachdirectory.org", role: "password storage algorithm" },
   // Intelligence X — searches the leaks.public bucket. Returns breach archive
   // names and dates; data classes are filled in through the merge with HIBP
   // and LeakCheck where those sources also know the breach.
-  { name: "Intelligence X", href: "https://intelx.io", role: "leak archive names and dates" },
+  { id: "IntelX", name: "Intelligence X", href: "https://intelx.io", role: "leak archive names and dates" },
 ];
 
 export function Sources({ T, active }) {
@@ -49,9 +49,12 @@ export function Sources({ T, active }) {
       <div className="x-srctitle">{T.sourcesTitle}</div>
       <ul className="x-srclist">
         {SOURCES.map((s) => {
-          const dim = reached && !reached.has(s.name);
+          // match on the registry id, not the display name: the registry
+          // calls them HIBP and IntelX while the reader sees the full names,
+          // and matching on the label greyed out two sources that answered.
+          const dim = reached && !reached.has(s.id);
           return (
-            <li key={s.name} className={"x-srcitem" + (dim ? " off" : "")}>
+            <li key={s.id} className={"x-srcitem" + (dim ? " off" : "")}>
               <a className="x-srclink" href={s.href} target="_blank" rel="noopener noreferrer">{s.name}</a>
               <span className="x-srcrole">{s.role}</span>
             </li>

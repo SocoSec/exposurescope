@@ -513,7 +513,7 @@ function ScoreModel({ report, band }) {
     <div className="x-card">
       <div className="x-sech"><span className="x-secn">01</span><span className="x-sect">Score model</span></div>
       <div className="x-secd">
-        Two clocks. What you can change loses weight as it ages; what you cannot change does not.
+        Three clocks. What you can change loses weight as it ages, a stolen login session loses it far faster, and what you cannot change does not lose it at all.
       </div>
       <div className="x-explain" style={{ borderLeft: "3px solid " + band }}>
         Your data appears in {n} breach{n === 1 ? "" : "es"}.{" "}
