@@ -32,6 +32,10 @@ const SOURCES = [
   // matters for the same reason the others are listed: a reader is entitled
   // to know every party an identifier was sent to.
   { name: "BreachDirectory", href: "https://breachdirectory.org", role: "password storage algorithm" },
+  // Intelligence X — searches the leaks.public bucket. Returns breach archive
+  // names and dates; data classes are filled in through the merge with HIBP
+  // and LeakCheck where those sources also know the breach.
+  { name: "Intelligence X", href: "https://intelx.io", role: "leak archive names and dates" },
 ];
 
 export function Sources({ T, active }) {
