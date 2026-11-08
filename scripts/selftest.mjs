@@ -24,7 +24,7 @@ import { gdprLetter } from "../lib/gdpr.js";
 import { enrichFromCatalogue, catalogueEntry, CATALOGUE_SIZE } from "../lib/enrich.js";
 import { scoreFromScored } from "../lib/score.js";
 import { scoreInterval } from "../lib/interval.js";
-import { cipherFromRecord, credentialRecovered, queryBreachDirectory } from "../lib/sources.js";
+import { cipherFromRecord, credentialRecovered, queryBreachDirectory, queryIntelX } from "../lib/sources.js";
 import { independentSources, NON_INDEPENDENT } from "../lib/confidence.js";
 import { cipherWeight, CIPHER_WEIGHTS, W_STEALER, DECAY_VOLATILE, isStealerRecord } from "../lib/score.js";
 import { explain, brief } from "../lib/explain.js";
@@ -883,6 +883,45 @@ await check("the password score cannot exceed the credential tier", () => {
   // the top of the scale stays reserved for exposure that is not.
   assert.ok(passwordReport(10 ** 9).score <= 70, "a password must not reach 100");
   assert.ok(/above 70/.test(brief(passwordReport(10 ** 9)).how), "and the card should say so");
+});
+
+
+// ── the seventh source ───────────────────────────────────────────────────────
+
+await check("IntelX fails closed without a key and carries no credential material", async () => {
+  const out = await queryIntelX("x@example.com", "");
+  assert.equal(out.ok, false);
+  assert.equal(out.reason, "no_key");
+  const record = { title: "Collection #1", key: "collection1", date: "2019-01-07",
+                   dataClasses: [], sources: ["IntelX"] };
+  for (const f of ["password", "passwords", "hash", "plain", "line"]) {
+    assert.ok(!(f in record), "an IntelX record must not carry " + f);
+  }
+});
+
+await check("IntelX never corroborates a corpus it only reprints", () => {
+  // leaks.public indexes the archives HIBP and LeakCheck already cover, so a
+  // record shared with them is a republication, not a second observation.
+  assert.ok(NON_INDEPENDENT.has("IntelX"));
+  assert.deepEqual(independentSources(["HIBP", "IntelX"]), ["HIBP"]);
+  assert.deepEqual(independentSources(["IntelX", "BreachDirectory"]), []);
+  assert.equal(PROVIDERS.find((p) => p.name === "IntelX").independent, false);
+});
+
+await check("a record with no data classes is reported but scores nothing", () => {
+  // IntelX returns file metadata, so a breach only it knows has no classes.
+  // It must appear without severity being invented for it.
+  const r = emailReport([{ title: "SomeLeak", key: "someleak", date: "2024-01-01",
+                           dataClasses: [], sources: ["IntelX"] }], IV_NOW, "email");
+  assert.equal(r.breaches.length, 1, "the record is still reported");
+  assert.equal(r.raw, 0, "but contributes nothing to the raw score");
+});
+
+await check("the registry holds seven providers, four of them keyed", () => {
+  assert.equal(PROVIDERS.length, 7);
+  assert.deepEqual(PROVIDERS.filter((p) => !p.keyed).map((p) => p.name),
+    ["LeakCheck", "XposedOrNot", "Hudson Rock"]);
+  assert.equal(PROVIDERS.filter((p) => p.keyed).length, 4);
 });
 
 console.log("\n" + passed + " passed, " + failures.length + " failed");

@@ -20,9 +20,9 @@ the scoring stage three clocks rather than two.
 from uml import (Canvas, INK, MUTED, HAIR, TEAL, GOLD, SLATE, WASH,
                  FS_BODY, FS_SMALL, FS_TINY, W, rasterise)
 
-H = 1170
+H = 1266
 c = Canvas(H, "Exposio — sources and ingestion",
-           "Six breach providers, one browser-side check, one bundled catalogue")
+           "Seven breach providers, one browser-side check, one bundled catalogue")
 
 LX, LW = 300, 544          # the source column
 RX, RW = 790, 372          # the pipeline column
@@ -57,19 +57,20 @@ def stage(cy, n, name, detail):
 
 
 # ── the sources, grouped by what they cost and where they run ──────────────
-group(128, 442, "«paid key required»", GOLD)
+group(128, 538, "«API key required»", GOLD)
 source(214, "Have I Been Pwned", "email · title, exact date, data classes", "key", GOLD)
 source(310, "DeHashed", "email + phone · the only phone source", "key", GOLD)
 source(406, "BreachDirectory", "email · storage cipher; not independent", "key", GOLD)
+source(502, "IntelX", "email · archive names; not independent", "key", GOLD)
 
-group(460, 774, "«no key required»", TEAL)
-source(546, "LeakCheck", "email · month-precision dates", "free", TEAL)
-source(642, "XposedOrNot", "email · names only; coverage, not score", "free", TEAL)
-source(738, "Hudson Rock", "email · infostealer infections", "free", TEAL)
+group(556, 870, "«no key required»", TEAL)
+source(642, "LeakCheck", "email · month-precision dates", "free", TEAL)
+source(738, "XposedOrNot", "email · names only; coverage, not score", "free", TEAL)
+source(834, "Hudson Rock", "email · infostealer infections", "free", TEAL)
 
-group(792, 1010, "«never reaches the server»", SLATE)
-source(878, "Pwned Passwords", "password · first 5 hash characters only", "browser", SLATE)
-source(974, "HIBP catalogue", "1,048 breaches · 1,328 aliases · bundled", "local", SLATE)
+group(888, 1106, "«never reaches the server»", SLATE)
+source(974, "Pwned Passwords", "password · first 5 hash characters only", "browser", SLATE)
+source(1070, "HIBP catalogue", "1,048 breaches · 1,328 aliases · bundled", "local", SLATE)
 
 # ── the pipeline the answers pass through ───────────────────────────────────
 c.text(RX, 118, "Per request, nothing retained", FS_TINY, MUTED, weight="600")
@@ -93,10 +94,10 @@ c.note(RX - RW / 2, 812, RW, 122,
         "response ends the only copy."],
        title="Stateless by stage", accent=TEAL)
 
-c.text(14, 1064, "Email reaches all six providers; phone reaches DeHashed only.",
+c.text(14, 1160, "Email reaches all seven providers; phone reaches DeHashed only.",
        FS_TINY, MUTED, anchor="start")
-c.text(14, 1092, "A password never leaves the browser.", FS_TINY, MUTED, anchor="start")
-c.text(14, 1120, "Catalogue © Have I Been Pwned, CC BY 4.0. Exposio retains no breach "
+c.text(14, 1188, "A password never leaves the browser.", FS_TINY, MUTED, anchor="start")
+c.text(14, 1216, "Catalogue © Have I Been Pwned, CC BY 4.0. Exposio retains no breach "
                  "data of its own.", FS_TINY, MUTED, anchor="start")
 
 p = c.save("sources")
