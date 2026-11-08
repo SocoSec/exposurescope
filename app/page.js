@@ -77,6 +77,34 @@ async function pwnedCount(password) {
   return 0;
 }
 
+// Why a source is missing from a result, in the words the reason deserves.
+//
+// Every failure used to read "didn't respond", which is wrong for most of
+// them. A rate-limited source answered and said the quota was spent; a
+// refused key answered and said no. Reporting those as silence misdescribes
+// what happened, and on a free tier of ten lookups a month the rate-limit
+// case is the common one, not the exception. The tool's claim is that it
+// tells you what was and was not consulted, so the distinction belongs on
+// screen.
+const FAILURE_WORDS = {
+  rate_limited: "hit its rate limit",
+  auth: "refused the key",
+  no_credits: "has no credits left",
+  no_key: "is not configured",
+};
+
+function describeFailures(failed) {
+  const byReason = new Map();
+  for (const f of failed) {
+    const w = FAILURE_WORDS[f.reason] || "didn't respond";
+    if (!byReason.has(w)) byReason.set(w, []);
+    byReason.get(w).push(f.source);
+  }
+  return [...byReason.entries()]
+    .map(([words, names]) => names.join(", ") + " " + words)
+    .join(" · ");
+}
+
 export default function Page() {
   // ---- interface state ----
   const [lang, setLang] = useState("en");
@@ -367,7 +395,7 @@ export default function Page() {
                     {meta.sources.length > 0 && (
                       <div className="x-src">
                         {L.sources}: {meta.sources.join(" + ")}
-                        {meta.sourcesFailed.length > 0 && " · " + meta.sourcesFailed.map((f) => f.source).join(", ") + " didn't respond"}
+                        {meta.sourcesFailed.length > 0 && " · " + describeFailures(meta.sourcesFailed)}
                       </div>
                     )}
                   </>
