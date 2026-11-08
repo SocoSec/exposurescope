@@ -17,13 +17,18 @@ import { scoreInterval } from "../../lib/interval.js";
 // them. The self-test asserts that, and it forbids the vocabulary of the model
 // — clock, half-life, decay, percentile — from appearing in it at all.
 //
+// It covers the credential path too. A password check yields a score and
+// used to yield no account of it at all, which is the one case where the
+// reader is most likely to ask: the number moves with how often the
+// password has been seen, and nothing on screen said so.
+//
 // The register is deliberately plain. A person who has just been told their
 // data is in three breaches is not reading for the derivation; the derivation
 // is a tab away, in Audit, for anyone who wants it.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function ScoreNote({ report }) {
-  if (!report || report.kind === "password") return null;
+  if (!report) return null;
   const b = brief(report);
 
   // The interval is reported only where it means something: with no exposure

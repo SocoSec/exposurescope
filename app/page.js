@@ -336,11 +336,9 @@ export default function Page() {
                       : <Gauge score={report.score} level={report.level} />}
                     {!useHorizon && <div className="x-band" style={{ color: band }}>{L.bands[report.level]}</div>}
                     {!useHorizon && <div className="x-hhead">{L.heads[report.level]}</div>}
-                    {!exposed || report.kind === "password" ? (
+                    {!exposed ? (
                       <div className="x-hsub">
-                        {!exposed
-                          ? "No match in the sources checked. Keep it that way: unique passwords per site and two-step verification everywhere."
-                          : "This password is in public breach dumps. Treat it as known to attackers."}
+                        No match in the sources checked. Keep it that way: unique passwords per site and two-step verification everywhere.
                       </div>
                     ) : (
                       <ScoreNote report={report} />

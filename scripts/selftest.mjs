@@ -853,6 +853,38 @@ await check("a phone report says phone, and an empty one promises nothing", () =
   assert.equal(none.score, 0);
   assert.ok(/not proof/i.test(none.how), "an empty result must not read as a clean bill");
 });
+
+await check("a breached password is explained, not merely announced", () => {
+  // The credential path produces a score and used to produce no account of
+  // it: the interface said the password was in public dumps and stopped. A
+  // number with no explanation beside it is the thing this work objects to
+  // in comparable services.
+  const b = brief(passwordReport(2847193));
+  assert.equal(b.score, passwordReport(2847193).score);
+  assert.ok(/2,847,193/.test(b.found), b.found);
+  assert.ok(/how widely/i.test(b.how), "the note must say what the score measures");
+  assert.ok(/never left this device|first five characters/i.test(b.how),
+    "the k-anonymity guarantee is the thing a reader most needs told");
+  for (const jargon of ["clock", "half-life", "decay", "percentile", "kappa", "B_raw"]) {
+    assert.ok(!new RegExp(jargon, "i").test(b.how), "the card must not say " + jargon);
+  }
+});
+
+await check("the credential note counts in words a person would use", () => {
+  assert.ok(/appears once/.test(brief(passwordReport(1)).found));
+  assert.ok(/appears 1,000 times/.test(brief(passwordReport(1000)).found));
+  const clean = brief(passwordReport(0));
+  assert.equal(clean.score, 0);
+  assert.ok(/not proof/i.test(clean.how), "an unmatched password is not a guarantee");
+});
+
+await check("the password score cannot exceed the credential tier", () => {
+  // 0.7 is the credential severity of Table 3; a password is revocable, so
+  // the top of the scale stays reserved for exposure that is not.
+  assert.ok(passwordReport(10 ** 9).score <= 70, "a password must not reach 100");
+  assert.ok(/above 70/.test(brief(passwordReport(10 ** 9)).how), "and the card should say so");
+});
+
 console.log("\n" + passed + " passed, " + failures.length + " failed");
 if (failures.length) {
   console.log("Failed: " + failures.join("; "));
